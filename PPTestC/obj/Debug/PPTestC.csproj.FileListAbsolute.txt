@@ -1,0 +1,7 @@
+F:\VS2017.data\ppNetTest\PPTestC\bin\Debug\PPTestC.exe
+F:\VS2017.data\ppNetTest\PPTestC\bin\Debug\PPTestC.pdb
+F:\VS2017.data\ppNetTest\PPTestC\bin\Debug\ClientPublic.dll
+F:\VS2017.data\ppNetTest\PPTestC\bin\Debug\ClientPublic.pdb
+F:\VS2017.data\ppNetTest\PPTestC\obj\Debug\PPTestC.csprojResolveAssemblyReference.cache
+F:\VS2017.data\ppNetTest\PPTestC\obj\Debug\PPTestC.exe
+F:\VS2017.data\ppNetTest\PPTestC\obj\Debug\PPTestC.pdb

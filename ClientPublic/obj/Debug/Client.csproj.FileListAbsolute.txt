@@ -1,0 +1,4 @@
+F:\VS2017.data\ppNetTest\ClientPublic\bin\Debug\ClientPublic.dll
+F:\VS2017.data\ppNetTest\ClientPublic\bin\Debug\ClientPublic.pdb
+F:\VS2017.data\ppNetTest\ClientPublic\obj\Debug\ClientPublic.dll
+F:\VS2017.data\ppNetTest\ClientPublic\obj\Debug\ClientPublic.pdb
