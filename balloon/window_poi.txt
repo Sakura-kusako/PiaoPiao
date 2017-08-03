@@ -1,0 +1,465 @@
+//poi
+
+object Window_Play = 1003
+{
+	//游戏窗口(空)
+	type = window
+	rect = 0,0,800,600
+
+	visible = 1
+	movable = 0
+	enabled = 1
+	topmost = 0
+
+	fontname = 宋体
+	fontsize = 10
+}
+
+object Window_Shop = 1100
+{
+	//商店界面
+	type = window
+	rect = 0,0,467,597
+	src = balloon\Pic\Shop\商店区底图.tga
+	visible = 1
+	alpha = 256
+	movable = 0
+	enabled = 1
+
+	//上
+	object button = 110001
+	{
+		type = button
+		rect = 413,140,32,32
+		upimg = balloon\Wnd\shop\大箭头上-正常.tga
+		downimg = balloon\Wnd\shop\大箭头上-按下.tga
+		Hoverimg = balloon\Wnd\shop\大箭头上-经过.tga
+		disableimg = balloon\Wnd\shop\大箭头上-禁用.tga
+		alpha = 256
+	}
+
+	//下
+	object button = 110002
+	{
+		type = button
+		rect = 413,278,32,32
+		upimg = balloon\Wnd\shop\大箭头下-正常.tga
+		downimg = balloon\Wnd\shop\大箭头下-按下.tga
+		Hoverimg = balloon\Wnd\shop\大箭头下-经过.tga
+		disableimg = balloon\Wnd\shop\大箭头下-禁用.tga
+		alpha = 256
+	}
+
+	//购买
+	object button = 110003
+	{
+		type = button
+		rect = 399,356,59,59
+		upimg = balloon\Wnd\shop\商店购买-正常.tga
+		downimg = balloon\Wnd\shop\商店购买-按下.tga
+		Hoverimg = balloon\Wnd\shop\商店购买-经过.tga
+		disableimg = balloon\Wnd\shop\商店购买-禁用.tga
+		alpha = 256
+	}
+
+	//赠送
+	object button = 110004
+	{
+		type = button
+		rect = 403,424,51,29
+		upimg = balloon\Wnd\shop\商店赠送-正常.tga
+		downimg = balloon\Wnd\shop\商店赠送-按下.tga
+		Hoverimg = balloon\Wnd\shop\商店赠送-经过.tga
+		disableimg = balloon\Wnd\shop\商店赠送-禁用.tga
+		alpha = 256
+	}
+
+	//索要
+	object button = 110005
+	{
+		type = button
+		rect = 403,457,51,29
+		upimg = balloon\Wnd\shop\商店索要-正常.tga
+		downimg = balloon\Wnd\shop\商店索要-按下.tga
+		Hoverimg = balloon\Wnd\shop\商店索要-经过.tga
+		disableimg = balloon\Wnd\shop\商店索要-禁用.tga
+		alpha = 256
+	}
+
+	//充值
+	object button = 110006
+	{
+		type = button
+		rect = 177,527,63,63
+		upimg = balloon\Wnd\shop\冲值按钮-正常.tga
+		downimg = balloon\Wnd\shop\冲值按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\冲值按钮-经过.tga
+		disableimg = balloon\Wnd\shop\冲值按钮-禁用.tga
+		alpha = 256
+	}
+
+	//退出
+	object button = 110007
+	{
+		type = button
+		rect = 256,535,101,58
+		upimg = balloon\Wnd\shop\退出按钮-正常.tga
+		downimg = balloon\Wnd\shop\退出按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\退出按钮-经过.tga
+		disableimg = balloon\Wnd\shop\退出按钮-禁用.tga
+		alpha = 256
+	}
+
+	//装备
+	object button = 110008
+	{
+		type = button
+		rect = 378,0,55,57
+		upimg = balloon\Wnd\shop\我的装备按钮-正常.tga
+		downimg = balloon\Wnd\shop\我的装备按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\我的装备按钮-经过.tga
+		disableimg = balloon\Wnd\shop\我的装备按钮-禁用.tga
+		alpha = 256
+	}
+
+	//全部装备
+	object button = 110009
+	{
+		type = button
+		rect = 438,0,30,57
+		upimg = balloon\Wnd\shop\全部装备按钮-正常.tga
+		downimg = balloon\Wnd\shop\全部装备按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\全部装备按钮-经过.tga
+		disableimg = balloon\Wnd\shop\全部装备按钮-禁用.tga
+		alpha = 256
+	}
+
+	//推荐复选按钮
+	object button = 110010
+	{
+		type = CheckBoxShop
+		rect = 36,21,32,21
+		downimg = balloon\Pic\Shop\商店-推荐-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-推荐-经过.tga
+		pic_rect = 2,1,100,61
+		src = balloon\Pic\Shop\商店目录-推荐.tga
+		val_A = 1
+		alpha = 255			
+	}
+
+	//角色复选按钮
+	object button = 110011
+	{
+		type = CheckBoxShop
+		rect = 106,21,32,21
+		downimg = balloon\Pic\Shop\商店-角色-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-角色-经过.tga
+		pic_rect = 72,1,100,61
+		src = balloon\Pic\Shop\商店目录-角色.tga
+		val_A = 2
+		alpha = 255			
+	}
+
+	//装饰复选按钮
+	object button = 110012
+	{
+		type = CheckBoxShop
+		rect = 176,21,32,21
+		downimg = balloon\Pic\Shop\商店-装饰-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-装饰-经过.tga
+		pic_rect = 142,1,100,61
+		src = balloon\Pic\Shop\商店目录-装饰.tga
+		val_A = 3
+		alpha = 255			
+	}
+
+	//道具复选按钮
+	object button = 110013
+	{
+		type = CheckBoxShop
+		rect = 246,21,32,21
+		downimg = balloon\Pic\Shop\商店-道具-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-道具-经过.tga
+		pic_rect = 212,1,100,61
+		src = balloon\Pic\Shop\商店目录-道具.tga
+		val_A = 4
+		alpha = 255			
+	}
+
+	//宠物复选按钮
+	object button = 110014
+	{
+		type = CheckBoxShop
+		rect = 316,21,32,21
+		downimg = balloon\Pic\Shop\商店-宠物-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-宠物-经过.tga
+		pic_rect = 282,1,100,61
+		src = balloon\Pic\Shop\商店目录-宠物.tga
+		val_A = 5
+		alpha = 255			
+	}
+}
+
+//商店仓库
+object Window = 1110
+{
+	type = window
+	rect = 0,0,328,237
+	src = balloon\Wnd\shop\商店仓库底图.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//续费
+	object button = 111001
+	{
+		type = button
+		rect = 129,60,65,23
+		upimg = balloon\Wnd\shop\仓库-续费-正常.tga
+		downimg = balloon\Wnd\shop\仓库-续费-按下.tga
+		Hoverimg = balloon\Wnd\shop\仓库-续费-经过.tga
+		disableimg = balloon\Wnd\shop\仓库-续费-禁用.tga
+		alpha = 256
+	}
+
+	//装备物品
+	object button = 111002
+	{
+		type = button
+		rect = 59,60,65,23
+		upimg = balloon\Wnd\shop\仓库-装备-正常.tga
+		downimg = balloon\Wnd\shop\仓库-装备-按下.tga
+		Hoverimg = balloon\Wnd\shop\仓库-装备-经过.tga
+		disableimg = balloon\Wnd\shop\仓库-装备-禁用.tga
+		alpha = 256
+	}
+
+	//商品换购
+	object button = 111003
+	{
+		type = button
+		rect = 199,60,65,23
+		upimg = balloon\Wnd\shop\仓库-卖出-正常.tga
+		downimg = balloon\Wnd\shop\仓库-卖出-按下.tga
+		Hoverimg = balloon\Wnd\shop\仓库-卖出-经过.tga
+		disableimg = balloon\Wnd\shop\仓库-卖出-禁用.tga
+		alpha = 256
+	}
+
+	//上
+	object button = 111004
+	{
+		type = button
+		rect = 292,99,22,22
+		upimg = balloon\Wnd\shop\小箭头上-正常.tga
+		downimg = balloon\Wnd\shop\小箭头上-按下.tga
+		Hoverimg = balloon\Wnd\shop\小箭头上-经过.tga
+		disableimg = balloon\Wnd\shop\小箭头上-禁用.tga
+		alpha = 256
+	}
+
+	//下
+	object button = 111005
+	{
+		type = button
+		rect = 292,172,22,22
+		upimg = balloon\Wnd\shop\小箭头下-正常.tga
+		downimg = balloon\Wnd\shop\小箭头下-按下.tga
+		Hoverimg = balloon\Wnd\shop\小箭头下-经过.tga
+		disableimg = balloon\Wnd\shop\小箭头下-禁用.tga
+		alpha = 256
+	}
+
+	//道具栏清空
+	object button = 111006
+	{
+		type = button
+		rect = 238,14,36,36
+		upimg = balloon\Wnd\shop\道具栏清空按钮-正常.tga
+		downimg = balloon\Wnd\shop\道具栏清空按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\道具栏清空按钮-经过.tga
+		disableimg = balloon\Wnd\shop\道具栏清空按钮-禁用.tga
+		alpha = 256
+	}
+
+	//道具栏重购
+	object button = 111007
+	{
+		type = button
+		rect = 280,14,36,36
+		upimg = balloon\Wnd\shop\道具栏重购按钮-正常.tga
+		downimg = balloon\Wnd\shop\道具栏重购按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\道具栏重购按钮-经过.tga
+		disableimg = balloon\Wnd\shop\道具栏重购按钮-禁用.tga
+		alpha = 256
+	}    
+
+	//全部复选按钮
+	object button = 111009
+	{
+		type = CheckBoxShop
+		rect = 18,215,32,20
+		downimg = balloon\Pic\Shop\仓库-全部-经过.tga
+		Hoverimg = balloon\Pic\Shop\仓库-全部-经过.tga
+		pic_rect = 0,190,74,59
+		src = balloon\Pic\Shop\仓库目录-全部.tga
+		val_A = 1
+		alpha = 255			
+	}
+
+	//角色复选按钮
+	object button = 111010
+	{
+		type = CheckBoxShop
+		rect = 81,215,32,20
+		downimg = balloon\Pic\Shop\仓库-角色-经过.tga
+		Hoverimg = balloon\Pic\Shop\仓库-角色-经过.tga
+		pic_rect = 56,190,74,59
+		src = balloon\Pic\Shop\仓库目录-角色.tga
+		val_A = 2
+		alpha = 255			
+	}
+
+	//装饰复选按钮
+	object button = 111011
+	{
+		type = CheckBoxShop
+		rect = 144,215,32,20
+		downimg = balloon\Pic\Shop\仓库-装饰-经过.tga
+		Hoverimg = balloon\Pic\Shop\仓库-装饰-经过.tga
+		pic_rect = 119,190,74,59
+		src = balloon\Pic\Shop\仓库目录-装饰.tga
+		val_A = 3
+		alpha = 255			
+	}
+
+	//道具复选按钮
+	object button = 111012
+	{
+		type = CheckBoxShop
+		rect = 207,215,32,20
+		downimg = balloon\Pic\Shop\仓库-道具-经过.tga
+		Hoverimg = balloon\Pic\Shop\仓库-道具-经过.tga
+		pic_rect = 185,190,74,59
+		src = balloon\Pic\Shop\仓库目录-道具.tga
+		val_A = 4
+		alpha = 255			
+	}
+
+	//宠物复选按钮
+	object button = 111013
+	{
+		type = CheckBoxShop
+		rect = 277,215,32,20
+		downimg = balloon\Pic\Shop\仓库-宠物-经过.tga
+		Hoverimg = balloon\Pic\Shop\仓库-宠物-经过.tga
+		pic_rect = 252,190,74,59
+		src = balloon\Pic\Shop\仓库目录-宠物.tga
+		val_A = 5
+		alpha = 255			
+	}
+}
+
+//商店角色选择
+object Window = 1120
+{
+	type = window
+	rect = 0,0,127,144
+	src = balloon\Pic\Shop\角色选择底图.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//全部复选按钮
+	object button = 112000
+	{
+		type = CheckBoxShop
+		rect = 36,36,54,54
+		downimg = balloon\Pic\Shop\全局-经过.tga
+		Hoverimg = balloon\Pic\Shop\全局-经过.tga
+		pic_rect = 36,36,54,54
+		src = balloon\Pic\Shop\全局-按下.tga
+		val_A = 7
+		alpha = 255			
+	}
+
+	//角色-曲奇-复选按钮
+	object button = 112001
+	{
+		type = CheckBoxShop
+		rect = -10,30,60,60
+		downimg = balloon\Pic\Shop\独角兽-经过.tga
+		Hoverimg = balloon\Pic\Shop\独角兽-经过.tga
+		pic_rect = -10,30,60,60
+		src = balloon\Pic\Shop\独角兽-按下.tga
+		val_A = 1
+		alpha = 255			
+	}
+
+	//角色-氧气-复选按钮
+	object button = 112002
+	{
+		type = CheckBoxShop
+		rect = 13,68,60,60
+		downimg = balloon\Pic\Shop\四叶草-经过.tga
+		Hoverimg = balloon\Pic\Shop\四叶草-经过.tga
+		pic_rect = 13,68,60,60
+		src = balloon\Pic\Shop\四叶草-按下.tga
+		val_A = 2
+		alpha = 255			
+	}
+
+	//角色-洛丽-复选按钮
+	object button = 112003
+	{
+		type = CheckBoxShop
+		rect = 13,-3,60,60
+		downimg = balloon\Pic\Shop\心-经过.tga
+		Hoverimg = balloon\Pic\Shop\心-经过.tga
+		pic_rect = 13,-3,60,60
+		src = balloon\Pic\Shop\心-按下.tga
+		val_A = 3
+		alpha = 255			
+	}
+
+	//角色-小P-复选按钮
+	object button = 112004
+	{
+		type = CheckBoxShop
+		rect = 75,30,60,60
+		downimg = balloon\Pic\Shop\飞-经过.tga
+		Hoverimg = balloon\Pic\Shop\飞-经过.tga
+		pic_rect = 75,30,60,60
+		src = balloon\Pic\Shop\飞-按下.tga
+		val_A = 4
+		alpha = 255			
+	}
+
+	//角色-饼干-复选按钮
+	object button = 112005
+	{
+		type = CheckBoxShop
+		rect = 56,68,60,60
+		downimg = balloon\Pic\Shop\糖果-经过.tga
+		Hoverimg = balloon\Pic\Shop\糖果-经过.tga
+		pic_rect = 56,68,60,60
+		src = balloon\Pic\Shop\糖果-按下.tga
+		val_A = 5
+		alpha = 255			
+	}
+
+	//角色-JOJO-复选按钮
+	object button = 112006
+	{
+		type = CheckBoxShop
+		rect = 56,-3,60,60
+		downimg = balloon\Pic\Shop\鲸鱼-经过.tga
+		Hoverimg = balloon\Pic\Shop\鲸鱼-经过.tga
+		pic_rect = 56,-3,60,60
+		src = balloon\Pic\Shop\鲸鱼-按下.tga
+		val_A = 6
+		alpha = 255			
+	}
+}

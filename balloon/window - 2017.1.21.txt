@@ -1,0 +1,1728 @@
+MaxID = 1000000
+//fontname = 宋体
+//fontsize = 12
+
+object CursorType = 1
+{
+	object CT_ARROW = 2
+	{
+		//是否为动画
+		animate = 1
+		//热点
+		hot = 0,0
+		//是否有透明色
+		mask = 1
+		//动画帧数
+		frames = 3
+		//动画间隔时间
+		interval = 200
+		//alpha值，没有为256
+		alpha = 256
+		//图片
+		src = cur_arrow.bmp
+	}
+	
+	object CT_HAND = 3
+	{
+		animate = 0
+		hot = 0,0
+		mask = 1
+		frames = 1
+		interval = 0
+		alpha = 256
+		src = cur_hand.bmp
+	}
+	
+	object CT_BEAN = 4
+	{
+		animate = 0
+		hot = 5,15
+		mask = 1
+		frames = 1
+		interval = 0
+		alpha = 256
+		src = cur_beam.bmp
+	}
+	object CT_VSIZE = 5
+	{
+		animate = 0
+		hot = 5,15
+		mask = 1
+		frames = 1
+		interval = 0
+		alpha = 256
+		src = cur_vsize.bmp
+	}
+}
+
+
+object WindowGroup = 13
+{
+	type = window
+	rect = 0,0,178,296
+	src = 操作面板.tga
+	alpha = 255
+
+	visible = 1
+	modal = 0
+	mask = 1
+	movable = 0
+	enabled = 1
+	topmost = 1
+
+	fontname = 宋体
+	fontsize = 10
+
+	object edit1 = 131
+	{
+		type = edit
+		rect = 86,51,78,18
+		border = 1,1
+		maxlen = 10
+		password = 0
+		backcolor = 16,52,66
+		alpha = 255		
+	}
+
+	object edit2 = 132
+	{
+		type = edit
+		rect = 86,82,78,18
+		border = 1,1
+		maxlen = 10
+		password = 0
+		backcolor = 16,52,66
+		alpha = 255		
+	}
+	object edit3 = 133
+	{
+		type = edit
+		rect = 86,113,78,18
+		border = 1,1
+		maxlen = 10
+		password = 0
+		backcolor = 16,52,66
+		alpha = 255		
+	}
+	object edit4 = 134
+	{
+		type = edit
+		rect = 86,144,78,18
+		border = 1,1
+		maxlen = 10
+		password = 0
+		backcolor = 16,52,66
+		alpha = 255		
+	}
+	object edit5 = 135
+	{
+		type = edit
+		rect = 86,175,78,18
+		border = 1,1
+		maxlen = 10
+		password = 0
+		backcolor = 16,52,66
+		alpha = 255			
+	}
+	object edit6 = 136
+	{
+		type = edit
+		rect = 86,206,78,18
+		border = 1,1
+		maxlen = 10
+		password = 0
+		backcolor = 16,52,66
+		alpha = 255		
+	}
+	object edit7 = 137
+	{
+		type = edit
+		rect = 86,237,78,18
+		border = 1,1
+		maxlen = 10
+		password = 0
+		backcolor = 16,52,66
+		alpha = 255		
+	}
+
+	object BtConfirm = 1312
+	{
+		type = Button
+		rect = 26,264,45,22
+		upimg = 地图选择确定1.bmp
+		downimg = 地图选择确定2.bmp
+		Hoverimg = 地图选择确定3.bmp
+		disableimg = 地图选择确定4.bmp
+		alpha = 256
+	}
+
+	object BtCancel = 1313
+	{
+		type = Button
+		rect = 110,264,45,22
+		upimg = 地图选择关闭1.bmp
+		downimg = 地图选择关闭2.bmp
+		Hoverimg = 地图选择关闭3.bmp
+		disableimg = 地图选择关闭4.bmp
+		alpha = 256
+	}
+	
+}
+object WindowGame = 14
+{
+	type = window
+	rect = 0,0,600,35
+	src = 游戏窗口\游戏窗口.bmp
+	alpha = 1
+
+	visible = 1
+	modal = 0
+	mask = 1
+	movable = 0
+	enabled = 1
+	topmost = 1
+
+	fontname = 宋体
+	fontsize = 10
+	
+	object button1 = 141
+	{
+		type = Button
+		rect = 480,5,59,28
+		upimg    = 游戏窗口\游戏-菜单按钮1.tga
+		hoverimg = 游戏窗口\游戏-菜单按钮2.tga
+		downimg  = 游戏窗口\游戏-菜单按钮3.tga
+		alpha = 256
+	}
+
+	object button2 = 142
+	{
+		type = Button
+		rect = 540,5,59,28
+		upimg    = 游戏窗口\游戏-退出按钮1.tga
+		hoverimg = 游戏窗口\游戏-退出按钮2.tga
+		downimg  = 游戏窗口\游戏-退出按钮3.tga
+		alpha = 256
+	}
+
+	//聊天输入框
+	object edit = 143
+	{
+		type = edit
+		rect = 5,5,378,27
+		border = 1,1
+		maxlen = 54
+		password = 0
+		src = 游戏窗口\聊天框.tga
+		alpha = 150
+	}
+
+	object button2 = 144
+	{
+		type = Button
+		rect = 385,5,34,27
+		upimg    = 游戏窗口\游戏-表情按钮1.tga
+		hoverimg = 游戏窗口\游戏-表情按钮2.tga
+		downimg  = 游戏窗口\游戏-表情按钮3.tga
+		alpha = 256
+	}
+	object button2 = 145
+	{
+		type = Button
+		rect = 420,5,55,29
+		upimg    = 游戏窗口\游戏-发送按钮1.tga
+		hoverimg = 游戏窗口\游戏-发送按钮2.tga
+		downimg  = 游戏窗口\游戏-发送按钮3.tga
+		alpha = 256
+	}
+}
+
+object WindowList = 15
+{
+	type = window
+	rect = 0,0,240,400
+	src = 地图选择框.Tga
+	movable = 1
+	topmost = 0
+	alpha = 200
+
+	object mapFrame = 151
+	{
+		type = staticbitmap
+		rect = 0,0,235,360
+		src = 地图选择框2.tga
+	}	
+
+	object ListBox1 = 152
+	{
+		type = listbox
+		rect = 35,110,160,150
+		//src = 地图选择框2.tga
+		scrollimg = scrollbar.bmp
+		forecolor = 255,255,0
+		context = 地图加载中...
+		alpha = 200
+	}
+	object button2 = 153
+	{
+		type = Button
+		rect = 35,290,81,53
+		//src = btnup.bmp
+		upimg = kaishianniu01a.tga
+		downimg = kaishianniu01b.tga
+		Hoverimg = kaishianniu01c.tga
+		disableimg = kaishianniu01d.tga
+		alpha = 256
+	}
+	object button2 = 154
+	{
+		type = Button
+		rect = 122,290,81, 53
+		//src = btnup.bmp
+		upimg = caidananniu01a.tga
+		downimg = caidananniu01b.tga
+		Hoverimg = caidananniu01c.tga
+		disableimg = caidananniu01d.tga
+		alpha = 256
+	}
+}
+
+
+object Window5 = 18
+{
+	type = window
+	rect = 0,0,580,160
+	src = 聊天商店.tga
+	visible = 1
+	modal = 0
+	alpha = 200
+	mask = 1
+
+	object Chat1 = 181
+	{
+		type = chat
+		rect = 20,18,320,70
+		//src = b03.bmp
+		margin = 2
+		linespace = 2
+		autoscroll = 0
+		maxlines = 100
+		alpha = 255
+	}
+
+	object edit1 = 182
+	{
+		type = edit
+		rect = 100,383,300,30
+		border = 4,4
+		maxlen = 32
+		password = 0
+		//src = editback2.bmp
+		alpha = 100
+		
+	}
+		
+	object RoleFrame = 183
+	{
+		type = staticbitmap
+		rect = 0,0,580,160
+		src = 聊天商店2.tga
+	}	
+}
+
+//等待UI
+object Window = 19
+{
+	type = window
+	rect = 0,0,800,600
+	src = 遮罩.tga
+
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//选择地图
+	object button = 191
+	{
+		type = button
+		rect = 166,571,30,26
+		upimg = 地图选择按钮1.tga
+		downimg = 地图选择按钮2.tga
+		Hoverimg = 地图选择按钮3.tga
+		disableimg = 地图选择按钮4.tga
+		alpha = 256
+	}
+
+	//聊天语句
+	object button = 192
+	{
+		type = button
+		rect = 470,424,33,19
+		upimg = 聊天框语句按钮1.tga
+		downimg = 聊天框语句按钮2.tga
+		Hoverimg = 聊天框语句按钮4.tga
+		disableimg = 聊天框语句按钮5.tga
+		alpha = 256
+	}
+
+	//聊天图标
+	object button = 193
+	{
+		type = button
+		rect = 506,424,33,19
+		upimg = 聊天框表情按钮1.tga
+		downimg = 聊天框表情按钮2.tga
+		Hoverimg = 聊天框表情按钮4.tga
+		disableimg = 聊天框表情按钮5.tga
+		alpha = 256
+	}
+
+	//聊天发送
+	object button = 194
+	{
+		type = button
+		rect = 542,403,55,40
+		upimg = 聊天框发送按钮1.tga
+		downimg =聊天框发送按钮2.tga
+		Hoverimg = 聊天框发送按钮4.tga
+		disableimg = 聊天框发送按钮5.tga
+		alpha = 256
+	}
+
+	//组队A
+	object button = 195
+	{
+		type = button
+		rect = 285,558,34,34
+		upimg =  组队按钮a1.bmp
+		downimg = 组队按钮a2.bmp
+		Hoverimg = 组队按钮a4.bmp
+		disableimg = 组队按钮a5.bmp
+		alpha = 256
+	}
+	
+	//组队B
+	object button = 196
+	{
+		type = button
+		rect = 321,558,34,34
+		upimg =  组队按钮b1.bmp
+		downimg = 组队按钮b2.bmp
+		Hoverimg = 组队按钮b4.bmp
+		disableimg = 组队按钮b5.bmp
+		alpha = 256
+	}
+
+	//组队C
+	object button = 197
+	{
+		type = button
+		rect = 357,558,34,34
+		upimg =  组队按钮c1.bmp
+		downimg = 组队按钮c2.bmp
+		Hoverimg = 组队按钮c4.bmp
+		disableimg = 组队按钮c5.bmp
+		alpha = 256
+	}
+
+	//组队自由
+	object button = 198
+	{
+		type = button
+		rect = 393,558,74,34
+		upimg = 组队按钮自由1.bmp
+		downimg = 组队按钮自由2.bmp
+		Hoverimg = 组队按钮自由4.bmp
+		disableimg = 组队按钮自由5.bmp
+		alpha = 256
+	}
+
+	//开始
+	object button = 199
+	{
+		type = button
+		rect = 608,412,187,60
+		upimg = 开始按钮1.tga
+		downimg = 开始按钮3.tga
+		Hoverimg = 开始按钮4.tga
+		disableimg = 开始按钮5.tga
+		alpha = 256
+	}
+
+	object face = 1910
+	{
+		type = staticbitmap
+		movable = 0
+		rect = 608,476,185,80
+		src = 商店面板.tga
+		movable = 1
+		alpha = 256
+	}	
+
+	//商店
+	object button = 1911
+	{
+		type = button
+		rect = 615,476,171,51
+		upimg = 逛逛商店1.tga
+		downimg = 逛逛商店2.tga
+		Hoverimg = 逛逛商店4.tga
+		disableimg = 逛逛商店5.tga
+		alpha = 256
+	}
+
+	//菜单
+	object button = 1912
+	{
+		type = button
+		rect = 607,558,61,39
+		upimg = 菜单按钮1.tga
+		downimg = 菜单按钮2.tga
+		Hoverimg = 菜单按钮4.tga
+		disableimg = 菜单按钮5.tga
+		alpha = 256
+	}
+
+	//返回
+	object button = 1913
+	{
+		type = button
+		rect = 735,558,61,39
+		upimg = 返回按钮1.tga
+		downimg = 返回按钮2.tga
+		Hoverimg = 返回按钮4.tga
+		disableimg = 返回按钮5.tga
+		alpha = 256
+	}
+
+	//房间属性
+	object button = 1914
+	{
+		type = button
+		rect = 460,3,79,26
+		upimg = 房间属性按钮1.tga
+		downimg = 房间属性按钮2.tga
+		Hoverimg = 房间属性按钮4.tga
+		disableimg = 房间属性按钮5.tga
+		alpha = 256
+	}
+
+	//聊天历史按钮
+	object button = 1915
+	{
+		type = button
+		upimg = 聊天历史出1.tga
+		downimg = 聊天历史出2.tga
+		Hoverimg = 聊天历史出4.tga
+		disableimg = 聊天历史出.tga
+		rect = 515,404,22,17
+		alpha = 256
+	}
+
+	//聊天输入框
+	object edit = 1916
+	{
+		type = edit
+		rect = 305,403,210,19
+		border = 1,1
+		maxlen = 54
+		password = 0
+		src = 聊天框.bmp
+		alpha = 100
+	}
+
+	//帮助
+	object button = 1917
+	{
+		type = button
+		rect = 671,558,61,39
+		upimg = 帮助按钮1.tga
+		downimg = 帮助按钮2.tga
+		Hoverimg = 帮助按钮4.tga
+		disableimg = 帮助按钮5.tga
+		alpha = 256
+	}
+	
+	//常用聊语框
+	object face = 1918
+	{
+		type = staticbitmap
+		rect = 262,443,240,145
+		src = 语聊窗口.tga
+		movable = 1
+		alpha = 256
+	}	
+
+	//选择密聊玩家
+	object button = 1919
+	{
+		type = button
+		rect = 287,402,18,19
+		upimg = 密聊按钮1.tga
+		downimg = 密聊按钮2.tga
+		Hoverimg =密聊按钮4.tga
+		disableimg = 密聊按钮5.tga
+		alpha = 256
+	}
+
+	//密聊玩家名字
+	object edit = 1920
+	{
+		type = edit
+		rect = 209,403,77,19
+		border = 1,1
+		maxlen = 54
+		password = 0
+		src = 聊天框.bmp
+		alpha = 100
+	}
+}
+
+//地图选择
+object Window = 20
+{
+	type = window
+	rect = 0,0,178,348
+	src = 地图选择.tga
+	visible = 1
+	modal = 1
+	alpha = 256
+	mask = 1
+
+	//确定
+	object button = 201
+	{
+		type = button
+		rect = 24,318,45,22
+		upimg = 地图选择确定1.bmp
+		downimg = 地图选择确定2.bmp
+		Hoverimg = 地图选择确定3.bmp
+		disableimg = 地图选择确定4.bmp
+		alpha = 256
+	}
+
+	//关闭
+	object button = 202
+	{
+		type = button
+		rect = 112,318,45,22
+		upimg = 地图选择关闭1.bmp
+		downimg = 地图选择关闭2.bmp
+		Hoverimg = 地图选择关闭3.bmp
+		disableimg = 地图选择关闭4.bmp
+		alpha = 256
+	}
+
+	//上拖
+	object button = 203
+	{
+		type = button
+		rect = 159,39,13,10
+		upimg = 上1.tga
+		downimg = 上2.tga
+		Hoverimg = 上3.tga
+		disableimg = 上3.tga
+		alpha = 256
+	}
+
+	//下拖
+	object button = 204
+	{
+		type = button
+		rect = 159,299,13,10
+		upimg = 下1.tga
+		downimg = 下2.tga
+		Hoverimg = 下3.tga
+		disableimg = 下3.tga
+		alpha = 256
+	}
+}
+
+object Window = 21
+{
+	type = window
+	rect = 0,0,332,110
+	src = 聊天历史框.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//聊天框
+	object Chat1 = 211
+	{
+		type = chat
+		rect = 0,0,330,108
+		//src = b03.BMP
+		margin = 1
+		linespace = 2
+		autoscroll = 0
+		maxlines = 100
+		alpha = 255
+	}
+}
+
+object Window = 22
+{
+	type = window
+	rect = 0,0,252,208
+	src = 房间属性面板.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//房间名称
+	object edit = 221
+	{
+		type = edit
+		rect = 102,50,140,18
+		border = 1,1
+		maxlen = 20
+		password = 0
+		backcolor = 16,52,66
+		alpha = 256
+	}
+
+	//密码
+	object edit = 222
+	{
+		type = edit
+		rect = 150,80,88,18
+		border = 1,1
+		maxlen = 8
+		password = 0
+		backcolor = 16,52,66
+		alpha = 256
+	}
+
+	//加锁
+	object CheckBox = 223
+	{
+		type = checkbox
+		//caption = OFF
+		rect = 71,79,23,23
+		stateimg = 复选框.tga
+		forecolor = 255,0,0
+	}
+
+	//误伤
+	object CheckBox = 224
+	{
+		type = checkbox
+		//caption = OFF
+		rect = 71,109,23,23
+		stateimg = 复选框1.tga
+		forecolor = 255,0,0
+	}
+
+	//自由
+	object Radio = 225
+	{
+		type = radio
+		//caption = OFF
+		rect = 71,143,22,22
+		stateimg = 单选框.tga
+		forecolor = 255,0,0
+	}
+
+	//标准
+	object Radio = 226
+	{
+		type = radio
+		//caption = OFF
+		rect = 164,143,22,22
+		stateimg = 单选框.tga
+		forecolor = 255,0,0
+	}
+
+	//确定
+	object button = 227
+	{
+		type = button
+		rect = 150,175,45,22
+		upimg = 地图选择确定1.bmp
+		downimg = 地图选择确定2.bmp
+		Hoverimg = 地图选择确定3.bmp
+		disableimg = 地图选择确定4.bmp
+		alpha = 256
+	}
+
+	//关闭
+	object button = 228
+	{
+		type = button
+		rect = 200,175,45,22
+		upimg = 地图选择关闭1.bmp
+		downimg = 地图选择关闭2.bmp
+		Hoverimg = 地图选择关闭3.bmp
+		disableimg = 地图选择关闭4.bmp
+		alpha = 256
+	}
+}
+
+object Window = 23
+{
+	type = window
+	rect = 0,0,178,296
+	src = 系统面板.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//窗口模式
+	object Radio = 231
+	{
+		type = radio
+		//caption = OFF
+		rect = 25,76,22,22
+		stateimg = 单选框.tga
+		forecolor = 255,0,0
+	}
+
+	//全屏模式
+	object Radio = 232
+	{
+		type = radio
+		//caption = OFF
+		rect = 25,107,22,22
+		stateimg = 单选框.tga
+		forecolor = 255,0,0
+	}
+
+	//音乐开
+	object Radio = 233
+	{
+		type = radio
+		//caption = OFF
+		rect = 63,167,23,23
+		stateimg = 复选框.tga
+		forecolor = 255,0,0
+	}
+
+	//音乐关
+	object Radio = 234
+	{
+		type = radio
+		//caption = OFF
+		rect = 125,167,23,23
+		stateimg = 复选框.tga
+		forecolor = 255,0,0
+	}
+
+	//音效开
+	object Radio = 235
+	{
+		type = radio
+		//caption = OFF
+		rect = 63,229,23,23
+		stateimg = 复选框.tga
+		forecolor = 255,0,0
+	}
+
+	//音效关
+	object Radio = 236
+	{
+		type = radio
+		//caption = OFF
+		rect = 125,229,23,23
+		stateimg = 复选框.tga
+		forecolor = 255,0,0
+	}
+
+	//确定
+	object button = 237
+	{
+		type = button
+		rect = 70,264,45,22
+		upimg = 地图选择确定1.bmp
+		downimg = 地图选择确定2.bmp
+		Hoverimg = 地图选择确定3.bmp
+		disableimg = 地图选择确定4.bmp
+		alpha = 256
+	}
+
+	//关闭
+	object button = 238
+	{
+		type = button
+		rect = 125,264,45,22
+		upimg = 地图选择关闭1.bmp
+		downimg = 地图选择关闭2.bmp
+		Hoverimg = 地图选择关闭3.bmp
+		disableimg = 地图选择关闭4.bmp
+		alpha = 256
+	}
+}
+
+//系统菜单
+object Window = 24
+{
+	type = window
+	rect = 0,0,178,247
+	src = 菜单面板.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//返回游戏
+	object button = 241
+	{
+		type = button
+		rect = 11,50,132,36
+		upimg = 返回游戏按钮1.bmp
+		downimg = 返回游戏按钮2.bmp
+		Hoverimg = 返回游戏按钮4.bmp
+		disableimg = 返回游戏按钮5.bmp
+		alpha = 256
+	}
+
+	//操作设置
+	object button = 242
+	{
+		type = button
+		rect = 11,87,132,36
+		upimg = 操作设置按钮1.bmp
+		downimg = 操作设置按钮2.bmp
+		Hoverimg =操作设置按钮4.bmp
+		disableimg = 操作设置按钮5.bmp
+		alpha = 256
+	}
+
+	//系统设置
+	object button = 243
+	{
+		type = button
+		rect = 11,124,132,36
+		upimg = 系统设置按钮1.bmp
+		downimg = 系统设置按钮2.bmp
+		Hoverimg = 系统设置按钮4.bmp
+		disableimg = 系统设置按钮5.bmp
+		alpha = 256
+	}
+
+	//退出游戏
+	object button = 244
+	{
+		type = button
+		rect = 11,161,132,36
+		upimg = 退出游戏按钮1.bmp
+		downimg = 退出游戏按钮2.bmp
+		Hoverimg = 退出游戏按钮4.bmp
+		disableimg = 退出游戏按钮5.bmp
+		alpha = 256
+	}
+}
+
+//退出消息框
+object Window = 25
+{
+	type = window
+	rect = 0,0,178,99
+	src = 退出面板.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//确定
+	object button = 251
+	{
+		type = button
+		rect = 17,73,45,22
+		upimg = 地图选择确定1.bmp
+		downimg = 地图选择确定2.bmp
+		Hoverimg = 地图选择确定3.bmp
+		disableimg = 地图选择确定4.bmp
+		alpha = 256
+	}
+
+	//关闭
+	object button = 252
+	{
+		type = button
+		rect = 117,73,45,22
+		upimg = 地图选择关闭1.bmp
+		downimg = 地图选择关闭2.bmp
+		Hoverimg = 地图选择关闭3.bmp
+		disableimg = 地图选择关闭4.bmp
+		alpha = 256
+	}
+}
+
+//右键菜单
+object Window = 26
+{
+	type = window
+	rect = 0,0,112,99
+	src = 右键菜单.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	object button = 261
+	{
+		type = button
+		rect = 11,4,90,25
+		upimg = 玩家信息1.tga
+		downimg = 玩家信息2.tga
+		Hoverimg = 玩家信息4.tga
+		disableimg = 玩家信息5.tga
+		alpha = 256
+	}
+
+	object button = 262
+	{
+		type = button
+		rect = 11,32,90,25
+		upimg = 踢出房间1.tga
+		downimg = 踢出房间2.tga
+		Hoverimg = 踢出房间4.tga
+		disableimg = 踢出房间5.tga
+		alpha = 256
+	}
+}
+
+//大表情面板
+object Window = 27
+{
+	type = window
+	rect = 0,0,122,145
+	src = 大表情窗口.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	object button = 271
+	{
+		type = button
+		rect = 74,120,22,22
+		upimg = 表情框左翻页1.bmp
+		downimg = 表情框左翻页2.bmp
+		Hoverimg = 表情框左翻页4.bmp
+		disableimg = 表情框左翻页5.bmp
+		alpha = 256
+	}
+
+	object button = 272
+	{
+		type = button
+		rect = 98,120,22,22
+		upimg = 表情框右翻页1.bmp
+		downimg = 表情框右翻页2.bmp
+		Hoverimg = 表情框右翻页4.bmp
+		disableimg = 表情框右翻页5.bmp
+		alpha = 256
+	}
+
+}
+
+object Window = 28
+{
+	type = window
+	rect = 0,0,166,145
+	src = 玩家信息框.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	object button = 281
+	{
+		type = button
+		rect = 146,6,18,17
+		upimg = 玩家信息关闭1.tga
+		downimg = 玩家信息关闭2.tga
+		Hoverimg = 玩家信息关闭4.tga
+		disableimg = 玩家信息关闭5.tga
+		alpha = 256
+	}
+
+}
+
+//教程菜单
+object Window = 29
+{
+	type = window
+	rect = 0,0,91,197
+	src = 教程\阶段选择框.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//飞行启动
+	object button = 291
+	{
+		type = button
+		rect = 15,43,61,16
+		upimg = 教程\飞行启动1.tga
+		downimg = 教程\飞行启动2.tga
+		alpha = 256
+	}
+
+	//飞行移动
+	object button = 292
+	{
+		type = button
+		rect = 15,64,61,16
+		upimg = 教程\飞行移动1.tga
+		downimg = 教程\飞行移动2.tga
+		alpha = 256
+	}
+
+	//攻击
+	object button = 293
+	{
+		type = button
+		rect = 15,85,61,16
+		upimg = 教程\攻击1.tga
+		downimg = 教程\攻击2.tga
+		alpha = 256
+	}
+
+	//胜负判定
+	object button = 294
+	{
+		type = button
+		rect = 15,106,61,16
+		upimg = 教程\胜负判定1.tga
+		downimg = 教程\胜负判定2.tga
+		alpha = 256
+	}
+
+	//道具获得
+	object button = 295
+	{
+		type = button
+		rect = 15,127,61,16
+		upimg = 教程\道具获得1.tga
+		downimg = 教程\道具获得2.tga
+		alpha = 256
+	}
+
+	//道具使用
+	object button = 296
+	{
+		type = button
+		rect = 15,148,61,16
+		upimg = 教程\道具使用1.tga
+		downimg = 教程\道具使用2.tga
+		alpha = 256
+	}
+
+	//危险区域
+	object button = 297
+	{
+		type = button
+		rect = 15,169,61,16
+		upimg = 教程\危险区域1.tga
+		downimg = 教程\危险区域2.tga
+		alpha = 256
+	}
+}
+
+//新手窗口
+object Window = 30
+{
+	type = window
+	rect = 0,0,300,52
+	src = 教程\新手窗口.bmp
+	visible = 1
+	modal = 0
+	alpha = 1
+	mask = 1
+
+	//翱翔一番
+	object button = 301
+	{
+		type = button
+		rect = 10,2,75,52
+		upimg = 教程\开始游戏1.tga
+		downimg = 教程\开始游戏2.tga
+		Hoverimg = 教程\开始游戏4.tga
+		disableimg = 教程\开始游戏5.tga
+		alpha = 256
+	}
+
+	//温习一遍
+	object button = 302
+	{
+		type = button
+		rect = 101,2,75,52
+		upimg = 教程\继续练习1.tga
+		downimg = 教程\继续练习2.tga
+		Hoverimg = 教程\继续练习4.tga
+		disableimg = 教程\继续练习5.tga
+		alpha = 256
+	}
+}
+
+//返回消息框
+object Window = 31
+{
+	type = window
+	rect = 0,0,178,99
+	src = 游戏窗口\退出面板.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//确定
+	object button = 251
+	{
+		type = button
+		rect = 17,73,45,22
+		upimg = 地图选择确定1.bmp
+		downimg = 地图选择确定2.bmp
+		Hoverimg = 地图选择确定3.bmp
+		disableimg = 地图选择确定4.bmp
+		alpha = 256
+	}
+
+	//关闭
+	object button = 252
+	{
+		type = button
+		rect = 117,73,45,22
+		upimg = 地图选择关闭1.bmp
+		downimg = 地图选择关闭2.bmp
+		Hoverimg = 地图选择关闭3.bmp
+		disableimg = 地图选择关闭4.bmp
+		alpha = 256
+	}
+}
+
+//商店商品
+object Window = 32
+{
+	type = window
+	rect = 0,0,467,597
+	src = shop\商店区底图.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//上
+	object button = 321
+	{
+		type = button
+		rect = 413,140,32,32
+		upimg = shop\大箭头上-正常.tga
+		downimg = shop\大箭头上-按下.tga
+		Hoverimg = shop\大箭头上-经过.tga
+		disableimg = shop\大箭头上-禁用.tga
+		alpha = 256
+	}
+
+	//下
+	object button = 322
+	{
+		type = button
+		rect = 413,278,32,32
+		upimg = shop\大箭头下-正常.tga
+		downimg = shop\大箭头下-按下.tga
+		Hoverimg = shop\大箭头下-经过.tga
+		disableimg = shop\大箭头下-禁用.tga
+		alpha = 256
+	}
+
+	//购买
+	object button = 323
+	{
+		type = button
+		rect = 399,356,59,59
+		upimg = shop\商店购买-正常.tga
+		downimg = shop\商店购买-按下.tga
+		Hoverimg = shop\商店购买-经过.tga
+		disableimg = shop\商店购买-禁用.tga
+		alpha = 256
+	}
+
+	//赠送
+	object button = 324
+	{
+		type = button
+		rect = 403,424,51,29
+		upimg = shop\商店赠送-正常.tga
+		downimg = shop\商店赠送-按下.tga
+		Hoverimg = shop\商店赠送-经过.tga
+		disableimg = shop\商店赠送-禁用.tga
+		alpha = 256
+	}
+
+	//索要
+	object button = 325
+	{
+		type = button
+		rect = 403,457,51,29
+		upimg = shop\商店索要-正常.tga
+		downimg = shop\商店索要-按下.tga
+		Hoverimg = shop\商店索要-经过.tga
+		disableimg = shop\商店索要-禁用.tga
+		alpha = 256
+	}
+
+	//充值
+	object button = 326
+	{
+		type = button
+		rect = 177,527,63,63
+		upimg = shop\冲值按钮-正常.tga
+		downimg = shop\冲值按钮-按下.tga
+		Hoverimg = shop\冲值按钮-经过.tga
+		disableimg = shop\冲值按钮-禁用.tga
+		alpha = 256
+	}
+
+	//退出
+	object button = 327
+	{
+		type = button
+		rect = 256,535,101,58
+		upimg = shop\退出按钮-正常.tga
+		downimg = shop\退出按钮-按下.tga
+		Hoverimg = shop\退出按钮-经过.tga
+		disableimg = shop\退出按钮-禁用.tga
+		alpha = 256
+	}
+
+	//装备
+	object button = 328
+	{
+		type = button
+		rect = 390,0,71,57
+		upimg = shop\我的装备按钮-正常.tga
+		downimg = shop\我的装备按钮-按下.tga
+		Hoverimg = shop\我的装备按钮-经过.tga
+		disableimg = shop\我的装备按钮-禁用.tga
+		alpha = 256
+	}
+}
+
+//商店仓库
+object Window = 33
+{
+	type = window
+	rect = 0,0,328,237
+	src = shop\商店仓库底图.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//续费
+	object button = 331
+	{
+		type = button
+		rect = 129,60,65,23
+		upimg = shop\仓库-续费-正常.tga
+		downimg = shop\仓库-续费-按下.tga
+		Hoverimg = shop\仓库-续费-经过.tga
+		disableimg = shop\仓库-续费-禁用.tga
+		alpha = 256
+	}
+
+	//装备物品
+	object button = 332
+	{
+		type = button
+		rect = 59,60,65,23
+		upimg = shop\仓库-装备-正常.tga
+		downimg = shop\仓库-装备-按下.tga
+		Hoverimg = shop\仓库-装备-经过.tga
+		disableimg = shop\仓库-装备-禁用.tga
+		alpha = 256
+	}
+
+	//商品换购
+	object button = 333
+	{
+		type = button
+		rect = 199,60,65,23
+		upimg = shop\仓库-卖出-正常.tga
+		downimg = shop\仓库-卖出-按下.tga
+		Hoverimg = shop\仓库-卖出-经过.tga
+		disableimg = shop\仓库-卖出-禁用.tga
+		alpha = 256
+	}
+
+	//上
+	object button = 334
+	{
+		type = button
+		rect = 292,99,22,22
+		upimg = shop\小箭头上-正常.tga
+		downimg = shop\小箭头上-按下.tga
+		Hoverimg = shop\小箭头上-经过.tga
+		disableimg = shop\小箭头上-禁用.tga
+		alpha = 256
+	}
+
+	//下
+	object button = 335
+	{
+		type = button
+		rect = 292,172,22,22
+		upimg = shop\小箭头下-正常.tga
+		downimg = shop\小箭头下-按下.tga
+		Hoverimg = shop\小箭头下-经过.tga
+		disableimg = shop\小箭头下-禁用.tga
+		alpha = 256
+	}
+
+	//道具栏清空
+	object button = 336
+	{
+		type = button
+		rect = 238,14,36,36
+		upimg = shop\道具栏清空按钮-正常.tga
+		downimg = shop\道具栏清空按钮-按下.tga
+		Hoverimg = shop\道具栏清空按钮-经过.tga
+		disableimg = shop\道具栏清空按钮-禁用.tga
+		alpha = 256
+	}
+
+	//道具栏重购
+	object button = 337
+	{
+		type = button
+		rect = 280,14,36,36
+		upimg = shop\道具栏重购按钮-正常.tga
+		downimg = shop\道具栏重购按钮-按下.tga
+		Hoverimg = shop\道具栏重购按钮-经过.tga
+		disableimg = shop\道具栏重购按钮-禁用.tga
+		alpha = 256
+	}
+}
+
+//按钮窗口
+object Window = 34
+{
+	type = window
+	rect = 0,0,257,34
+	src = shop\按钮窗口.bmp
+	visible = 1
+	modal = 0
+	alpha = 1
+	mask = 1
+
+	//购买按钮
+	object button = 341
+	{
+		type = button
+		rect = 100,0,157,36
+		upimg = shop\预览区购买按钮-正常.tga
+		downimg = shop\预览区购买按钮-按下.tga
+		Hoverimg = shop\预览区购买按钮-经过.tga
+		disableimg = shop\预览区购买按钮-禁用.tga
+		alpha = 256
+	}
+
+	//取消预览
+	object button = 342
+	{
+		type = button
+		rect = 0,0,97,36
+		upimg = shop\预览区取消预览按钮-正常.tga
+		downimg = shop\预览区取消预览按钮-按下.tga
+		Hoverimg = shop\预览区取消预览按钮-经过.tga
+		disableimg = shop\预览区取消预览按钮-禁用.tga
+		alpha = 256
+	}
+}
+
+//装备窗口
+object Window = 35
+{
+	type = window
+	rect = 0,0,467,488
+	src = shop\装备栏底图.tga
+	visible = 0
+	modal = 0
+	alpha = 256
+	mask = 1
+}
+
+//购买窗口
+object Window = 36
+{
+	type = window
+	rect = 0,0,277,401
+	src = shop\面板底图.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//查询
+	object button = 361
+	{
+		type = button
+		rect = 151,226,54,24
+		upimg = shop\查询-正常.tga
+		downimg = shop\查询-按下.tga
+		Hoverimg = shop\查询-经过.tga
+		disableimg = shop\查询-禁用.tga
+		alpha = 256
+	}
+
+	//赠送
+	object button = 362
+	{
+		type = button
+		rect = 49,349,71,36
+		upimg = shop\赠送-正常.tga
+		downimg = shop\赠送-按下.tga
+		Hoverimg = shop\赠送-经过.tga
+		disableimg = shop\赠送-禁用.tga
+		alpha = 256
+	}
+
+	//确定
+	object button = 363
+	{
+		type = button
+		rect = 49,349,71,36
+		upimg = shop\确定-正常.tga
+		downimg = shop\确定-按下.tga
+		Hoverimg = shop\确定-经过.tga
+		disableimg = shop\确定-禁用.tga
+		alpha = 256
+	}
+
+	//取消
+	object button = 364
+	{
+		type = button
+		rect = 157,349,71,36
+		upimg = shop\取消-正常.tga
+		downimg = shop\取消-按下.tga
+		Hoverimg = shop\取消-经过.tga
+		disableimg = shop\取消-禁用.tga
+		alpha = 256
+	}
+
+	//拒绝
+	object button = 365
+	{
+		type = button
+		rect = 157,349,71,36
+		upimg = shop\拒绝-正常.tga
+		downimg = shop\拒绝-按下.tga
+		Hoverimg = shop\拒绝-经过.tga
+		disableimg = shop\拒绝-禁用.tga
+		alpha = 256
+	}
+
+	//单选索要
+	object Radio = 366
+	{
+		type = radio
+		rect = 167,204,18,18
+		stateimg = shop\单选.tga
+		forecolor = 255,0,0
+	}
+
+	//单选赠送
+	object Radio = 367
+	{
+		type = radio
+		rect = 112,204,18,18
+		stateimg = shop\单选.tga
+		forecolor = 255,0,0
+	}
+
+	//单选Q币
+	object Radio = 368
+	{
+		type = radio
+		rect = 17,324,18,18
+		stateimg = shop\单选.tga
+		forecolor = 255,0,0
+	}
+
+	//单选飘币
+	object Radio = 369
+	{
+		type = radio
+		rect = 132,324,18,18
+		stateimg = shop\单选.tga
+		forecolor = 255,0,0
+	}
+
+	//上
+	object button = 3610
+	{
+		type = button
+		rect = 215,50,32,32
+		upimg = shop\大箭头上-正常.tga
+		downimg = shop\大箭头上-按下.tga
+		Hoverimg = shop\大箭头上-经过.tga
+		disableimg = shop\大箭头上-禁用.tga
+		alpha = 256
+	}
+
+	//下
+	object button = 3611
+	{
+		type = button
+		rect = 215,145,32,32
+		upimg = shop\大箭头下-正常.tga
+		downimg = shop\大箭头下-按下.tga
+		Hoverimg = shop\大箭头下-经过.tga
+		disableimg = shop\大箭头下-禁用.tga
+		alpha = 256
+	}
+
+	//单选购买
+	object Radio = 3612
+	{
+		type = radio
+		rect = 57,204,18,18
+		stateimg = shop\单选.tga
+		forecolor = 255,0,0
+	}
+
+	//号码输入框
+	object edit = 3613
+	{
+		type = edit
+		rect = 74,229,68,18
+		border = 1,1
+		maxlen = 54
+		password = 0
+		src = 聊天框.bmp
+		alpha = 0
+	}
+
+	//留言输入框
+	object edit = 3614
+	{
+		type = edit
+		rect = 17,256,241,61
+		border = 1,1
+		maxlen = 200
+		password = 0
+		multiline = 1
+		autowrap = 1
+		src = 聊天框.bmp
+		alpha = 0
+	}
+}
+
+//消息窗口
+object Window = 37
+{
+	type = window
+	rect = 0,0,223,175
+	src = shop\消息面板.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//确定
+	object button = 371
+	{
+		type = button
+		rect = 31,126,71,36
+		upimg = shop\确定-正常.tga
+		downimg = shop\确定-按下.tga
+		Hoverimg = shop\确定-经过.tga
+		disableimg = shop\确定-禁用.tga
+		alpha = 256
+	}
+
+	//取消
+	object button = 372
+	{
+		type = button
+		rect = 131,126,71,36
+		upimg = shop\取消-正常.tga
+		downimg = shop\取消-按下.tga
+		Hoverimg = shop\取消-经过.tga
+		disableimg = shop\取消-禁用.tga
+		alpha = 256
+	}
+}
+
+//密聊玩家列窗口
+object Window = 38
+{
+	type = window
+	rect = 0,0,95,110
+	src = PlayerList.tga
+	visible = 1
+	modal = 0
+	alpha = 220
+	mask = 1
+
+	//密聊玩家列表框
+	object ListBox = 381
+	{
+		type = listbox
+		rect = 0,0,95,110
+		//src = PlayerList.tga
+		//scrollimg = scrollbar.bmp
+		//forecolor = 255,255,0
+		alpha = 200
+	}
+}
+
+//返回消息框
+object Window = 39
+{
+	type = window
+	rect = 0,0,178,99
+	src = 游戏窗口\新手教程退出面板.tga
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+	//确定
+	object button = 391
+	{
+		type = button
+		rect = 17,73,45,22
+		upimg = 地图选择确定1.bmp
+		downimg = 地图选择确定2.bmp
+		Hoverimg = 地图选择确定3.bmp
+		disableimg = 地图选择确定4.bmp
+		alpha = 256
+	}
+
+	//关闭
+	object button = 392
+	{
+		type = button
+		rect = 117,73,45,22
+		upimg = 地图选择关闭1.bmp
+		downimg = 地图选择关闭2.bmp
+		Hoverimg = 地图选择关闭3.bmp
+		disableimg = 地图选择关闭4.bmp
+		alpha = 256
+	}
+}
+
+// 这个窗口要放在最后
+object WindowHelp = 99
+{
+	type = window
+	rect = 0,0,400,300
+	src = 帮助菜单.bmp
+	visible = 1
+	modal = 0
+	alpha = 256
+	mask = 1
+
+
+}

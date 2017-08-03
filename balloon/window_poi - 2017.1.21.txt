@@ -1,0 +1,594 @@
+//poi
+
+object Window_Plaza = 1000
+{
+	type = window
+	rect = 0,0,800,600
+	src = Medias\登陆界面背景2.bmp
+	alpha = 255
+
+	visible = 1
+	movable = 0
+	enabled = 1
+	topmost = 0
+
+	fontname = 宋体
+	fontsize = 10
+
+	object ButtonLine = 100012
+	{
+		type = ButtonLine
+		rect = 323,339,83,29
+		src = Medias\登陆界面-登陆按钮2.tga
+	}
+
+	object BtCancel = 100013
+	{
+		type = ButtonLine
+		rect = 443,342,63,26
+		src = Medias\登陆界面-离开按钮2.tga
+	}
+}
+
+object Window_Plaza = 1001
+{
+	type = window
+	rect = 0,0,800,600
+	src = Medias\Plaza_Bk.bmp
+	alpha = 255
+
+	visible = 1
+	movable = 0
+	enabled = 1
+	topmost = 0
+
+	fontname = 宋体
+	fontsize = 10
+
+	//自由频道
+	object CheckBoxLine = 100100
+	{
+		type = CheckBoxLine_Channel
+		rect = 406,64,104,29
+		src = Medias\ChannelFree.bmp
+		index = 0
+	}
+
+	//新手频道
+	object CheckBoxLine = 100101
+	{
+		type = CheckBoxLine_Channel
+		rect = 509,64,104,29
+		src = Medias\ChannelNew.bmp
+		index = 1
+	}
+
+	//高手频道
+	object CheckBoxLine = 100102
+	{
+		type = CheckBoxLine_Channel
+		rect = 612,64,104,29
+		src = Medias\ChannelOld.bmp
+		index = 2
+	}
+	object CheckBox2 = 100112
+	{
+		type = CheckBox2
+		rect = 412,97,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100113
+	{
+		type = CheckBox2
+		rect = 597,97,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100114
+	{
+		type = CheckBox2
+		rect = 412,132,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100115
+	{
+		type = CheckBox2
+		rect = 597,132,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100116
+	{
+		type = CheckBox2
+		rect = 412,167,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100117
+	{
+		type = CheckBox2
+		rect = 597,167,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100118
+	{
+		type = CheckBox2
+		rect = 412,202,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100119
+	{
+		type = CheckBox2
+		rect = 597,202,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100120
+	{
+		type = CheckBox2
+		rect = 412,237,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100121
+	{
+		type = CheckBox2
+		rect = 597,237,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100122
+	{
+		type = CheckBox2
+		rect = 412,272,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100123
+	{
+		type = CheckBox2
+		rect = 597,272,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100124
+	{
+		type = CheckBox2
+		rect = 412,307,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100125
+	{
+		type = CheckBox2
+		rect = 597,307,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100126
+	{
+		type = CheckBox2
+		rect = 412,342,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100127
+	{
+		type = CheckBox2
+		rect = 597,342,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100128
+	{
+		type = CheckBox2
+		rect = 412,377,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100129
+	{
+		type = CheckBox2
+		rect = 597,377,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100130
+	{
+		type = CheckBox2
+		rect = 412,412,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object CheckBox2 = 100131
+	{
+		type = CheckBox2
+		rect = 597,412,181,35
+		upimg = Medias\ServerListBk.tga
+		downimg = Medias\ServerListBkOn.tga
+	}
+	object ButtonLine = 100150
+	{
+		type = ButtonLine
+		rect = 450,448,90,37
+		src = Medias\ServerList_TurnUp.tga
+	}
+	object ButtonLine = 100151
+	{
+		type = ButtonLine
+		rect = 653,448,90,37
+		src = Medias\ServerList_TurnDown.tga
+	}
+	//离开按钮
+	object ButtonLine = 100161
+	{
+		type = ButtonLine
+		rect = 722,550,68,37
+		src = Medias\But_Leave.tga
+	}
+	//帮助按钮
+	object ButtonLine = 100162
+	{
+		type = ButtonLine
+		rect = 651,550,68,37
+		src = Medias\But_Help.tga
+	}
+	//菜单按钮
+	object ButtonLine = 100163
+	{
+		type = ButtonLine
+		rect = 580,550,68,37
+		src = Medias\But_Menu.tga
+	}
+	//英雄榜
+	object ButtonLine = 100165
+	{
+		type = ButtonLine
+		rect = 579,500,211,46
+		src = Medias\But_Hero.tga
+	}
+	
+	//区域选择
+	object ButtonLine = 100166
+	{
+		type = ButtonLine
+		rect = 489,500,90,90
+		src = Medias\But_Area.tga
+	}
+	//快速进入
+	object ButtonLine = 100167
+	{
+		type = ButtonLine
+		rect = 399,500,90,90
+		src = Medias\But_Quick.tga
+	}
+}
+
+object Room = 1002
+{
+	type = window
+	rect = 0,0,800,600
+	src = Medias\Zone_Bk.bmp
+	alpha = 255
+
+	visible = 1
+	movable = 0
+	enabled = 1
+	topmost = 0
+
+	fontname = 宋体
+	fontsize = 10
+
+	//飘币
+	object Shop = 100201
+	{
+		type = staticbitmap
+		src = Medias\Zone_Store.tga
+		rect = 584,478,207,80
+		alpha = 255			
+	}
+
+	//逛逛商店
+	object button = 100202
+	{
+		type = button
+		rect = 604,480,171,51
+		upimg = balloon\Wnd\逛逛商店1.tga
+		downimg = balloon\Wnd\逛逛商店2.tga
+		Hoverimg = balloon\Wnd\逛逛商店4.tga
+		disableimg = balloon\Wnd\逛逛商店5.tga
+		alpha = 256
+	}
+
+	//返回按钮
+	object ButtonLine = 100203
+	{
+		type = ButtonLine
+		rect = 727,560,68,37
+		src = Medias\But_Return.tga
+	}
+	//帮助按钮
+	object ButtonLine = 100204
+	{
+		type = ButtonLine
+		rect = 656,560,68,37
+		src = Medias\But_Help.tga
+	}
+	//菜单按钮
+	object ButtonLine = 100205
+	{
+		type = ButtonLine
+		rect = 585,560,68,37
+		src = Medias\But_Menu.tga
+	}
+
+	//快速进入房间
+	object ButtonLine = 100206
+	{
+		type = ButtonLine
+		rect = 436,380,135,46
+		src = Medias\But_Enter.tga
+	}
+
+	//创建房间
+	object ButtonLine = 100207
+	{
+		type = ButtonLine
+		rect = 342,383,88,39
+		src = Medias\But_CreateRoom.tga
+	}
+
+	//聊天表情按钮
+	object ButtonLine = 100208
+	{
+		type = ButtonLine
+		rect = 486,570,34,26
+		src = Medias\Chat_Faces.tga
+	}
+
+	//聊天发送按钮
+	object Chat_Send55x29 = 100209
+	{
+		type = ButtonLine
+		rect = 522,568,55,29
+		src = Medias\Chat_Send.tga
+	}
+
+	//下一页按钮
+	object Chat_Send55x29 = 100210
+	{
+		type = ButtonLine
+		rect = 249,380,74,33
+		src = Medias\Room_TurnDown.tga
+	}
+
+	//上一页按钮
+	object Chat_Send55x29 = 100211
+	{
+		type = ButtonLine
+		rect = 163,380,74,33
+		src = Medias\Room_TurnUp.tga
+	}
+
+	//
+	object Combox = 100201
+	{
+		type = staticbitmap
+		src = Medias\Combox_Head.tga
+		rect = 17,381,135,31
+		alpha = 255			
+	}
+
+	//
+	object ButtonLine = 100211
+	{
+		type = ButtonLine
+		rect = 125,385,25,25
+		src = Medias\Combox_But.tga
+	}
+
+}
+
+object Window_Play = 1003
+{
+	//游戏窗口(空)
+	type = window
+	rect = 0,0,800,600
+
+	visible = 1
+	movable = 0
+	enabled = 1
+	topmost = 0
+
+	fontname = 宋体
+	fontsize = 10
+}
+
+object Window_Shop = 1100
+{
+	//商店界面
+	type = window
+	rect = 0,0,467,597
+	src = balloon\Pic\Shop\商店区底图.tga
+	visible = 1
+	alpha = 256
+	movable = 0
+	enabled = 1
+
+	//上
+	object button = 110001
+	{
+		type = button
+		rect = 413,140,32,32
+		upimg = balloon\Wnd\shop\大箭头上-正常.tga
+		downimg = balloon\Wnd\shop\大箭头上-按下.tga
+		Hoverimg = balloon\Wnd\shop\大箭头上-经过.tga
+		disableimg = balloon\Wnd\shop\大箭头上-禁用.tga
+		alpha = 256
+	}
+
+	//下
+	object button = 110002
+	{
+		type = button
+		rect = 413,278,32,32
+		upimg = balloon\Wnd\shop\大箭头下-正常.tga
+		downimg = balloon\Wnd\shop\大箭头下-按下.tga
+		Hoverimg = balloon\Wnd\shop\大箭头下-经过.tga
+		disableimg = balloon\Wnd\shop\大箭头下-禁用.tga
+		alpha = 256
+	}
+
+	//购买
+	object button = 110003
+	{
+		type = button
+		rect = 399,356,59,59
+		upimg = balloon\Wnd\shop\商店购买-正常.tga
+		downimg = balloon\Wnd\shop\商店购买-按下.tga
+		Hoverimg = balloon\Wnd\shop\商店购买-经过.tga
+		disableimg = balloon\Wnd\shop\商店购买-禁用.tga
+		alpha = 256
+	}
+
+	//赠送
+	object button = 110004
+	{
+		type = button
+		rect = 403,424,51,29
+		upimg = balloon\Wnd\shop\商店赠送-正常.tga
+		downimg = balloon\Wnd\shop\商店赠送-按下.tga
+		Hoverimg = balloon\Wnd\shop\商店赠送-经过.tga
+		disableimg = balloon\Wnd\shop\商店赠送-禁用.tga
+		alpha = 256
+	}
+
+	//索要
+	object button = 110005
+	{
+		type = button
+		rect = 403,457,51,29
+		upimg = balloon\Wnd\shop\商店索要-正常.tga
+		downimg = balloon\Wnd\shop\商店索要-按下.tga
+		Hoverimg = balloon\Wnd\shop\商店索要-经过.tga
+		disableimg = balloon\Wnd\shop\商店索要-禁用.tga
+		alpha = 256
+	}
+
+	//充值
+	object button = 110006
+	{
+		type = button
+		rect = 177,527,63,63
+		upimg = balloon\Wnd\shop\冲值按钮-正常.tga
+		downimg = balloon\Wnd\shop\冲值按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\冲值按钮-经过.tga
+		disableimg = balloon\Wnd\shop\冲值按钮-禁用.tga
+		alpha = 256
+	}
+
+	//退出
+	object button = 110007
+	{
+		type = button
+		rect = 256,535,101,58
+		upimg = balloon\Wnd\shop\退出按钮-正常.tga
+		downimg = balloon\Wnd\shop\退出按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\退出按钮-经过.tga
+		disableimg = balloon\Wnd\shop\退出按钮-禁用.tga
+		alpha = 256
+	}
+
+	//装备
+	object button = 110008
+	{
+		type = button
+		rect = 378,0,55,57
+		upimg = balloon\Wnd\shop\我的装备按钮-正常.tga
+		downimg = balloon\Wnd\shop\我的装备按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\我的装备按钮-经过.tga
+		disableimg = balloon\Wnd\shop\我的装备按钮-禁用.tga
+		alpha = 256
+	}
+
+	//全部装备
+	object button = 110009
+	{
+		type = button
+		rect = 438,0,30,57
+		upimg = balloon\Wnd\shop\全部装备按钮-正常.tga
+		downimg = balloon\Wnd\shop\全部装备按钮-按下.tga
+		Hoverimg = balloon\Wnd\shop\全部装备按钮-经过.tga
+		disableimg = balloon\Wnd\shop\全部装备按钮-禁用.tga
+		alpha = 256
+	}
+
+	//推荐复选按钮
+	object button = 110010
+	{
+		type = CheckBoxShop
+		rect = 36,21,32,21
+		downimg = balloon\Pic\Shop\商店-推荐-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-推荐-经过.tga
+		pic_rect = 2,1,100,61
+		src = balloon\Pic\Shop\商店目录-推荐.tga
+		val_A = 1
+		alpha = 255			
+	}
+
+	//角色复选按钮
+	object button = 110011
+	{
+		type = CheckBoxShop
+		rect = 106,21,32,21
+		downimg = balloon\Pic\Shop\商店-角色-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-角色-经过.tga
+		pic_rect = 72,1,100,61
+		src = balloon\Pic\Shop\商店目录-角色.tga
+		val_A = 2
+		alpha = 255			
+	}
+
+	//装饰复选按钮
+	object button = 110012
+	{
+		type = CheckBoxShop
+		rect = 176,21,32,21
+		downimg = balloon\Pic\Shop\商店-装饰-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-装饰-经过.tga
+		pic_rect = 142,1,100,61
+		src = balloon\Pic\Shop\商店目录-装饰.tga
+		val_A = 3
+		alpha = 255			
+	}
+
+	//道具复选按钮
+	object button = 110013
+	{
+		type = CheckBoxShop
+		rect = 246,21,32,21
+		downimg = balloon\Pic\Shop\商店-道具-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-道具-经过.tga
+		pic_rect = 212,1,100,61
+		src = balloon\Pic\Shop\商店目录-道具.tga
+		val_A = 4
+		alpha = 255			
+	}
+
+	//宠物复选按钮
+	object button = 110014
+	{
+		type = CheckBoxShop
+		rect = 316,21,32,21
+		downimg = balloon\Pic\Shop\商店-宠物-经过.tga
+		Hoverimg = balloon\Pic\Shop\商店-宠物-经过.tga
+		pic_rect = 282,1,100,61
+		src = balloon\Pic\Shop\商店目录-宠物.tga
+		val_A = 5
+		alpha = 255			
+	}
+}
