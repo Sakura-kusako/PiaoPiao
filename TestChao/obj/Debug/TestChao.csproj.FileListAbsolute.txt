@@ -1,4 +1,0 @@
-F:\VS2017.data\ppNetTest\TestChao\bin\Debug\TestChao.exe
-F:\VS2017.data\ppNetTest\TestChao\bin\Debug\TestChao.pdb
-F:\VS2017.data\ppNetTest\TestChao\obj\Debug\TestChao.exe
-F:\VS2017.data\ppNetTest\TestChao\obj\Debug\TestChao.pdb
