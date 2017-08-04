@@ -1,0 +1,7 @@
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Data.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Data.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Room.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Room.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\obj\Debug\Data.csprojResolveAssemblyReference.cache
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\obj\Debug\Data.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\obj\Debug\Data.pdb

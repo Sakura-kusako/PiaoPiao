@@ -1,0 +1,13 @@
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\MainC.exe
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\MainC.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.csprojResolveAssemblyReference.cache
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.Form1.resources
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.Properties.Resources.resources
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.csproj.GenerateResource.Cache
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.exe
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Data.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Room.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Data.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Room.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.FormCreatePlayer.resources

@@ -5,3 +5,10 @@ F:\VS2017.data\ppNetTest\ppNetTest\bin\Debug\ClientPublic.pdb
 F:\VS2017.data\ppNetTest\ppNetTest\obj\Debug\ppTestS.csprojResolveAssemblyReference.cache
 F:\VS2017.data\ppNetTest\ppNetTest\obj\Debug\ppNetTest.exe
 F:\VS2017.data\ppNetTest\ppNetTest\obj\Debug\ppNetTest.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ppNetTest\bin\Debug\ppNetTest.exe
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ppNetTest\bin\Debug\ppNetTest.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ppNetTest\bin\Debug\ClientPublic.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ppNetTest\bin\Debug\ClientPublic.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ppNetTest\obj\Debug\ppTestS.csprojResolveAssemblyReference.cache
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ppNetTest\obj\Debug\ppNetTest.exe
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ppNetTest\obj\Debug\ppNetTest.pdb
