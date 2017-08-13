@@ -11,3 +11,4 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Room.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Data.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Room.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.FormCreatePlayer.resources
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.FormGame.resources

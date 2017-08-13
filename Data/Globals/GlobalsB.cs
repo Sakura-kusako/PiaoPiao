@@ -45,6 +45,22 @@ namespace Data.Globals
             RootPath = a;
             return a;
         }
+        public static string IntToString(int x,int zeroNum = 0)
+        {
+            //int转string，不够补0，补0位数zeroNum
+            string ret = x + "";
 
+            int n = 10;
+            for (int i = 0; i < zeroNum; i++)
+            {
+                if(x<n)
+                {
+                    ret = "0" + ret;
+                }
+                n *= 10;
+            }
+
+            return ret;
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Data.XML
 {
@@ -15,7 +16,7 @@ namespace Data.XML
         public static void WritePlayer(string path, PlayerData player)
         {
             CheckExists(path, player);
-            path = path + @"Setting\PlayerData\" + player.GetQQ() + @"\";
+            path = path + @"PlayerData\" + (player.GetQQ() + "_"+player.GetExID()) + @"\";
             WriteBase(path + "BaseData.xml", player);
             for (int i = 0; i < 7; i++)
             {
@@ -31,7 +32,7 @@ namespace Data.XML
                 Directory.CreateDirectory(file);
             }
 
-            file = path + @"PlayerData\" + player.GetQQ();
+            file = path + @"PlayerData\" + (player.GetQQ() + "_" + player.GetExID());
             if (Directory.Exists(file) == false)
             {
                 Directory.CreateDirectory(file);
@@ -156,6 +157,115 @@ namespace Data.XML
 
             //保存Xml文档
             xmlDoc.Save(path);
+        }
+
+        public static bool ReadPlayer(string path, PlayerData player)
+        {
+            //path为账号文件夹
+            if (player == null)
+            {
+                return false;
+            }
+            if (Directory.Exists(path) == false)
+            {
+                return false;
+            }
+
+            //提取账号
+            var strs = path.Split('\\');
+            if (strs.Length < 0) return false;
+            var str = strs[strs.Length - 1];
+            strs = str.Split('_');
+            if (strs.Length != 2) return false;
+            player.QQ = strs[0];
+            player.ExID = strs[1];
+
+            //加载基本信息
+            if(ReadBase(path + @"\BaseData.xml", player) == false) return false;
+
+            //加载装备信息
+            for (int i = 0; i <= 6; i++)
+            {
+                if (ReadEquip(path + @"\Equip_" + i + ".xml", player.items[i]) == false)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private static bool ReadBase(string path,PlayerData player)
+        {
+            if (File.Exists(path) == false) return false;
+
+            //将XML文件加载进来
+            XDocument document = XDocument.Load(path);
+            //获取到XML的根元素进行操作
+            XElement root = document.Root;
+
+            foreach (XElement item1 in root.Elements())
+            {
+                var name = item1.Name.LocalName;
+                if (name == "名字")
+                {
+                    player.name = XmlManager.Try_Get_Attribute_Value_Str(item1.Attribute("Value"));
+                }
+                else if (name == "等级")
+                {
+                    player.level = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "经验值")
+                {
+                    player.exp = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "击落数")
+                {
+                    player.hit = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "飘币")
+                {
+                    player.piaobi = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "Q点")
+                {
+                    player.Qbi = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "胜")
+                {
+                    player.vs_win = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "负")
+                {
+                    player.vs_lose = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "平")
+                {
+                    player.vs_peace = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+                else if (name == "角色")
+                {
+                    player.type = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                }
+            }
+            return true;
+        }
+        private static bool ReadEquip(string path, int[] items)
+        {
+            if (File.Exists(path) == false) return false;
+
+            //将XML文件加载进来
+            XDocument document = XDocument.Load(path);
+            //获取到XML的根元素进行操作
+            XElement root = document.Root;
+
+            foreach (XElement item1 in root.Elements())
+            {
+                int id = XmlManager.Try_Get_Attribute_Value(item1.Attribute("ID"));
+                if (id > 0 && id < items.Length)
+                {
+                    items[id] = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Type"));
+                }
+            }
+            return true;
         }
     }
 }

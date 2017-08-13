@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="gb2312"?>
+<Root>
+  <_____气球_____ ID="1" Type="2" Sale="Yes" File="Pic\角色\气球\苹果.png" />
+  <_____头发_____ ID="2" Type="2" Sale="Yes" File="pic\角色\头发\氧气女孩.png" />
+  <_____发饰_____ ID="3" Type="2" Sale="No " File="pic\角色\头饰\种子头花.png" />
+  <_____眼睛_____ ID="4" Type="2" Sale="No " File="pic\角色\眼睛\氧气女孩.png" />
+  <_____眼镜_____ ID="5" Type="0" Sale="   " File="null" />
+  <_____耳环_____ ID="6" Type="0" Sale="   " File="null" />
+  <_____脸型_____ ID="7" Type="1" Sale="No " File="Pic\角色\脸型\白.png" />
+  <__脸蛋装饰物__ ID="8" Type="0" Sale="   " File="null" />
+  <_____胡子_____ ID="9" Type="0" Sale="   " File="null" />
+  <___座舱主体___ ID="10" Type="2" Sale="Yes" File="pic\角色\座舱\叶子船.png" />
+  <____坏座舱____ ID="11" Type="2" Sale="No " File="pic\角色\座舱\叶子船-坏.png" />
+  <____舱首像____ ID="12" Type="0" Sale="   " File="null" />
+  <____舱尾旗____ ID="13" Type="0" Sale="   " File="null" />
+  <___幻影效果___ ID="14" Type="0" Sale="   " File="null" />
+  <___光圈效果___ ID="15" Type="0" Sale="   " File="null" />
+  <____大火焰____ ID="16" Type="1" Sale="No " File="Pic\角色\火焰\大火焰.png" />
+  <____小火焰____ ID="17" Type="1" Sale="No " File="Pic\角色\火焰\小火焰.png" />
+  <_____身体_____ ID="18" Type="2" Sale="No " File="Pic\角色\身体\黑色紧身衣.png" />
+  <______手______ ID="19" Type="3" Sale="No " File="Pic\角色\手\普通肉色.png" />
+  <_____嘴巴_____ ID="20" Type="1" Sale="No " File="Pic\角色\嘴巴\正常.png" />
+  <_____气垫_____ ID="21" Type="1" Sale="No " File="Pic\角色\座舱\座舱气垫.png" />
+  <___下落表情___ ID="22" Type="1" Sale="No " File="Pic\角色\表情\下落表情.png" />
+  <___被踩表情___ ID="23" Type="1" Sale="No " File="Pic\角色\表情\打气被踩表情.png" />
+  <___打气表情___ ID="24" Type="1" Sale="No " File="Pic\角色\表情\打气表情.png" />
+  <_____哭泣_____ ID="25" Type="1" Sale="No " File="Pic\角色\哭.png" />
+  <_____眼泪_____ ID="26" Type="1" Sale="No " File="Pic\角色\大哭眼泪.png" />
+  <_____宠物_____ ID="27" Type="1" Sale="No " File="Pic\角色\宠物\打气宠物吹气动画.png" />
+  <宠物出现的光环 ID="28" Type="1" Sale="No " File="Pic\角色\打气时宠物出现.png" />
+  <宠物离开的光环 ID="29" Type="1" Sale="No " File="Pic\角色\复活分解-蓝.png" />
+  <___打气完成___ ID="30" Type="1" Sale="No " File="Pic\角色\打气完成.png" />
+  <_____电击_____ ID="31" Type="1" Sale="No " File="Pic\角色\电击状态.png" />
+  <_____冒烟_____ ID="32" Type="1" Sale="No " File="Pic\角色\冒烟黑人.png" />
+  <___气泡图片___ ID="33" Type="1" Sale="No " File="Pic\Role\出生.png" />
+  <___下落手型___ ID="34" Type="1" Sale="No " File="Pic\角色\下落拳头摆动.png" />
+  <___气球爆炸___ ID="35" Type="1" Sale="No " File="Pic\角色\气球\星星爆.png" />
+  <___座舱爆炸___ ID="36" Type="1" Sale="No " File="Pic\角色\人爆.png" />
+  <_____表情_____ ID="37" Type="1" Sale="No " File="Pic\角色\表情\汗.png" />
+  <_____幻影_____ ID="38" Type="1" Sale="No " File="Pic\角色\拖尾\角色基本幻影.png" />
+  <_____尾随_____ ID="39" Type="1" Sale="No " File="Pic\角色\拖尾\星星.png" />
+  <_____翅膀_____ ID="40" Type="0" Sale="   " File="null" />
+  <_____名片_____ ID="41" Type="0" Sale="   " File="null" />
+  <_____背景_____ ID="42" Type="0" Sale="   " File="null" />
+  <_____后景_____ ID="43" Type="0" Sale="   " File="null" />
+</Root>

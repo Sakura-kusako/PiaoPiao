@@ -7,9 +7,9 @@ namespace Room
 {
     public class PlayerData
     {
-        public string QQ = "857631673";
+        public string QQ = "88888888";
         public string ExID = "0";
-        public string name = "大 草";
+        public string name = "name";
         public int exp = 0;
         public int hit = 0;
         public int piaobi = 0;
@@ -46,6 +46,10 @@ namespace Room
         public string GetQQ()
         {
             return QQ;
+        }
+        public string GetExID()
+        {
+            return ExID;
         }
         public string GetName()
         {

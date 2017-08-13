@@ -247,7 +247,7 @@ namespace Data.XML
                 this.shopItem.Add(t);
             }
         }
-        private int Try_Get_Attribute_Value(XAttribute t)
+        public static int Try_Get_Attribute_Value(XAttribute t)
         {
             if (t == null)
             {
@@ -258,7 +258,7 @@ namespace Data.XML
                 return int.Parse(t.Value);
             }
         }
-        private bool Try_Get_Attribute_Value_Bool(XAttribute t)
+        public static bool Try_Get_Attribute_Value_Bool(XAttribute t)
         {
             if (t == null)
             {
@@ -273,7 +273,7 @@ namespace Data.XML
                 return true;
             }
         }
-        private float Try_Get_Attribute_Value_F(XAttribute t)
+        public static float Try_Get_Attribute_Value_F(XAttribute t)
         {
             if (t == null)
             {
@@ -291,7 +291,7 @@ namespace Data.XML
                 }
             }
         }
-        private string Try_Get_Attribute_Value_Str(XAttribute t)
+        public static string Try_Get_Attribute_Value_Str(XAttribute t)
         {
             if (t == null)
             {
@@ -302,7 +302,7 @@ namespace Data.XML
                 return t.Value;
             }
         }
-        private string Try_Get_Attribute_Value_File(XAttribute t)
+        public static string Try_Get_Attribute_Value_File(XAttribute t)
         {
             if (t == null)
             {
