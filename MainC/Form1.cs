@@ -16,7 +16,7 @@ namespace MainC
     public partial class Form1 : Form
     {
         List<PlayerData> players = new List<PlayerData>();
-        FormGame formGame;
+        public FormGame formGame;
 
         public Form1()
         {
@@ -88,6 +88,30 @@ namespace MainC
         private void AddTextLine(TextBox tx,string str)
         {
             tx.AppendText(str + System.Environment.NewLine);
+        }
+        public void AddTextGame(string str)
+        {
+            AddTextLine(textBox5, str);
+        }
+        public void ShowText7(string str)
+        {
+            textBox7.Text = str;
+        }
+        public void ShowText8(string str)
+        {
+            textBox8.Text = str;
+        }
+        public void ShowText9(string str)
+        {
+            textBox9.Text = str;
+        }
+        public void ShowText10(string str)
+        {
+            textBox10.Text = str;
+        }
+        public void ShowText11(string str)
+        {
+            textBox11.Text = str;
         }
     }
 }

@@ -5,3 +5,17 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Room.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\obj\Debug\Data.csprojResolveAssemblyReference.cache
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\obj\Debug\Data.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\obj\Debug\Data.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Animation.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Desktop.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Direct3D9.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.DirectSound.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.DXGI.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Mathematics.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Animation.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Desktop.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Direct3D9.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.DirectSound.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.DXGI.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Mathematics.xml

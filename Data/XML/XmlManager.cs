@@ -54,6 +54,7 @@ namespace Data.XML
                 MessageBox.Show("无法打开: " + path, "ERROR");
                 return;
             }
+            itemPics.Clear();
 
             //将XML文件加载进来
             XDocument document = XDocument.Load(path);
@@ -97,6 +98,7 @@ namespace Data.XML
                 MessageBox.Show("无法打开: " + path, "ERROR");
                 return;
             }
+            pics.Clear();
 
             //将XML文件加载进来
             XDocument document = XDocument.Load(path);
@@ -134,6 +136,8 @@ namespace Data.XML
                 MessageBox.Show("无法打开: " + path, "ERROR");
                 return;
             }
+            maps.Clear();
+            maps.Add(null); //第一个为空
 
             //将XML文件加载进来
             XDocument document = XDocument.Load(path);
@@ -222,6 +226,8 @@ namespace Data.XML
                 MessageBox.Show("商店列表加载失败 无法打开: " + path);
                 return;
             }
+            shopItem.Clear();
+            shopItem.Add(null);
 
             //将XML文件加载进来
             XDocument document = XDocument.Load(path);
@@ -397,6 +403,7 @@ namespace Data.XML
                 MessageBox.Show("无法打开: " + path, "ERROR");
                 return;
             }
+            Clear();
 
             //将XML文件加载进来
             XDocument document = XDocument.Load(path);

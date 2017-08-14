@@ -12,3 +12,10 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Data.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Room.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.FormCreatePlayer.resources
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.FormGame.resources
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\MainC.exe.config
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.Direct3D9.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.Mathematics.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.Direct3D9.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.Mathematics.xml
