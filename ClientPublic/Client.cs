@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -21,16 +22,21 @@ namespace ClientPublic
          * ·获取数据接收列表
          * ·获取连接延时
          * ·获取IPEndPoint
+         * ·更新内部时间（每帧）
          */
+        private const int timeLost = 10000; //掉线时间
 
         private IPAddress IP;
         private int Port = 0;
         private bool isConnect = false; //连接状态
         private int delay = 0; //延时
-        private int ID = 0; //发送编号
+        private int ID = 1; //发送编号
+        private long delayTime = 0;
+        private Stopwatch sw = new Stopwatch();
 
         private List<ClientData> SendList = new List<ClientData>();
         private List<ClientData> RecvList = new List<ClientData>();
+        private List<ClientDataID> RecvIDList = new List<ClientDataID>();
 
         public Client()
         {
@@ -40,6 +46,8 @@ namespace ClientPublic
         {
             IP = ep.Address;
             Port = ep.Port;
+            sw.Restart();
+            delayTime = sw.ElapsedMilliseconds;
         }
         public bool IsConnect()
         {
@@ -53,9 +61,13 @@ namespace ClientPublic
             Port = ep.Port;
             isConnect = true;
             delay = 0;
+            delayTime = 0;
             ID = 0;
+            sw.Restart();
+            delayTime = sw.ElapsedMilliseconds;
             SendList.Clear();
             RecvList.Clear();
+            RecvIDList.Clear();
         }
         public void ReConnect(IPEndPoint ep)
         {
@@ -71,10 +83,16 @@ namespace ClientPublic
             isConnect = false;
             SendList.Clear();
             RecvList.Clear();
+            RecvIDList.Clear();
         }
         public void AddSendData(ClientData dat)
         {
             //将数据添加到数据发送列表
+            if(dat.Type == ClientData.CLIENT_TYPE.SEND)
+            {
+                dat.ID = this.ID;
+                this.ID++;
+            }
             lock (SendList)
             {
                 SendList.Add(dat);
@@ -99,6 +117,7 @@ namespace ClientPublic
                         var time = DateTime.Now;
                         int dataTime = (time.Minute * 60000) + (time.Second * 1000) + (time.Millisecond) + 3600000;
                         delay = (dataTime - dat.GetImpulseTime()) % 3600000;
+                        delayTime = sw.ElapsedMilliseconds;
                         return;
                     }
                 case ClientData.CLIENT_TYPE.SEND_ONCE:
@@ -116,6 +135,11 @@ namespace ClientPublic
                         else
                         {
                             //不存在
+                            //检查是否已经接收
+                            if (CheckRecvID(dat.ID) == true)
+                            {
+                                return;
+                            }
                             //检查是否在接收列表
                             if(CheckRecvExist(dat))
                             {
@@ -166,6 +190,30 @@ namespace ClientPublic
         {
             return new IPEndPoint(IP, Port);
         }
+        public void UpdateTime()
+        {
+            var t = sw.ElapsedMilliseconds;
+            if(t - delayTime > delay)
+            {
+                delay = (int)(t - delayTime);
+            }
+
+            lock (RecvIDList)
+            {
+                int i = 0;
+                foreach (var datID in RecvIDList)
+                {
+                    if (t - datID.time > timeLost)
+                    {
+                        RecvIDList.RemoveAt(i);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+        }
 
         private bool AddRecvSend(ClientData dat)
         {
@@ -213,6 +261,72 @@ namespace ClientPublic
                     i++;
                 }
             }
+        }
+        private bool CheckRecvID(int id)
+        {
+            int i = 0;
+            lock(RecvIDList)
+            {
+                foreach (var datID in RecvIDList)
+                {
+                    int dx = datID.IsIn(id);
+                    if (dx == 0) return true;
+                    else if(dx < -1)
+                    {
+                        RecvIDList.Insert(i, new ClientDataID(id,sw.ElapsedMilliseconds));
+                        return false;
+                    }
+                    else if(dx == -1)
+                    {
+                        datID.minID--;
+                        datID.time = sw.ElapsedMilliseconds;
+                        return false;
+                    }
+                    else if(dx == 1)
+                    {
+                        datID.maxID++;
+                        datID.time = sw.ElapsedMilliseconds;
+                        if (i + 1 < RecvIDList.Count)
+                        {
+                            if(datID.AndClientDataID(RecvIDList[i + 1]) == true)
+                            {
+                                RecvIDList.RemoveAt(i + 1);
+                            }
+                        }
+                        return false;
+                    }
+                    i++;
+                }
+                RecvIDList.Insert(i, new ClientDataID(id, sw.ElapsedMilliseconds));
+            }
+            return false;
+        }
+    }
+    public class ClientDataID
+    {
+        public int minID = 0;
+        public int maxID = 0;
+        public long time = 0;
+
+        public ClientDataID(int id,long t)
+        {
+            minID = maxID = id;
+            time = t;
+        }
+        public int IsIn(int id)
+        {
+            if (id < minID) return id - minID;
+            else if (id > maxID) return id - maxID;
+            else return 0;
+        }
+        public bool AndClientDataID(ClientDataID datID)
+        {
+            if(maxID-datID.minID>=-1)
+            {
+                maxID = datID.maxID;
+                return true;
+            }
+            return false;
         }
     }
 }

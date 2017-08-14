@@ -13,12 +13,14 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace Data.PPDevices
 {
+    /*
     struct Vertex
     {
         public Vector4 position;
         public Vector4 texture;
         public ColorBGRA color;
     }
+    */
     public class PPDevice
     {
         public VertexDeclaration Decl_Tex;

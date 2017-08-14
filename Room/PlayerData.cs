@@ -144,7 +144,7 @@ namespace Room
         {
             //传送玩家属性
             byte[] bye = new byte[10];
-            int index = 9;
+            //int index = 9;
 
             return bye;
         }

@@ -95,7 +95,7 @@ namespace Data.Windows
     {
         public string str = "文字";
         public float size = 12;
-        public string TextType = "宋体";
+        public new string TextType = "宋体";
         public Color color = new Color(0xff, 0xff, 0xff);
         public Sprite_Text(float x = 0, float y = 0, string str = "文字", int alpha = 255, int color = 0xffffff, float width = -1, float size = 12, string Type = "宋体")
         {

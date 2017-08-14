@@ -20,8 +20,11 @@ namespace PPTestC
                 int delay = clientC.GetDelay();
                 if (delay > 0)
                 {
-                    //Console.WriteLine("clients " + " : " + delay + " ms");
+                    Console.WriteLine("clients " + " : " + delay + " ms");
                 }
+                clientC.UpdateTime();
+                if (clientC.IsConnect() == false)
+                    break;
             }
         }
     }

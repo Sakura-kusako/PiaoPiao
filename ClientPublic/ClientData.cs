@@ -103,7 +103,7 @@ namespace ClientPublic
         public void CreateSignIn()
         {
             //转变为登录信息
-            Type = CLIENT_TYPE.SEND;
+            Type = CLIENT_TYPE.SEND_ONCE;
             Data = new byte[4];
             Buffer.BlockCopy(BitConverter.GetBytes((int)(CLIENT_DATA_TYPE.SIGN_IN)), 0, Data, 0, 4);
         }

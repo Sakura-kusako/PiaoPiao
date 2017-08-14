@@ -19,6 +19,7 @@ namespace ClientPublic
          * ·将数据添加到数据发送列表
          * ·获取数据接收列表
          * ·获取连接延时
+         * ·更新延时
          */
         private bool isConnect = false;
         private int Port = 10800;
@@ -55,7 +56,7 @@ namespace ClientPublic
             }
 
             //创建一个UdpClient对象，10800为接收端口
-            IPEndPoint ep = new IPEndPoint(IPAddress.Any,10800);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Any,Port);
             Client = new UdpClient(ep);
 
             //消除远程错误
@@ -168,6 +169,19 @@ namespace ClientPublic
             }
             return 0;
         }
+        public void UpdateTime()
+        {
+            Client client;
+            for (int i = 0; i < 6; i++)
+            {
+                client = clients[i];
+                client.UpdateTime();
+                if(client.GetDelay()>10000)
+                {
+                    client.LostConnect();
+                }
+            }
+        }
 
         private void Callback(IAsyncResult ar)
         {
@@ -236,7 +250,7 @@ namespace ClientPublic
                 if (isConnect == false) return;
                 Client.EndSend(ar);
             }
-            catch(Exception e)
+            catch(Exception)
             {
 
             }

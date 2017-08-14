@@ -19,6 +19,7 @@ namespace ClientPublic
          * ·将数据添加到数据发送列表
          * ·获取数据接收列表
          * ·获取连接延时
+         * ·更新延时
          */
         private bool isConnect = false;
         private IPAddress IP = new IPAddress(new byte[] { 127, 0, 0, 1 });
@@ -135,6 +136,15 @@ namespace ClientPublic
                 return client.GetDelay();
             }
             return 0;
+        }
+        public void UpdateTime()
+        {
+            client.UpdateTime();
+            if (client.GetDelay() > 10000)
+            {
+                client.LostConnect();
+                CloseClient();
+            }
         }
 
         private void Callback(IAsyncResult ar)

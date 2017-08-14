@@ -1,0 +1,8 @@
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\obj\Debug\MainS.csprojResolveAssemblyReference.cache
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\MainS.exe.config
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\MainS.exe
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\MainS.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\Room.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\Room.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\obj\Debug\MainS.exe
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\obj\Debug\MainS.pdb

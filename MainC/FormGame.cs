@@ -26,7 +26,6 @@ namespace MainC
         private long t0 = 0;
         private Thread thread;
 
-
         public string msg = "";
         public PPDevice ppDevice;
         public XmlManager xml;
@@ -70,8 +69,8 @@ namespace MainC
                 Global.GetRoom().AddPlayer(Global.GetPlayer());
                 sw.Start();
 
-                Thread t = new Thread(new ThreadStart(Action));
-                t.Start();
+                thread = new Thread(new ThreadStart(Action));
+                thread.Start();
             }
             catch (Exception ex)
             {

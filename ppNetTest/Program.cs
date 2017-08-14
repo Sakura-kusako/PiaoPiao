@@ -24,9 +24,10 @@ namespace ppNetTest
                     int delay = clientS.GetDelay(i);
                     if(delay > 0)
                     {
-                        //Console.WriteLine("clients " + i + " : " + delay + " ms");
+                        Console.WriteLine("clients " + i + " : " + delay + " ms");
                     }
                 }
+                clientS.UpdateTime();
             }
         }
     }
