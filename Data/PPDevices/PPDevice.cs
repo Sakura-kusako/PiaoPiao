@@ -84,6 +84,7 @@ namespace Data.PPDevices
         }
         public void BitBlt(Resources.BalloonItemPic_Base pic, RectangleF pos, RectangleF tex, float alpha = 1.0f)
         {
+            if (pic == null) return;
             if (pic.bitmap == null) return;
             float w = (int)pic.bitmap.GetWidth() + 1;
             float h = (int)pic.bitmap.GetHeight() + 1;
@@ -119,7 +120,8 @@ namespace Data.PPDevices
                     new RectangleF((int)(tex.X+1) / w, (int)(tex.Y+1) / h, (int)(tex.Width) / w, (int)(tex.Height) / h),
                     alpha);
             */
-
+            if (pic == null) return;
+            if (pic.bitmap == null) return;
             float w = (int)pic.bitmap.GetWidth() + 1;
             float h = (int)pic.bitmap.GetHeight() + 1;
 
@@ -290,10 +292,7 @@ namespace Data.PPDevices
         }
         public void Clear()
         {
-            _BitmapStream.Dispose();
-            _Sprite.Dispose();
-            _Font.Dispose();
-            _Engine.Dispose();
+            //_Engine.Dispose();
         }
     }
 }

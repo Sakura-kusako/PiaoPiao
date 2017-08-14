@@ -7,6 +7,8 @@ namespace Room
 {
     public class PlayerData
     {
+        public PlayerInput input = new PlayerInput();
+
         public string QQ = "88888888";
         public string ExID = "0";
         public string name = "name";
@@ -271,4 +273,49 @@ namespace Room
             type = System.BitConverter.ToInt32(bye, index);
         }
     }
+
+    public class PlayerInput
+    {
+        public int[] key = new int[9];
+
+        public PlayerInput()
+        {
+            Init();
+        }
+        public void Init()
+        {
+            for (int i = 0; i < key.Length; i++)
+            {
+                key[i] = 0;
+            }
+        }
+        public void UpdateKey(bool[] input)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if (input[i])
+                {
+                    key[i]++;
+                }
+                else
+                {
+                    key[i] = 0;
+                }
+            }
+        }
+
+        public int GetFlyUp()
+        {
+            return key[4];
+        }
+        public int GetFlyLeft()
+        {
+            return key[2];
+        }
+        public int GetFlyRight()
+        {
+            return key[3];
+        }
+    }
+
 }

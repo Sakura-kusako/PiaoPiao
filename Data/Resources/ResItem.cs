@@ -139,7 +139,7 @@ namespace Data.Resources
         public int frameNum = 1;
         public int frameSpan = 1;
         public Texture bitmap = null;
-        public void Clear()
+        public virtual void Clear()
         {
             if (bitmap != null)
                 bitmap.Dispose();

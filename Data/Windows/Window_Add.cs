@@ -176,6 +176,7 @@ namespace Data.Windows
         }
         public override RectangleF GetPicArea()
         {
+            if(pic == null)return new RectangleF(0, 0, 1, 1);
             if (pic.frameNum <= 0) pic.frameNum = 1;
             if (pic.line <= 0) pic.line = 1;
             float Width = pic.width;
@@ -190,13 +191,16 @@ namespace Data.Windows
         public override void Action()
         {
             count++;
-            if (pic.frameNum > 1)
+            if(pic != null)
             {
-                if (pic.frameSpan == 0)
+                if (pic.frameNum > 1)
                 {
-                    pic.frameSpan = 80;
+                    if (pic.frameSpan == 0)
+                    {
+                        pic.frameSpan = 80;
+                    }
+                    frame = (count * 16 / pic.frameSpan) % pic.frameNum;
                 }
-                frame = (count * 16 / pic.frameSpan) % pic.frameNum;
             }
         }
         public virtual void Update()
@@ -1003,7 +1007,6 @@ namespace Data.Windows
         }
         public override void Clear()
         {
-            base.Clear();
             foreach (var t in roots)
             {
                 if (t != null)
@@ -1265,10 +1268,6 @@ namespace Data.Windows
                 return (int)((Input.y - (y + pic_dy + height + 1)) / poi_A);
             }
             return -10;
-        }
-        public override void Clear()
-        {
-            base.Clear();
         }
     }
     public class Sprite_Room_MapSelect_Son

@@ -1231,7 +1231,8 @@ namespace Data.Windows
                 var win = windows[GetIndex(20)];
                 int index = (int)win.addBefore[0].poi_A; //unsafe
                 win.ToBottom();
-                Global.GetRoom().SetMapIndex(index);
+                if (index > 100)
+                    Global.GetRoom().SetMapIndex(index);
                 /*
                 if (Poi.IsConnect())
                 {
@@ -1297,18 +1298,16 @@ namespace Data.Windows
         {
             if (Input.IsLeftUp())
             {
-                /*
-                if (Poi.IsConnect())
+                if (Global.IsConnect())
                 {
                     //开始游戏
-                    Poi.GetForm().SendMessage_ReadyAll();
+                    //Poi.GetForm().SendMessage_ReadyAll();
                 }
                 else
                 {
                     CloseAll();
                     ActiveWindow(1003);
                 }
-                */
             }
         }
         private void Into_Shop_Eve()
@@ -1992,16 +1991,17 @@ namespace Data.Windows
         }
         public void Ready_Go()
         {
+            //开始游戏
             var room = Global.GetRoom();
             if (room.mapTypeID == 1)
             {
                 //随机地图
-                //Poi.GetData().Init_Map(6, 5);
+                Global.Init_Map(6, 5);
                 room.mapTypeID = 6;
             }
             else
             {
-                //Poi.GetData().Init_Map(room.mapTypeID, room.mapID);
+                Global.Init_Map(room.mapTypeID, room.mapID);
             }
             if (room.mapTypeID == 6)
             {

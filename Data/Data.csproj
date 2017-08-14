@@ -82,6 +82,10 @@
     <Compile Include="Globals\Globals.cs" />
     <Compile Include="Globals\GlobalsB.cs" />
     <Compile Include="Inputs\Input.cs" />
+    <Compile Include="MapsManager\Layer.cs" />
+    <Compile Include="MapsManager\MapManager.cs" />
+    <Compile Include="MapsManager\SpriteMap.cs" />
+    <Compile Include="MapsManager\SpriteMap_Other.cs" />
     <Compile Include="PPDevices\PPDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResItem.cs" />

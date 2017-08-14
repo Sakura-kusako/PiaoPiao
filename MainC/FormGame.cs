@@ -1,6 +1,7 @@
 ﻿using Data.Cameras;
 using Data.Globals;
 using Data.Inputs;
+using Data.MapsManager;
 using Data.PPDevices;
 using Data.Resources;
 using Data.Windows;
@@ -32,7 +33,6 @@ namespace MainC
         public Input input;
         public Camera camera;
         public ResManager res;
-        //public MapManager map;
         public Window_List windowList;
         //public Config config;
         //public ShopManager shop;
@@ -58,6 +58,7 @@ namespace MainC
                 camera = Global.GetCamara();
                 res = Global.GetResManager();
                 res.LoadItemPic();
+                res.LoadPic();
                 windowList = Global.GetWindowsList();
                 //Global.Getconfig = new Config();
                 //Global.Getshop = new ShopManager();
@@ -90,6 +91,8 @@ namespace MainC
 
                     ppDevice.RenderAll();
                     camera.Update();
+                    if (Global.GetMapManager() != null)
+                        Global.GetMapManager().Update();
                     windowList.Action();
                     windowList.Draw(ppDevice);
 
@@ -100,15 +103,16 @@ namespace MainC
             catch (Exception ex)
             {
                 FormParent.AddTextGame(ex.ToString());
+                this.Close();
             }
         }
 
         private void Draw()
         {
-            //ppDevice.BeginDraw();
-            //if (map != null) map.Draw(ppDevice);
+            var map = Global.GetMapManager();
+            if (map != null) map.Draw(ppDevice);
+
             windowList.Draw(ppDevice);
-            //ppDevice.EndDraw();
         }
 
         private void Other()
@@ -192,6 +196,17 @@ namespace MainC
         {
             Global.DelRes();
             FormParent.formGame = null;
+        }
+
+        private void FormGame_KeyDown(object sender, KeyEventArgs e)
+        {            
+            input.UpdateKeyDown((byte)e.KeyCode);
+            input.keyNum++;
+        }
+
+        private void FormGame_KeyUp(object sender, KeyEventArgs e)
+        {
+            input.UpdateKeyUP((byte)e.KeyCode);
         }
     }
 }

@@ -18,12 +18,17 @@ namespace Data.Resources
         public void Init(List<SpritePic> pics, string rootPath)
         {
             Clear();
+            pic1.Clear();
             pic1.Add(null);
             Load(pics, rootPath);
         }
         public void Clear()
         {
-            pic1.Clear();
+            foreach (var t in pic1)
+            {
+                if (t != null)
+                    t.Clear();
+            }
         }
         public void Load(List<SpritePic> pics, string rootPath)
         {
@@ -57,7 +62,8 @@ namespace Data.Resources
                     t2.frameNum = item2.frameNum;
                     t2.frameSpan = item2.frameSpan;
                     t2.line = item2.line;
-                    t2.bitmap = Load_Bitmap_FromFile(path, item2.file);
+                    //t2.bitmap = Load_Bitmap_FromFile(path, item2.file);
+                    t2.bitmap = null;
                     t1.pic2.Add(t2);
                 }
                 pic1.Add(t1);
@@ -97,10 +103,24 @@ namespace Data.Resources
         {
             pic2.Add(null);
         }
+        public void Clear()
+        {
+            foreach (var t in pic2)
+            {
+                if (t != null)
+                    t.Clear();
+            }
+        }
     }
     public class BalloonPic2 : BalloonItemPic_Base
     {
         public int ID = 0;
         public string name = "ERROR";
+        public bool isLoad = false;
+        public override void Clear()
+        {
+            base.Clear();
+            isLoad = false;
+        }
     }
 }

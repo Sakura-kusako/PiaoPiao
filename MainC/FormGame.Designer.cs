@@ -42,6 +42,8 @@
             this.Text = "飘飘";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormGame_FormClosed);
             this.Load += new System.EventHandler(this.FormGame_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGame_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormGame_KeyUp);
             this.ResumeLayout(false);
 
         }

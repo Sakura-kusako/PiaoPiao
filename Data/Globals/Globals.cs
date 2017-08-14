@@ -13,12 +13,18 @@ using Room;
 using Data.Windows;
 using System.Drawing;
 using SharpDX.Direct3D9;
+using Data.MapsManager;
 
 namespace Data.Globals
 {
     public static class Global
     {
-        public static bool IsDebug = false; 
+        public static bool IsDebug = false;
+        public static bool IsConnect()
+        {
+            return false;
+        }
+
         private static ResManager resManager = new ResManager();
         private static XmlManager xmlManager = new XmlManager();
         private static Input inputManager = new Input();
@@ -26,7 +32,8 @@ namespace Data.Globals
         private static Rooms.Room room = new Rooms.Room();
         private static PlayerData player = new PlayerData();
         private static PPDevice ppDevice;
-        private static Window_List windowsList = new Window_List(); 
+        private static Window_List windowsList = new Window_List();
+        private static MapManager mapManager = null;
 
         public static ResManager GetResManager()
         {
@@ -56,10 +63,6 @@ namespace Data.Globals
         {
             return player;
         }
-        public static void PlayBgm(int id)
-        {
-
-        }
         public static Window_List GetWindowsList()
         {
             return windowsList;
@@ -67,6 +70,14 @@ namespace Data.Globals
         public static void SetPPDevice(PPDevice dv)
         {
             ppDevice = dv;
+        }
+        public static MapManager GetMapManager()
+        {
+            return mapManager;
+        }
+        public static void SetMapManager(MapManager mm)
+        {
+            mapManager = mm;
         }
 
         public static Texture Load_Bitmap_FromFile(string path, string file)
@@ -88,6 +99,15 @@ namespace Data.Globals
             }
             //MessageBox("加载图片失败：" + file);
             return null;
+        }
+
+        public static void PlayBgm(int id)
+        {
+
+        }
+        public static void PlayEffect(int id)
+        {
+
         }
 
         public static void BitBlt_Rect_Green(RectangleF pos)
@@ -139,5 +159,54 @@ namespace Data.Globals
             windowsList = new Window_List();
             SpriteBase.ClearAll();
         }
+        public static SpritePlayerJudgement GetMin(List<SpritePlayerJudgement> list)
+        {
+            if (list == null) return null;
+            if (list.Count == 0) return null;
+            int t = 0;
+            for (int i = 1; i < list.Count; i++)
+            {
+                if (list[i].judgeData.time < list[t].judgeData.time)
+                {
+                    t = i;
+                }
+            }
+            return list[t];
+        }
+        public static List<RectangleF> GetRectList_StaticElement(int type, List<Point> points)
+        {
+            if (points == null) return null;
+            if (points.Count == 0) return null;
+            List<RectangleF> rects = new List<RectangleF>();
+
+            if (points.Count == 4)
+            {
+                rects.Add(new RectangleF(
+                                points[3].X,
+                                points[0].Y,
+                                points[1].X - points[3].X,
+                                points[2].Y - points[0].Y));
+            }
+            else if (points.Count == 12)
+            {
+                rects.Add(new RectangleF(
+                                points[0].X,
+                                points[0].Y,
+                                points[6].X - points[0].X,
+                                points[6].Y - points[0].Y));
+                rects.Add(new RectangleF(
+                                points[2].X,
+                                points[2].Y,
+                                points[8].X - points[2].X,
+                                points[8].Y - points[2].Y));
+            }
+            return rects;
+        }
+
+        public static void Init_Map(int typeID, int mapID)
+        {
+            mapManager = new MapManager(xmlManager.maps[typeID].maps[mapID]);
+        }
+
     }
 }
