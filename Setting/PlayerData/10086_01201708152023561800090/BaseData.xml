@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="gb2312"?>
+<Root>
+  <名字 Value="NPC1" />
+  <等级 Value="1" />
+  <经验值 Value="0" />
+  <击落数 Value="0" />
+  <飘币 Value="0" />
+  <Q点 Value="0" />
+  <胜 Value="0" />
+  <负 Value="0" />
+  <平 Value="0" />
+  <角色 Value="4" />
+</Root>

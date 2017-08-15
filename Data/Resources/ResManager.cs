@@ -39,10 +39,14 @@ namespace Data.Resources
         }
         public void LoadItemPic()
         {
+            if (itemPic == null)
+                itemPic = new BalloonItemPic();
             itemPic.Init(Global.GetXmlManager().itemPics, path);
         }
         public void LoadPic()
         {
+            if (pic == null)
+                pic = new BalloonPic();
             pic.Init(Global.GetXmlManager().pics, path);
         }
 

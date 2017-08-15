@@ -445,7 +445,7 @@ namespace Data.Windows
             /*
             g.DrawString(str, new Font(TextType, 10), new SolidBrush(color_yellow), new PointF(80, 9));
             */
-            Global.BitBlt_Str("七号遗迹" + ": " + room.name, new Rectangle(80, 10, 300, 30), color_yellow, 6, 12);
+            Global.BitBlt_Str("飘飘" + ": " + room.name, new Rectangle(80, 10, 300, 30), color_yellow, 6, 12);
             Global.BitBlt_Str(room.GetRoomType(), new Rectangle(337, 10, 600, 100), color_yellow, 6, 12);
             Global.BitBlt_Str(room.GetMapName(), new Rectangle(98, 578, 800, 600), color_blue, 6, 12);
         }
@@ -480,11 +480,6 @@ namespace Data.Windows
         }
         private void DrawPlayer(PPDevice ppDevice)
         {
-            /*
-            var format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
-            format.Alignment = StringAlignment.Center;
-            */
             for (int i = 0; i < 6; i++)
             {
                 Draw_bg(ppDevice, i);
@@ -492,7 +487,6 @@ namespace Data.Windows
                 {
                     DrawBig(ppDevice, i);
                     DrawPlayerData(ppDevice, i);
-                    //g.DrawString(player.GetName(), new Font(TextType, 9), new SolidBrush(color_yellow), new RectangleF(17, 47 + i * 120, 121, 20), format);
                 }
             }
         }
@@ -591,10 +585,14 @@ namespace Data.Windows
 
             if (player.type != 0)
             {
-                BitBlt(ppDevice, room_player_type[player.type][room.GetTeam(i) - 1], IsLeft ? 105 : 636, 86 + (i / 2) * 120);
+                int t = room.GetTeam(i) - 1;
+                if (t < 0) t = 0;
+                BitBlt(ppDevice, room_player_type[player.type][t], IsLeft ? 105 : 636, 86 + (i / 2) * 120);
             }
             BitBlt(ppDevice, room_Hit, IsLeft ? 105 : 636, 69 + (i / 2) * 120);
-            DrawNum(ppDevice, Num_Hit_8x10, player.hit, 137, 74 + (i / 2) * 120, 8, 10, 0, 1);
+            DrawNum(ppDevice, Num_Hit_8x10, player.hit, IsLeft ? 137 : 668, 74 + (i / 2) * 120, 8, 10, 0, 1);
+            
+            //Global.BitBlt_Str(player.GetName(), new Rectangle(17, 47 + (i/2) * 120, 121, 15), color_yellow, 6, 12);
         }
     }
     public class Sprite_Shop : Sprite_WinAdd

@@ -34,6 +34,14 @@ namespace ClientPublic
             client = new Client();
             client.AddConnect(new IPEndPoint(IP, Port));
         }
+        public ClientC(string qq,string exid)
+        {
+            //构造函数
+            client = new Client();
+            client.AddConnect(new IPEndPoint(IP, Port));
+            client.SetQQ(qq);
+            client.SetExID(exid);
+        }
         public bool IsConnect()
         {
             //获取连接状态
@@ -44,7 +52,6 @@ namespace ClientPublic
             //开启客户端
 
             //状态初始化
-            isConnect = true;
 
             //连接到服务端并指定接收端口
             Client = new UdpClient(0);
@@ -57,11 +64,12 @@ namespace ClientPublic
 
             //发送登录消息
             var dat = new ClientData();
-            dat.CreateSignIn();
+            dat.CreateSignIn(client.GetQQ(),client.GetExID());
             client.AddSendData(dat);
 
             //开始接收
             Client.BeginReceive(new AsyncCallback(Callback), null);
+            isConnect = true;
         }
         public void CloseClient()
         {

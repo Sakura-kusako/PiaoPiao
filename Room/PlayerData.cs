@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientPublic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,13 @@ namespace Room
 {
     public class PlayerData
     {
+        const int itemsChaNum = 7;
+        const int itemsNum = 44;
         public PlayerInput input = new PlayerInput();
 
         public string QQ = "88888888";
         public string ExID = "0";
-        public string name = "name";
+        public string name = "NPC-9972";
         public int exp = 0;
         public int hit = 0;
         public int piaobi = 0;
@@ -22,7 +25,7 @@ namespace Room
         public int vs_lose = 0;
         public int vs_peace = 0;
         public int roomID = 0;
-        public int roomSit = 0;
+        public int roomSit = 0; //0-5
         public int server = 0;
 
         public int type = 2;
@@ -31,10 +34,10 @@ namespace Room
         public PlayerData()
         {
             //构造函数
-            items = new int[7][];
-            for (int i = 0; i < 7; i++)
+            items = new int[itemsChaNum][];
+            for (int i = 0; i < itemsChaNum; i++)
             {
-                items[i] = new int[44]
+                items[i] = new int[itemsNum]
                 {
                     0,i,i,i,i,    0,0,1,0,0,
                     i,i,0,0,0,    0,1,1,i,3,
@@ -111,166 +114,182 @@ namespace Room
             return items[type][id];
         }
 
-        //传送函数
-        public List<byte[]> GetSendData_All()
+        public void Clone(PlayerData player)
         {
-            var list = new List<byte[]>();
-            list.Add(GetSendData_Name());
-            //list.Add(GetSendData_Prop());
-            list.Add(GetSendData_Items());
-            list.Add(GetSendData_ItemType());
-            return list;
-        }
-        public byte[] GetSendData_Name()
-        {
-            //传送名字
-            byte[] bye = new byte[QQ.Length * 2 + name.Length * 2 + 12 + 10];
-            int index = 9;
+            QQ = player.QQ;
+            ExID = player.ExID;
+            name = player.name;
+            exp = player.exp;
+            hit = player.hit;
+            piaobi = player.piaobi;
+            Qbi = player.Qbi;
+            level = player.level;
+            vs_win = player.vs_win;
+            vs_lose = player.vs_lose;
+            vs_peace = player.vs_peace;
+            roomID = player.roomID;
+            roomSit = player.roomSit;
+            type = player.type;
+            server = player.server;
 
-            System.Buffer.BlockCopy(BitConverter.GetBytes(1000), 0, bye, index, 4);
-            index += 4;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(QQ.Length * 2), 0, bye, index, 4);
-            index += 4;
-
-            Encoding.Unicode.GetBytes(QQ, 0, QQ.Length, bye, index);
-            index += QQ.Length * 2;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(name.Length * 2), 0, bye, index, 4);
-            index += 4;
-
-            Encoding.Unicode.GetBytes(name, 0, name.Length, bye, index);
-            return bye;
-        }
-        public byte[] GetSendData_Prop()
-        {
-            //传送玩家属性
-            byte[] bye = new byte[10];
-            //int index = 9;
-
-            return bye;
-        }
-        public byte[] GetSendData_Items()
-        {
-            const int type_len = 7;
-            const int item_len = 44;
-
-            byte[] bye = new byte[type_len * item_len + 4 + 10];
-            int index = 9;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(1003), 0, bye, index, 4);
-            index += 4;
-
-            for (int i = 0; i < type_len; i++)
+            for (int i = 0; i < itemsChaNum; i++)
             {
-                for (int j = 0; j < item_len; j++)
+                for (int j = 0; j < itemsNum; j++)
                 {
-                    bye[index] = (byte)items[i][j];
+                    items[i][j] = player.items[i][j];
+                }
+            }
+        }
+
+        //传送函数
+        public ClientData GetSendData_All()
+        {
+            //传送所有信息
+            //类型 + 基础数据 + 道具
+            int len = ((QQ.Length + ExID.Length + name.Length) * 2 + 12) + 4 * 11 + itemsChaNum * itemsNum + 4;
+            byte[] byt = new byte[len];
+            int index = 0;
+
+            AddSendData_Int((int)(ClientData.CLIENT_DATA_TYPE.ADD_PLAYER), byt, ref index);
+
+            AddSendData_Str(QQ, byt, ref index);
+            AddSendData_Str(ExID, byt, ref index);
+            AddSendData_Str(name, byt, ref index);
+
+            AddSendData_Int(exp, byt, ref index);
+            AddSendData_Int(hit, byt, ref index);
+            AddSendData_Int(piaobi, byt, ref index);
+            AddSendData_Int(Qbi, byt, ref index);
+            AddSendData_Int(level, byt, ref index);
+
+            AddSendData_Int(vs_win, byt, ref index);
+            AddSendData_Int(vs_lose, byt, ref index);
+            AddSendData_Int(vs_peace, byt, ref index);
+            AddSendData_Int(roomID, byt, ref index);
+            AddSendData_Int(roomSit, byt, ref index);
+            AddSendData_Int(type, byt, ref index);
+
+            AddSendData_Item(byt, ref index);
+
+            ClientData dat = new ClientData();
+            dat.Type = ClientData.CLIENT_TYPE.SEND;
+            dat.Data = byt;
+
+            return dat;
+        }
+        public ClientData GetSendData_All_Change()
+        {
+            //传送所有信息
+            //类型 + 位置 +基础数据 + 道具
+            int len = ((QQ.Length + ExID.Length + name.Length) * 2 + 12) + 4 * 11 + itemsChaNum * itemsNum + 4+4;
+            byte[] byt = new byte[len];
+            int index = 0;
+
+            AddSendData_Int((int)(ClientData.CLIENT_DATA_TYPE.DATA_PLAYER), byt, ref index);
+            AddSendData_Int(roomSit, byt, ref index);
+
+            AddSendData_Str(QQ, byt, ref index);
+            AddSendData_Str(ExID, byt, ref index);
+            AddSendData_Str(name, byt, ref index);
+
+            AddSendData_Int(exp, byt, ref index);
+            AddSendData_Int(hit, byt, ref index);
+            AddSendData_Int(piaobi, byt, ref index);
+            AddSendData_Int(Qbi, byt, ref index);
+            AddSendData_Int(level, byt, ref index);
+
+            AddSendData_Int(vs_win, byt, ref index);
+            AddSendData_Int(vs_lose, byt, ref index);
+            AddSendData_Int(vs_peace, byt, ref index);
+            AddSendData_Int(roomID, byt, ref index);
+            AddSendData_Int(roomSit, byt, ref index);
+            AddSendData_Int(type, byt, ref index);
+
+            AddSendData_Item(byt, ref index);
+
+            ClientData dat = new ClientData();
+            dat.Type = ClientData.CLIENT_TYPE.SEND;
+            dat.Data = byt;
+
+            return dat;
+        }
+        private void AddSendData_Str(string str,byte[] byt, ref int index)
+        {
+            //拼接长度信息
+            System.Buffer.BlockCopy(BitConverter.GetBytes(str.Length * 2), 0, byt, index, 4);
+            index += 4;
+
+            //拼接字符串
+            Encoding.Unicode.GetBytes(str, 0, str.Length, byt, index);
+            index += str.Length * 2;
+        }
+        private void AddSendData_Int(int data,byte[] byt,ref int index)
+        {
+            System.Buffer.BlockCopy(BitConverter.GetBytes(data), 0, byt, index, 4);
+            index += 4;
+        }
+        private void AddSendData_Item(byte[]byt,ref int index)
+        {
+            for (int i = 0; i < itemsChaNum; i++)
+            {
+                for (int j = 0; j < itemsNum; j++)
+                {
+                    byt[index] = (byte)(items[i][j]);
                     index++;
                 }
             }
-
-            return bye;
-        }
-        public byte[] GetSendData_ItemType()
-        {
-            //传送当前角色
-            byte[] bye = new byte[8 + 10];
-            int index = 9;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(1002), 0, bye, index, 4);
-            index += 4;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(type), 0, bye, index, 4);
-            index += 4;
-
-            return bye;
         }
 
         //接收函数
-        public void SetSendData(byte[] bye)
+        public void SetSendData_All(byte[] byt,ref int index)
         {
-            switch (System.BitConverter.ToInt32(bye, 9))
-            {
-                case 1000:
-                    SetSendData_Name(bye);
-                    break;
-                case 1001:
-                    SetSendData_Prop(bye);
-                    break;
-                case 1002:
-                    SetSendData_ItemType(bye);
-                    break;
-                case 1003:
-                    SetSendData_Items(bye);
-                    break;
-                default:
-                    break;
-            }
+            QQ = GetSendData_Str(byt, ref index);
+            ExID = GetSendData_Str(byt, ref index);
+            name = GetSendData_Str(byt, ref index);
+
+            exp = GetSendData_Int(byt, ref index);
+            hit = GetSendData_Int(byt, ref index);
+            piaobi = GetSendData_Int(byt, ref index);
+            Qbi = GetSendData_Int(byt, ref index);
+            level = GetSendData_Int(byt, ref index);
+
+            vs_win = GetSendData_Int(byt, ref index);
+            vs_lose = GetSendData_Int(byt, ref index);
+            vs_peace = GetSendData_Int(byt, ref index);
+            roomID = GetSendData_Int(byt, ref index);
+            roomSit = GetSendData_Int(byt, ref index);
+            type = GetSendData_Int(byt, ref index);
+
+            SetSendData_Items(byt, ref index);
         }
-        public void SetSendData_Name(byte[] bye)
+        private string GetSendData_Str(byte[] byt, ref int index)
         {
-            //传送名字
-            int index = 9;
-            int t = 0;
-
-            //读指令
-            //1000
-            t = System.BitConverter.ToInt32(bye, index);
+            //读长度
+            int t = System.BitConverter.ToInt32(byt, index);
             index += 4;
 
-            //QQ长度
-            t = System.BitConverter.ToInt32(bye, index);
-            index += 4;
-
-            //读QQ
-            QQ = Encoding.Unicode.GetString(bye, index, t);
+            //读字符
+            string str = Encoding.Unicode.GetString(byt, index, t);
             index += t;
 
-            //名字长度
-            t = System.BitConverter.ToInt32(bye, index);
-            index += 4;
-
-            //读名字
-            name = Encoding.Unicode.GetString(bye, index, t);
-            index += t;
+            return str;
         }
-        public void SetSendData_Prop(byte[] bye)
+        private int GetSendData_Int(byte[] byt,ref int index)
         {
-            //传送玩家属性
-
-        }
-        public void SetSendData_Items(byte[] bye)
-        {
-            const int type_len = 7;
-            const int item_len = 44;
-            int index = 9;
-
-            //校验指令
-            //            
+            int t = System.BitConverter.ToInt32(byt, index);
             index += 4;
-
-            //读item列表
-            for (int i = 0; i < type_len; i++)
+            return t;
+        }
+        private void SetSendData_Items(byte[] byt,ref int index)
+        {
+            for (int i = 0; i < itemsChaNum; i++)
             {
-                for (int j = 0; j < item_len; j++)
+                for (int j = 0; j < itemsNum; j++)
                 {
-                    items[i][j] = bye[index];
+                    items[i][j] = byt[index];
                     index++;
                 }
             }
-        }
-        public void SetSendData_ItemType(byte[] bye)
-        {
-            //传送当前角色
-            int index = 9;
-
-            //校验指令
-            //
-            index += 4;
-
-            //读数据
-            type = System.BitConverter.ToInt32(bye, index);
         }
     }
 

@@ -106,6 +106,7 @@ namespace Data.Globals
             //MessageBox("加载图片失败：" + file);
             return null;
         }
+
     }
 
     public static class Physics

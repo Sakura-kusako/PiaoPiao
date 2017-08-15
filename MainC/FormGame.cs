@@ -1,4 +1,5 @@
-﻿using Data.Cameras;
+﻿using ClientPublic;
+using Data.Cameras;
 using Data.Globals;
 using Data.Inputs;
 using Data.MapsManager;
@@ -48,10 +49,9 @@ namespace MainC
 
         private void FormGame_Load(object sender, EventArgs e)
         {
-            try
-            {
                 ppDevice = new PPDevice(this,this.Draw);
                 Global.SetPPDevice(ppDevice);
+
                 xml = Global.GetXmlManager();
                 xml.Load();
                 input = Global.GetInput();
@@ -68,15 +68,12 @@ namespace MainC
                 windowList.CloseAll();
                 windowList.ActiveWindow(19);
                 Global.GetRoom().AddPlayer(Global.GetPlayer());
+                Global.GetRoom().clientC = Global.GetClientC();
                 sw.Start();
 
                 thread = new Thread(new ThreadStart(Action));
                 thread.Start();
-            }
-            catch (Exception ex)
-            {
-                 FormParent.AddTextGame(ex.ToString());
-            }
+                Global.IsFormGameOpen = true;
         }
 
         public void Action()
@@ -97,12 +94,24 @@ namespace MainC
                     windowList.Draw(ppDevice);
 
                     input.UpdateKey();
+
+                    {
+                        var clientC = Global.GetClientC();
+                        if(clientC != null && clientC.IsConnect())
+                        {
+                            clientC.SendAll();
+                            clientC.UpdateTime();
+                            Global.GetRoom().DealSendData(clientC.GetDataList());
+                        }
+                    }
+
                     Other();
                 }
             }
             catch (Exception ex)
             {
                 FormParent.AddTextGame(ex.ToString());
+                MessageBox.Show(ex.ToString());
                 this.Close();
             }
         }
@@ -137,6 +146,12 @@ namespace MainC
             else
             {
                 FormParent.ShowText10("Win: " + "null");
+            }
+
+            if(Global.GetClientC() != null)
+            {
+                int delay = Global.GetClientC().GetDelay();
+                FormParent.ShowText12("延时" + " : " + delay + " ms");
             }
 
             /*
@@ -194,6 +209,9 @@ namespace MainC
 
         private void FormGame_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Global.IsFormGameOpen = false;
+            XmlPlayer.WritePlayer(GlobalB.GetRootPath()+@"\Setting\", Global.GetPlayer());
+            FormParent.AddTextGame("玩家数据保存成功");
             Global.DelRes();
             FormParent.formGame = null;
         }
@@ -203,7 +221,6 @@ namespace MainC
             input.UpdateKeyDown((byte)e.KeyCode);
             input.keyNum++;
         }
-
         private void FormGame_KeyUp(object sender, KeyEventArgs e)
         {
             input.UpdateKeyUP((byte)e.KeyCode);

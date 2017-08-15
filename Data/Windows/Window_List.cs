@@ -1,4 +1,5 @@
-﻿using Data.Globals;
+﻿using ClientPublic;
+using Data.Globals;
 using Data.Inputs;
 using Data.PPDevices;
 using Data.Resources;
@@ -45,6 +46,9 @@ namespace Data.Windows
         }
         public void Load()
         {
+            if(showNum==null) showNum = new List<int>();
+            if(windows==null) windows = new List<Window>();
+
             Input = Global.GetInput();
             SpriteBase.Input = Input;
             var Data_rootPath = GlobalB.GetRootPath() + @"\";
@@ -1231,14 +1235,18 @@ namespace Data.Windows
                 var win = windows[GetIndex(20)];
                 int index = (int)win.addBefore[0].poi_A; //unsafe
                 win.ToBottom();
-                if (index > 100)
-                    Global.GetRoom().SetMapIndex(index);
-                /*
-                if (Poi.IsConnect())
+                if (index <= 100) return;
+
+                if (Global.IsConnect())
                 {
-                    Poi.GetTcp().SendMessage(Poi.GetRoom().GetSendData_Prop());
+                    ClientData dat = new ClientData();
+                    dat.CreateMapChange(index);
+                    Global.GetClientC().AddData(dat);
                 }
-                */
+                else
+                {
+                    Global.GetRoom().SetMapIndex(index);
+                }
             }
         }
         private void Room_SelectMap_ToBottom_Eve()
@@ -1281,17 +1289,16 @@ namespace Data.Windows
         {
             if (Input.IsLeftUp())
             {
-                /*
-                if (Poi.IsConnect())
+                if (Global.IsConnect())
                 {
-                    Poi.GetForm().SendMessage_SetRoomTeam(eve - 194);
+                    ClientData dat = new ClientData();
+                    dat.CreateTeamChange(eve - 194);
+                    Global.GetClientC().AddData(dat);
                 }
                 else
                 {
-                    Poi.GetRoom().SetRoomTeam(Poi.GetRoomSit(), eve - 194);
+                    Global.GetRoom().SetRoomTeam(Global.GetPlayer().roomSit, eve - 194);
                 }
-                */
-                //Global.GetRoom().SetRoomTeam(Poi.GetRoomSit(), eve - 194);
             }
         }
         private void Ready_Go_Eve()

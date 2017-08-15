@@ -153,7 +153,7 @@ namespace Data.PPDevices
                 _Font.Dispose();
             }
             _Font = new RenderFont(_Engine, ZiTi, width, height);
-            _Font.RenderText(str, new SharpDX.Mathematics.Interop.RawRectangle(rect.X, rect.Y, rect.Width, rect.Height),
+            _Font.RenderText(str, new SharpDX.Mathematics.Interop.RawRectangle(rect.X, rect.Y, rect.Right, rect.Bottom),
                             color);
         }
         private void BitBlt(Texture pic, RectangleF pos, RectangleF tex, float alpha = 1.0f)

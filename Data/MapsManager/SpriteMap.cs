@@ -602,7 +602,6 @@ namespace Data.MapsManager
         public override void Action()
         {
             count++;
-            player.input.UpdateKey(Global.GetInput().GetKeyBool());
             Update_Buff_Time();
             Update_Buff_Eff();
             switch (buff_base.type)

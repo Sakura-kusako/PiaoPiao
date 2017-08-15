@@ -100,6 +100,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClientPublic\Client.csproj">
+      <Project>{427EE0DD-2F81-45E7-A779-B3A27B801C11}</Project>
+      <Name>Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{2E27E5FC-41A4-4AB7-A9B0-8581506B96F5}</Project>
       <Name>Data</Name>

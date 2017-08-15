@@ -7,6 +7,53 @@ using System.Text;
 
 namespace ClientPublic
 {
+    public static class GlobalC
+    {
+        public static void AddSendData_Str(string str, byte[] byt, ref int index)
+        {
+            //拼接长度信息
+            System.Buffer.BlockCopy(BitConverter.GetBytes(str.Length * 2), 0, byt, index, 4);
+            index += 4;
+
+            //拼接字符串
+            Encoding.Unicode.GetBytes(str, 0, str.Length, byt, index);
+            index += str.Length * 2;
+        }
+        public static void AddSendData_Int(int data, byte[] byt, ref int index)
+        {
+            System.Buffer.BlockCopy(BitConverter.GetBytes(data), 0, byt, index, 4);
+            index += 4;
+        }
+        public static void AddSendData_Bool(bool data,byte[]byt,ref int index)
+        {
+            byt[index] = data ? (byte)1 : (byte)0;
+            index++;
+        }
+        public static string GetSendData_Str(byte[] byt, ref int index)
+        {
+            //读长度
+            int t = System.BitConverter.ToInt32(byt, index);
+            index += 4;
+
+            //读字符
+            string str = Encoding.Unicode.GetString(byt, index, t);
+            index += t;
+
+            return str;
+        }
+        public static int GetSendData_Int(byte[] byt, ref int index)
+        {
+            int t = System.BitConverter.ToInt32(byt, index);
+            index += 4;
+            return t;
+        }
+        public static bool GetSendData_Bool(byte[] byt, ref int index)
+        {
+            var t = (byt[index]==1);
+            index++;
+            return t;
+        }
+    }
     public class Client
     {
         /**服务器传输类
@@ -28,6 +75,8 @@ namespace ClientPublic
 
         private IPAddress IP;
         private int Port = 0;
+        private string QQ = "";
+        private string ExID = "";
         private bool isConnect = false; //连接状态
         private int delay = 0; //延时
         private int ID = 1; //发送编号
@@ -38,6 +87,23 @@ namespace ClientPublic
         private List<ClientData> RecvList = new List<ClientData>();
         private List<ClientDataID> RecvIDList = new List<ClientDataID>();
 
+        public string GetQQ()
+        {
+            return QQ;
+        }
+        public string GetExID()
+        {
+            return ExID;
+        }
+        public void SetQQ(string str)
+        {
+            QQ = str;
+        }
+        public void SetExID(string str)
+        {
+            ExID = str;
+        }
+
         public Client()
         {
 
@@ -46,7 +112,7 @@ namespace ClientPublic
         {
             IP = ep.Address;
             Port = ep.Port;
-            sw.Restart();
+            //sw.Restart();
             delayTime = sw.ElapsedMilliseconds;
         }
         public bool IsConnect()
@@ -76,6 +142,10 @@ namespace ClientPublic
             Port = ep.Port;
             isConnect = true;
             delay = 0;
+            if(sw.IsRunning==false)
+            {
+                sw.Restart();
+            }
         }
         public void LostConnect()
         {
@@ -84,6 +154,8 @@ namespace ClientPublic
             SendList.Clear();
             RecvList.Clear();
             RecvIDList.Clear();
+            sw.Stop();
+            sw.Reset();
         }
         public void AddSendData(ClientData dat)
         {
@@ -186,6 +258,10 @@ namespace ClientPublic
         {
             return (ep.Address.Equals(IP) && ep.Port == Port);
         }
+        public bool EqualQQ(string qq,string exid)
+        {
+            return (qq == QQ && exid == ExID);
+        }
         public IPEndPoint GetIPEndPoint()
         {
             return new IPEndPoint(IP, Port);
@@ -201,8 +277,9 @@ namespace ClientPublic
             lock (RecvIDList)
             {
                 int i = 0;
-                foreach (var datID in RecvIDList)
+                while(i<RecvIDList.Count)
                 {
+                    var datID = RecvIDList[i];
                     if (t - datID.time > timeLost)
                     {
                         RecvIDList.RemoveAt(i);

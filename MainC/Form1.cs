@@ -28,6 +28,10 @@ namespace MainC
             var xmlManager = Global.GetXmlManager();
             xmlManager.Load();
             Form1_Load_Player();
+            if(Global.GetClientC() == null)
+            {
+                Global.SetClientC(new ClientPublic.ClientC());
+            }
         }
         private void Form1_Load_Player()
         {
@@ -75,14 +79,32 @@ namespace MainC
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if(formGame == null || formGame.IsDisposed)
+            if(comboBox1.Items.Count == 0)
             {
+                AddTextLine(textBox6, "当前没有玩家数据，需要创建一个玩家");
+                return;
+            }
+            if(comboBox1.SelectedIndex < 0 || comboBox1.SelectedIndex >= players.Count)
+            {
+                comboBox1.SelectedIndex = 0;
+                AddTextLine(textBox6, "Error : 超出引索，按第一个玩家启动");
+            }
+
+            //复制数据
+            var player = Global.GetPlayer();
+            player.Clone(players[comboBox1.SelectedIndex]);
+            AddTextLine(textBox6, "玩家加载成功");
+
+            if ((formGame == null || formGame.IsDisposed) && Global.IsFormGameOpen == false)
+            {
+                AddTextLine(textBox6, "飘飘正在启动，可能需要几十秒的时间");
                 formGame = new FormGame(this);
                 formGame.Show();
+                AddTextLine(textBox6, "飘飘启动成功");
             }
             else
             {
-                AddTextLine(textBox6, "游戏已启动");
+                AddTextLine(textBox6, "飘飘已启动");
             }
         }
         private void AddTextLine(TextBox tx,string str)
@@ -112,6 +134,50 @@ namespace MainC
         public void ShowText11(string str)
         {
             textBox11.Text = str;
+        }
+        public void ShowText12(string str)
+        {
+            textBox12.Text = str;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Global.IsFormGameOpen)
+                {
+                    var clientC = Global.GetClientC();
+                    if (clientC == null || true)
+                    {
+                        clientC = new ClientPublic.ClientC(Global.GetPlayer().GetQQ(),Global.GetPlayer().GetExID());
+                        Global.SetClientC(clientC);
+                    }
+                    if(clientC.IsConnect() == false)
+                    {
+                        clientC.OpenClient();
+                        clientC.AddData(Global.GetPlayer().GetSendData_All());
+                        AddTextLine(textBox6, "尝试连接到服务器");
+                    }
+                    else
+                    {
+                        AddTextLine(textBox6,"连接已经打开");
+                    }
+                }
+                else
+                {
+                    AddTextLine(textBox6, "飘飘尚未启动");
+                }
+            }
+            catch (Exception ex)
+            {
+                AddTextLine(textBox6, ex.ToString());
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (formGame != null && formGame.IsDisposed == false)
+                formGame.Close();
         }
     }
 }

@@ -6,3 +6,5 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\Room.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\Room.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\obj\Debug\MainS.exe
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\obj\Debug\MainS.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\ClientPublic.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainS\bin\Debug\ClientPublic.pdb

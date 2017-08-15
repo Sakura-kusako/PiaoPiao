@@ -47,7 +47,9 @@ namespace ClientPublic
             {
                 if(clients[i] == null)
                 {
-                    clients[i] = new Client(); 
+                    clients[i] = new Client();
+                    clients[i].SetQQ(i + "");
+                    clients[i].SetExID(i + "");
                 }
                 else
                 {
@@ -175,10 +177,13 @@ namespace ClientPublic
             for (int i = 0; i < 6; i++)
             {
                 client = clients[i];
-                client.UpdateTime();
-                if(client.GetDelay()>10000)
+                if(client.IsConnect())
                 {
-                    client.LostConnect();
+                    client.UpdateTime();
+                    if(client.GetDelay()>10000)
+                    {
+                        client.LostConnect();
+                    }
                 }
             }
         }
@@ -204,14 +209,18 @@ namespace ClientPublic
                 int i = 0;
                 int t = -1;
                 bool IsReConnect = false;
-
+                int index = 4;
+                string qq = GlobalC.GetSendData_Str(dat.Data, ref index);
+                string exid = GlobalC.GetSendData_Str(dat.Data, ref index);
                 foreach (var client in clients)
                 {
-                    if (client.EqualIP(ep))
+                    if (client.EqualQQ(qq,exid))
                     {
                         client.ReConnect(ep);
                         IsReConnect = true;
                         clients[i].AddRecvData(dat);
+                        clients[i].SetQQ(qq);
+                        clients[i].SetExID(exid);
                         break;
                     }
                     else
@@ -227,6 +236,8 @@ namespace ClientPublic
                 {
                     clients[t].AddConnect(ep);
                     clients[t].AddRecvData(dat);
+                    clients[t].SetQQ(qq);
+                    clients[t].SetExID(exid);
                 }
             }
             else

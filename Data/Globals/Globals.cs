@@ -14,14 +14,18 @@ using Data.Windows;
 using System.Drawing;
 using SharpDX.Direct3D9;
 using Data.MapsManager;
+using ClientPublic;
 
 namespace Data.Globals
 {
     public static class Global
     {
+        public static bool IsFormGameOpen = false;
         public static bool IsDebug = false;
         public static bool IsConnect()
         {
+            if (clientC != null)
+                return clientC.IsConnect();
             return false;
         }
 
@@ -34,6 +38,7 @@ namespace Data.Globals
         private static PPDevice ppDevice;
         private static Window_List windowsList = new Window_List();
         private static MapManager mapManager = null;
+        private static ClientC clientC ;
 
         public static ResManager GetResManager()
         {
@@ -78,6 +83,14 @@ namespace Data.Globals
         public static void SetMapManager(MapManager mm)
         {
             mapManager = mm;
+        }
+        public static ClientC GetClientC()
+        {
+            return clientC;
+        }
+        public static void SetClientC(ClientC c)
+        {
+            clientC = c;
         }
 
         public static Texture Load_Bitmap_FromFile(string path, string file)

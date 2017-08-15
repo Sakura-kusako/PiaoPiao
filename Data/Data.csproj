@@ -102,6 +102,10 @@
     <Compile Include="XML\XmlPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClientPublic\Client.csproj">
+      <Project>{427EE0DD-2F81-45E7-A779-B3A27B801C11}</Project>
+      <Name>Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Room\Room.csproj">
       <Project>{E53C9C1E-8577-49D6-9B83-4F2B2C404CAF}</Project>
       <Name>Room</Name>

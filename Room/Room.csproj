@@ -46,5 +46,11 @@
     <Compile Include="Rooms.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClientPublic\Client.csproj">
+      <Project>{427EE0DD-2F81-45E7-A779-B3A27B801C11}</Project>
+      <Name>Client</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

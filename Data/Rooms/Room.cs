@@ -1,4 +1,5 @@
-﻿using Data.Globals;
+﻿using ClientPublic;
+using Data.Globals;
 using Room;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Data.Rooms
 {
     public class Room
     {
+        public ClientC clientC; //FormGame初始化
         public Room_Players[] players = new Room_Players[6];
 
         public string name = "大家一起踩~~";
@@ -192,86 +194,91 @@ namespace Data.Rooms
             return players[i].team;
         }
 
-        public List<byte[]> GetSendData_Player(int poi)
+        public void DealSendData(List<ClientData> list)
         {
-            var list = players[poi].GetSendData_All();
-            list.Insert(0, GetSendData_CopySit(poi));
-            return list;
-        }
-        public byte[] GetSendData_CopySit(int poi)
-        {
-            //设置复制位置
-            //5
-            byte[] bye = new byte[5 + 10];
-            int index = 9;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(5), 0, bye, index, 4);
-            index += 4;
-
-            bye[index] = (byte)poi;
-            return bye;
-        }
-        public byte[] GetSendData_Prop()
-        {
-            //传送房间属性
-            //1005
-            byte[] bye = new byte[10 + 10];
-            int index = 9;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(1005), 0, bye, index, 4);
-            index += 4;
-
-            bye[index + 0] = (byte)ID;
-            bye[index + 1] = (byte)soutai;
-            bye[index + 2] = (byte)Boss;
-            bye[index + 3] = (byte)mode;
-            bye[index + 4] = (byte)mapTypeID;
-            bye[index + 5] = (byte)mapID;
-            return bye;
-        }
-
-        public void SetSendData(byte[] bye, int poi = -1)
-        {
-            if (poi == -1) poi = copySit;
-            switch (System.BitConverter.ToInt32(bye, 9))
+            ClientData dat;
+            if (list == null) return;
+            while (true)
             {
-                case 1000:
-                case 1001:
-                case 1002:
-                case 1003:
-                case 1004:
-                    SetPlayer(bye, poi);
+                lock (list)
+                {
+                    if (list.Count > 0)
+                    {
+                        dat = list[0];
+                        list.RemoveAt(0);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                DealSendData(dat);
+            }
+        }
+        private void DealSendData(ClientData dat)
+        {
+            var byt = dat.Data;
+            int index = 0;
+            var typ = (ClientData.CLIENT_DATA_TYPE)GlobalC.GetSendData_Int(byt, ref index);
+            switch (typ)
+            {
+                case ClientData.CLIENT_DATA_TYPE.DATA_PLAYER:
+                    DealSendData_ChangePlayer(byt);
                     break;
-                case 1005:
-                    SetSendData_Prop(bye);
+                case ClientData.CLIENT_DATA_TYPE.DATA_ROOM:
+                    DealSendData_ChangeRoom(byt);
+                    break;
+                case ClientData.CLIENT_DATA_TYPE.DEL_PLAYER:
+                    DealSendData_DelPlayer(byt);
                     break;
                 default:
                     break;
             }
         }
-        public void SetSendData_Prop(byte[] bye)
+        private void DealSendData_ChangePlayer(byte[] byt)
         {
-            //传送房间属性
-            //1005
-            int index = 9;
-
-            //校验指令
-            //t = System.BitConverter.ToInt32(bye, index);
-            index += 4;
-
-            //读数据
-            ID = bye[index + 0];
-            soutai = bye[index + 1];
-            Boss = bye[index + 2];
-            mode = bye[index + 3];
-            mapTypeID = bye[index + 4];
-            mapID = bye[index + 5];
+            //接收玩家数据
+            int index = 4;
+            int sit = GlobalC.GetSendData_Int(byt, ref index);
+            var player = new PlayerData();
+            player.SetSendData_All(byt,ref index);
+            players[sit].player = player;
         }
-        public void SetPlayer(byte[] bye, int poi = 0)
+        private void DealSendData_ChangeRoom(byte[] byt)
         {
-            if (0 <= poi && poi <= 5)
-                players[poi].SetSendData(bye);
+            //接收房间数据
+            int index = 4;
+
+            name = GlobalC.GetSendData_Str(byt, ref index);
+
+            ID = GlobalC.GetSendData_Int(byt, ref index);
+            soutai = GlobalC.GetSendData_Int(byt, ref index);
+            Boss = GlobalC.GetSendData_Int(byt, ref index);
+            mode = GlobalC.GetSendData_Int(byt, ref index);
+            mapTypeID = GlobalC.GetSendData_Int(byt, ref index);
+            mapID = GlobalC.GetSendData_Int(byt, ref index);
+
+            IsGame = GlobalC.GetSendData_Bool(byt, ref index);
+            Islock = GlobalC.GetSendData_Bool(byt, ref index);
+            IsWS = GlobalC.GetSendData_Bool(byt, ref index);
+            modeFree = GlobalC.GetSendData_Bool(byt, ref index);
+
+            for (int i = 0; i < 6; i++)
+            {
+                players[i].enabled = GlobalC.GetSendData_Bool(byt, ref index);
+                players[i].IsReady = GlobalC.GetSendData_Bool(byt, ref index);
+                players[i].team = GlobalC.GetSendData_Int(byt, ref index);
+            }
+
         }
+        private void DealSendData_DelPlayer(byte[] byt)
+        {
+            //玩家退出
+            int index = 4;
+            int sit = GlobalC.GetSendData_Int(byt, ref index);
+            players[sit].player = null;
+        }
+            
     }
     public class Room_Players
     {
@@ -286,73 +293,6 @@ namespace Data.Rooms
             enabled = true;
             IsReady = false;
             team = 0;
-        }
-        public List<byte[]> GetSendData_All()
-        {
-            if (player == null)
-            {
-                var rlist = new List<byte[]>();
-                rlist.Add(GetSendData_Prop());
-                return rlist;
-            }
-            var list = player.GetSendData_All();
-            list.Insert(0, GetSendData_Prop());
-            return list;
-        }
-        public byte[] GetSendData_Prop()
-        {
-            //传送玩家房间属性
-            //1004
-            byte[] bye = new byte[8 + 10];
-            int index = 9;
-
-            System.Buffer.BlockCopy(BitConverter.GetBytes(1004), 0, bye, index, 4);
-            index += 4;
-
-            bye[index] = (player == null) ? (byte)0 : (byte)1;
-            bye[index + 1] = (enabled) ? (byte)0 : (byte)1;
-            bye[index + 2] = (IsReady) ? (byte)0 : (byte)1;
-            bye[index + 3] = (byte)team;
-            return bye;
-        }
-
-        public void SetSendData(byte[] bye)
-        {
-            switch (System.BitConverter.ToInt32(bye, 9))
-            {
-                case 1000:
-                case 1001:
-                case 1002:
-                case 1003:
-                    SetPlayer(bye);
-                    break;
-                case 1004:
-                    SetSendData_Prop(bye);
-                    break;
-                default:
-                    break;
-            }
-        }
-        public void SetSendData_Prop(byte[] bye)
-        {
-            //传送玩家房间属性
-            //1004
-            int index = 9;
-
-            //校验指令
-            //t = System.BitConverter.ToInt32(bye, index);
-            index += 4;
-
-            //读数据
-            if (bye[index] == 0) player = null;
-            enabled = (bye[index + 1] == 1) ? true : false;
-            IsReady = (bye[index + 2] == 1) ? true : false;
-            team = bye[index + 3];
-        }
-        public void SetPlayer(byte[] bye)
-        {
-            if (player == null) player = new PlayerData();
-            player.SetSendData(bye);
         }
     }
 }

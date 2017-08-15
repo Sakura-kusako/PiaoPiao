@@ -19,3 +19,5 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Direct3D9.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.DirectSound.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.DXGI.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Mathematics.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\ClientPublic.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\ClientPublic.pdb

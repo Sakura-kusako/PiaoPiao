@@ -28,10 +28,16 @@ namespace ClientPublic
         };
         public enum CLIENT_DATA_TYPE : int
         {
-           //数据类型
-           SIGN_IN = 1, //登录
-           IMPULSE, //脉冲信号
-           RECV_SEND, //接收信号
+            //数据类型
+            SIGN_IN = 1, //登录
+            IMPULSE, //脉冲信号
+            RECV_SEND, //接收信号
+            ADD_PLAYER, //玩家接入
+            DATA_PLAYER, //玩家信息
+            DATA_ROOM, //房间信息
+            MAP_CHANGE, //更改地图
+            TEAM_CHANGE, //更改队伍
+            DEL_PLAYER, //玩家退出
         };
         
         public IPAddress IP;
@@ -55,12 +61,17 @@ namespace ClientPublic
             Data = new byte[byt.Length - 14];
             Buffer.BlockCopy(byt, 13, Data, 0, byt.Length - 14);
         }
-        public byte[] CreateSendData()
+        public byte[] CreateSendData(int index = 0)
         {
             //转变为发送的byte[]
 
             //创建
-            byte[] byt = new byte[Data.Length + 14];
+            int len = Data.Length + 14;
+            if(index != 0)
+            {
+                len = index;
+            }
+            byte[] byt = new byte[len];
 
             //数据头
             byt[0] = 15;
@@ -100,12 +111,48 @@ namespace ClientPublic
             //转变为脉冲信号回复
             Type = CLIENT_TYPE.IMPULSE_RECV;
         }
-        public void CreateSignIn()
+        public void CreateSignIn(string qq,string exid)
         {
             //转变为登录信息
+            int len = (qq.Length + exid.Length) * 2 + 8 + 4;
+
             Type = CLIENT_TYPE.SEND_ONCE;
-            Data = new byte[4];
-            Buffer.BlockCopy(BitConverter.GetBytes((int)(CLIENT_DATA_TYPE.SIGN_IN)), 0, Data, 0, 4);
+            Data = new byte[len];
+            int index = 0;
+
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.SIGN_IN), Data,ref index);
+            GlobalC.AddSendData_Str(qq, Data, ref index);
+            GlobalC.AddSendData_Str(exid, Data, ref index);
+        }
+        public void CreateMapChange(int mapIndex)
+        {
+            //选择地图信息
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[8];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.MAP_CHANGE), Data, ref index);
+            GlobalC.AddSendData_Int(mapIndex, Data, ref index);
+        }
+        public void CreateTeamChange(int TeamIndex)
+        {
+            //选择地图信息
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[8];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.TEAM_CHANGE), Data, ref index);
+            GlobalC.AddSendData_Int(TeamIndex, Data, ref index);
+        }
+        public void CreateDelPlayer(int sit)
+        {
+            //玩家退出
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[8];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.DEL_PLAYER), Data, ref index);
+            GlobalC.AddSendData_Int(sit, Data, ref index);
         }
         public ClientData NewRecvSend()
         {
