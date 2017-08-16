@@ -676,7 +676,7 @@ namespace Data.MapsManager
             }
             if (player.input.GetFlyUp() > 0)
             {
-                vy -= vy_poi;
+                 vy -= vy_poi;
                 if (player.input.GetFlyLeft() > 0)
                 {
                     vx -= vx_poi;

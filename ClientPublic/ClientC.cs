@@ -22,11 +22,13 @@ namespace ClientPublic
          * ·更新延时
          */
         private bool isConnect = false;
-        private IPAddress IP = new IPAddress(new byte[] { 127, 0, 0, 1 });
-        private int Port = 10800;
+        public IPAddress IP = new IPAddress(new byte[] { 127, 0, 0, 1 });
+        public int Port = 10800;
         private UdpClient Client;
         private IPEndPoint EndPoint; //临时变量
         private Client client;
+        public int SendNum = 0;
+        public int RecvNum = 0;
 
         public ClientC()
         {
@@ -62,13 +64,14 @@ namespace ClientPublic
             uint SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12;
             Client.Client.IOControl((int)SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
 
+            //开始接收
+            Client.BeginReceive(new AsyncCallback(Callback), null);
+
             //发送登录消息
             var dat = new ClientData();
             dat.CreateSignIn(client.GetQQ(),client.GetExID());
             client.AddSendData(dat);
 
-            //开始接收
-            Client.BeginReceive(new AsyncCallback(Callback), null);
             isConnect = true;
         }
         public void CloseClient()
@@ -94,6 +97,15 @@ namespace ClientPublic
                     while (i < list.Count)
                     {
                         var dat = list[i];
+                        /*
+                        {
+                            int index = 0;
+                            int type = GlobalC.GetSendData_Int(dat.Data,ref index);
+                            if((int)ClientData.CLIENT_DATA_TYPE.INPUT == type)
+                            {
+
+                            }
+                        }//*/
                         var byt = dat.CreateSendData();
                         Client.BeginSend(byt, byt.Length, ep, CallbackSend, null);
                         switch (dat.Type)
@@ -157,22 +169,24 @@ namespace ClientPublic
 
         private void Callback(IAsyncResult ar)
         {
+
             //接收回调函数
-                if (isConnect == false) return;
+            if (isConnect == false) return;
 
-                //读取数据
-                byte[] bytes = Client.EndReceive(ar, ref EndPoint);
-                var dat = new ClientData(EndPoint, bytes);
+            //读取数据
+            byte[] bytes = Client.EndReceive(ar, ref EndPoint);
+            var dat = new ClientData(EndPoint, bytes);
 
-                //重新开始接收
-                Client.BeginReceive(new AsyncCallback(Callback), null);
+            //重新开始接收
+            Client.BeginReceive(new AsyncCallback(Callback), null);
 
-                //判断ip
-                if (client.EqualIP(EndPoint))
-                {
-                    //添加到消息列表
-                    client.AddRecvData(dat);
-                }
+            //判断ip
+            if (client.EqualIP(EndPoint) || true)
+            {
+                //添加到消息列表
+                client.AddRecvData(dat);
+                RecvNum++;
+            }
         }
         private void CallbackSend(IAsyncResult ar)
         {
@@ -180,6 +194,7 @@ namespace ClientPublic
 
             if (isConnect == false) return;
             Client.EndSend(ar);
+            SendNum++;
         }
         private void AddDataImpulseAll()
         {

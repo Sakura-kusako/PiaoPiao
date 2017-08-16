@@ -1305,10 +1305,16 @@ namespace Data.Windows
         {
             if (Input.IsLeftUp())
             {
+                if(Global.GetRoom().mapTypeID != 6 && Global.GetRoom().mapTypeID != 0)
+                {
+                    return;
+                }
                 if (Global.IsConnect())
                 {
                     //开始游戏
-                    //Poi.GetForm().SendMessage_ReadyAll();
+                    ClientData dat = new ClientData();
+                    dat.CreateGameStart();
+                    Global.GetClientC().AddData(dat);
                 }
                 else
                 {
@@ -2008,6 +2014,7 @@ namespace Data.Windows
             }
             else
             {
+                //
                 Global.Init_Map(room.mapTypeID, room.mapID);
             }
             if (room.mapTypeID == 6)

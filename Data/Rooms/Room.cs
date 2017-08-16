@@ -3,6 +3,7 @@ using Data.Globals;
 using Room;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Data.Rooms
     public class Room
     {
         public ClientC clientC; //FormGame初始化
+        public RoomInputManager inputManager = new RoomInputManager();
         public Room_Players[] players = new Room_Players[6];
 
         public string name = "大家一起踩~~";
@@ -231,6 +233,12 @@ namespace Data.Rooms
                 case ClientData.CLIENT_DATA_TYPE.DEL_PLAYER:
                     DealSendData_DelPlayer(byt);
                     break;
+                case ClientData.CLIENT_DATA_TYPE.INPUT:
+                    DealSendData_Input(byt);
+                    break;
+                case ClientData.CLIENT_DATA_TYPE.GAME_START:
+                    DealSendData_GameStart(byt);
+                    break;
                 default:
                     break;
             }
@@ -278,7 +286,116 @@ namespace Data.Rooms
             int sit = GlobalC.GetSendData_Int(byt, ref index);
             players[sit].player = null;
         }
-            
+        private void DealSendData_Input(byte[] byt)
+        {
+            //键盘输入
+            //type + sit + 帧ID + bool[9]
+            int index = 4;
+            int sit = GlobalC.GetSendData_Int(byt, ref index);
+            int ID = GlobalC.GetSendData_Int(byt, ref index);
+            bool[] dat = new bool[9];
+            for (int i = 0; i < 9; i++)
+            {
+                dat[i] = GlobalC.GetSendData_Bool(byt, ref index);
+            }
+            inputManager.SetInput(ID, sit, dat);
+        }
+        private void DealSendData_GameStart(byte[] byt)
+        {
+            //游戏开始
+            Global.GetWindowsList().CloseAll();
+            Global.GetWindowsList().ActiveWindow(1003);
+        }
+
+        public int UpdateInput()
+        {
+            if(Global.IsConnect())
+            {
+                //游戏是否开始
+                if(Global.GetMapManager()!=null)
+                {
+                    if(inputManager.IsComplete())
+                    {
+                        //发送到服务端
+                        {
+                            var dat = new ClientData();
+                            dat.CreateInput(inputManager.GetTime(),Global.GetInput().GetKeyBool());
+                            Global.GetClientC().AddData(dat);
+                        }
+                        
+                        var rep = Global.GetReplayManager();
+                        var sw = rep.GetSw();
+                        if(inputManager.IsBegin())
+                        {
+                            var player = Global.GetPlayer();
+                            string path = GlobalB.GetRootPath() + @"\Setting\PlayerData\" + (player.GetQQ() + "_" + player.GetExID() + @"\Replay");
+                            if(Directory.Exists(path) == false)
+                            {
+                                Directory.CreateDirectory(path);
+                            }
+                            var time = DateTime.Now;
+                            string timeStr = "" + time.Year + time.Month + time.Day + "_" + time.Hour + time.Minute + time.Second;
+                            path = path + "\\" + timeStr + ".rep";
+                            rep.Start(path);
+                            sw = rep.GetSw();
+                            sw.WriteLine("" + GetPlayerNum());
+
+                            //
+                            bool[] dat = new bool[6];
+                            for (int i = 0; i < 6; i++)
+                            {
+                                dat[i] = (players[i].player != null);
+                            }
+                            inputManager.SetPlayer(dat);
+                        }
+                        int index = 0;
+                        for (int i = 0; i < 6; i++)
+                        {
+                            if(inputManager.IsIn(i))
+                            {
+                                var player = players[i].player;
+                                if (player != null)
+                                {
+                                    var inp = inputManager.GetInput(i);
+                                    {
+                                        //player.input.UpdateKey(inp);
+                                        //？？？？
+                                        //创建的player有误？
+                                        Global.GetMapManager().pla.list[index].player.input.UpdateKey(inp);
+                                        index++;
+                                    }
+                                    for (int j = 0; j < 9; j++)
+                                    {
+                                        if(inp[j])
+                                        {
+                                            sw.Write('1');
+                                        }
+                                        else
+                                        {
+                                            sw.Write('0');
+                                        }
+                                    }
+                                    sw.Write(' ');
+                                }
+                            }
+                        }
+                        sw.WriteLine();
+                        //sw.Flush();
+                        inputManager.Update();
+                    }
+                    else
+                    {
+                        return 1;
+                    }
+                }
+            }
+            else
+            {
+                //本地更新
+                Global.GetPlayer().input.UpdateKey(Global.GetInput().GetKeyBool());
+            }
+            return 0;
+        }
     }
     public class Room_Players
     {
@@ -293,6 +410,145 @@ namespace Data.Rooms
             enabled = true;
             IsReady = false;
             team = 0;
+        }
+    }
+    public class RoomInputManager
+    {
+        const int delayFps = 5; //延迟帧
+        const int LenMax = 10; //最大储存量
+        private int timeFps = 0; //第0帧开始
+        public List<InputFps> inputFps;
+        public static bool[] player;
+
+        public RoomInputManager()
+        {
+            Reset();
+        }
+        public void Reset()
+        {
+            timeFps = 0;
+            if (inputFps != null)
+                inputFps.Clear();
+            inputFps = new List<InputFps>();
+            for (int i = 0; i < delayFps; i++)
+            {
+                inputFps.Add(new InputFps(false));
+            }
+            for (int i = delayFps; i < LenMax; i++)
+            {
+                inputFps.Add(new InputFps());
+            }
+            player = new bool[6] { false, false, false, false, false, false };
+        }
+        public bool IsIn(int sit)
+        {
+            return player[sit];
+        }
+        public bool IsComplete()
+        {
+            if (inputFps.Count == 0) return false;
+            return inputFps[0].IsComplete();
+        }
+        public void SetInput(int ID,int sit,bool[] dat)
+        {
+            ID = ID - timeFps + delayFps;
+            if(ID<0&&ID>=LenMax)
+            {
+                return;
+            }
+            lock(inputFps)
+            {
+                inputFps[ID].SetInput(sit, dat);
+            }
+        }
+        public bool[] GetInput(int sit)
+        {
+            if(inputFps.Count>0)
+            {
+                return inputFps[0].GetInput(sit);
+            }
+            else
+            {
+                return new bool[9]
+                {
+                    false,false,false,
+                    false,false,false,
+                    false,false,false
+                };
+            }
+        }
+        public bool IsBegin()
+        {
+            return timeFps == 0;
+        }
+        public int GetPlayerNum()
+        {
+            int ret = 0;
+            for (int i = 0; i < 6; i++)
+            {
+                if (player[i])
+                    ret++;
+            }
+            return ret;
+        }
+        public void Update()
+        {
+            timeFps++;
+            lock(inputFps)
+            {
+                inputFps.RemoveAt(0);
+                inputFps.Add(new InputFps());
+            }
+        }           
+        public void SetPlayer(bool[] dat)
+        {
+            player = dat;
+        }
+        public int GetTime()
+        {
+            return timeFps;
+        }
+
+        public class InputFps
+        {
+            private bool[][] input;
+
+            public InputFps()
+            {
+                input = new bool[6][];
+            }
+            public InputFps(bool x)
+            {
+                input = new bool[6][];
+                for (int i = 0; i < 6; i++)
+                {
+                    input[i] = new bool[9];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        input[i][j] = false;
+                    }
+                }
+            }
+
+            public void SetInput(int sit, bool[] dat)
+            {
+                input[sit] = dat;
+            }
+            public bool IsComplete()
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    if(player[i] && input[i] == null)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            public bool[] GetInput(int sit)
+            {
+                return input[sit];
+            }
         }
     }
 }

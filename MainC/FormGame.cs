@@ -49,7 +49,8 @@ namespace MainC
 
         private void FormGame_Load(object sender, EventArgs e)
         {
-                ppDevice = new PPDevice(this,this.Draw);
+            {
+                ppDevice = new PPDevice(this, this.Draw);
                 Global.SetPPDevice(ppDevice);
 
                 xml = Global.GetXmlManager();
@@ -74,8 +75,8 @@ namespace MainC
                 thread = new Thread(new ThreadStart(Action));
                 thread.Start();
                 Global.IsFormGameOpen = true;
+            }
         }
-
         public void Action()
         {
             try
@@ -83,17 +84,22 @@ namespace MainC
                 while (true)
                 {
                     if (this.IsDisposed) break;
-                    input.UpdateMousePoint(this.PointToClient(MousePosition));
-                    input.UpdateMouseBottons(MouseButtons);
 
                     ppDevice.RenderAll();
-                    camera.Update();
-                    if (Global.GetMapManager() != null)
-                        Global.GetMapManager().Update();
+
+                    input.UpdateMousePoint(this.PointToClient(MousePosition));
+                    input.UpdateMouseBottons(MouseButtons);
+                    input.UpdateKey();
+
+                    if (Global.GetRoom().UpdateInput()==0)
+                    {
+                        if (Global.GetMapManager() != null)
+                            Global.GetMapManager().Update();
+                        camera.Update();
+                    }
+
                     windowList.Action();
                     windowList.Draw(ppDevice);
-
-                    input.UpdateKey();
 
                     {
                         var clientC = Global.GetClientC();
@@ -154,6 +160,14 @@ namespace MainC
                 FormParent.ShowText12("延时" + " : " + delay + " ms");
             }
 
+            var clientC = Global.GetClientC();
+            if(clientC!=null)
+            {
+                FormParent.ShowText13("发送" + " : " + clientC.SendNum);
+                clientC.SendNum = 0;
+                FormParent.ShowText14("接收" + " : " + clientC.RecvNum);
+                clientC.RecvNum = 0;
+            }
             /*
             if (data.input.GetFlyDown() > 0 && data.input.GetFlyUp() > 0 && data.input.GetNum4() == 2)
             {
@@ -209,6 +223,7 @@ namespace MainC
 
         private void FormGame_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Global.GetReplayManager().End();
             Global.IsFormGameOpen = false;
             XmlPlayer.WritePlayer(GlobalB.GetRootPath()+@"\Setting\", Global.GetPlayer());
             FormParent.AddTextGame("玩家数据保存成功");

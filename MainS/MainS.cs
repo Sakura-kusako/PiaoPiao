@@ -18,11 +18,28 @@ namespace MainS
             Console.WriteLine("等待客户端接入");
 
             room.clientS = clientS;
+            int t = 0;
+            int ret = 0;
             while(true)
             {
+                t++;
                 Thread.Sleep(5);
                 clientS.SendAll();
-                clientS.UpdateTime();
+                ret = clientS.UpdateTime();
+                if(ret > 0)
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if ((ret & (1 << i)) > 0)
+                        {
+                            room.players[i].Reset();
+                            room.DelPlayer(i);
+                        }
+                    }
+                    room.ResetSoutai();
+                    room.SendData_All();
+                    room.SendData_PlayerAll();
+                }
                 for (int i = 0; i < 6; i++)
                 {
                     var list = clientS.GetDataList(i);
@@ -30,20 +47,24 @@ namespace MainS
                     {
                         room.DealSendData(list,i);
                     }
-                    else
+
+                    if(t>=20)
                     {
-                        room.players[i].Reset();
-                        room.DelPlayer(i);
-                        room.ResetSoutai();
-                        room.SendData_All();
-                        room.SendData_PlayerAll();
-                    }
-                    int delay = clientS.GetDelay(i);
-                    if (delay > 0)
-                    {
-                        Console.WriteLine("clients " + i + " : " + delay + " ms");
+                        int delay = clientS.GetDelay(i);
+                        if (delay > 0)
+                        {
+                            //Console.WriteLine("clients " + i + " : " + delay + " ms");
+                        }
                     }
                 }
+                if(t>=20)
+                {
+                    t = 0;
+                    clientS.AddDataImpulseAll();
+                }
+                Console.WriteLine("Send : " + clientS.SendNum + "   Recv : " + clientS.RecvNum);
+                clientS.SendNum = 0;
+                clientS.RecvNum = 0;
             }
         }
     }

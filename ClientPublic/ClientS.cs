@@ -26,6 +26,8 @@ namespace ClientPublic
         private UdpClient Client; 
         private IPEndPoint EndPoint; //临时变量
         private Client[] clients;
+        public int SendNum = 0;
+        public int RecvNum = 0;
 
         public ClientS()
         {
@@ -84,9 +86,6 @@ namespace ClientPublic
             //发送所有数据
             if (isConnect == false) return;
 
-            //发送脉冲
-            AddDataImpulseAll();
-
             foreach (var client in clients)
             {
                 if(client.IsConnect())
@@ -120,6 +119,7 @@ namespace ClientPublic
                                         break;
                                     }
                             }
+                            //Console.WriteLine("Send"+ep.ToString()+"  "+dat.Type.ToString());
                         }
                     }
                 }
@@ -171,9 +171,10 @@ namespace ClientPublic
             }
             return 0;
         }
-        public void UpdateTime()
+        public int UpdateTime()
         {
             Client client;
+            int ret = 0;
             for (int i = 0; i < 6; i++)
             {
                 client = clients[i];
@@ -183,9 +184,11 @@ namespace ClientPublic
                     if(client.GetDelay()>10000)
                     {
                         client.LostConnect();
+                        ret += 1<<0;
                     }
                 }
             }
+            return ret;
         }
 
         private void Callback(IAsyncResult ar)
@@ -199,6 +202,9 @@ namespace ClientPublic
             //读取数据
             byte[] bytes = Client.EndReceive(ar, ref ep);
             var dat = new ClientData(ep, bytes);
+
+
+            //Console.WriteLine(dat.ToString());
 
             //重新开始接收
             Client.BeginReceive(new AsyncCallback(Callback), null);
@@ -218,9 +224,9 @@ namespace ClientPublic
                     {
                         client.ReConnect(ep);
                         IsReConnect = true;
-                        clients[i].AddRecvData(dat);
-                        clients[i].SetQQ(qq);
-                        clients[i].SetExID(exid);
+                        client.AddRecvData(dat);
+                        client.SetQQ(qq);
+                        client.SetExID(exid);
                         break;
                     }
                     else
@@ -252,6 +258,7 @@ namespace ClientPublic
                     }
                 }
             }
+            RecvNum++;
         }
         private void CallbackSend(IAsyncResult ar)
         {
@@ -260,6 +267,7 @@ namespace ClientPublic
             {
                 if (isConnect == false) return;
                 Client.EndSend(ar);
+                SendNum++;
             }
             catch(Exception)
             {
@@ -267,7 +275,7 @@ namespace ClientPublic
             }
         }
 
-        private void AddDataImpulseAll()
+        public void AddDataImpulseAll()
         {
             var dat = new ClientData();
             dat.CreateImpulse();

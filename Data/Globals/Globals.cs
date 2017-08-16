@@ -15,6 +15,7 @@ using System.Drawing;
 using SharpDX.Direct3D9;
 using Data.MapsManager;
 using ClientPublic;
+using Data.Replays;
 
 namespace Data.Globals
 {
@@ -39,6 +40,7 @@ namespace Data.Globals
         private static Window_List windowsList = new Window_List();
         private static MapManager mapManager = null;
         private static ClientC clientC ;
+        private static Replay replayManager = new Replay();
 
         public static ResManager GetResManager()
         {
@@ -91,6 +93,10 @@ namespace Data.Globals
         public static void SetClientC(ClientC c)
         {
             clientC = c;
+        }
+        public static Replay GetReplayManager()
+        {
+            return replayManager;
         }
 
         public static Texture Load_Bitmap_FromFile(string path, string file)

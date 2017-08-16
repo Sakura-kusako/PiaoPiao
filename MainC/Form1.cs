@@ -50,6 +50,8 @@ namespace MainC
                     comboBox1.Items.Add(player.GetQQ() + " - " + player.GetName());
                 }
             }
+            if (comboBox1.Items.Count > 0)
+                comboBox1.SelectedIndex = 0;
         }
         private void Save()
         {
@@ -139,6 +141,14 @@ namespace MainC
         {
             textBox12.Text = str;
         }
+        public void ShowText13(string str)
+        {
+            textBox13.Text = str;
+        }
+        public void ShowText14(string str)
+        {
+            textBox14.Text = str;
+        }
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -146,21 +156,54 @@ namespace MainC
             {
                 if (Global.IsFormGameOpen)
                 {
+                    string port = textBox4.Text;
+                    string ip = textBox3.Text;
+                    int ret = 0;
+                    byte[] ipbyte = new byte[4];
+
+                    var strs = ip.Split('.');
+                    if (strs.Length != 4)
+                    {
+                        AddTextLine(textBox6, "IP地址格式有误");
+                        return;
+                    }
+                    for (int i = 0; i < 4; i++)
+                    {
+                        bool checks = byte.TryParse(strs[i],out ipbyte[i]);
+                        if(checks == false)
+                        {
+                            AddTextLine(textBox6, "IP地址格式有误");
+                            return;
+                        }
+                    }
+
+                    bool check =  int.TryParse(port, out ret);
+                    if(check == false || ret>65535)
+                    {
+                        AddTextLine(textBox6, "端口格式有误");
+                        return;
+                    }
+
                     var clientC = Global.GetClientC();
                     if (clientC == null || true)
                     {
-                        clientC = new ClientPublic.ClientC(Global.GetPlayer().GetQQ(),Global.GetPlayer().GetExID());
+                        clientC = new ClientPublic.ClientC(Global.GetPlayer().GetQQ(), Global.GetPlayer().GetExID());
                         Global.SetClientC(clientC);
                     }
-                    if(clientC.IsConnect() == false)
+                    if (clientC.IsConnect() == false)
                     {
+                        {
+                            clientC.IP = new System.Net.IPAddress(ipbyte);
+                            clientC.Port = ret;
+                        }
+
                         clientC.OpenClient();
                         clientC.AddData(Global.GetPlayer().GetSendData_All());
-                        AddTextLine(textBox6, "尝试连接到服务器");
+                        AddTextLine(textBox6, "尝试连接到 " + clientC.IP.ToString() + ":" + clientC.Port);
                     }
                     else
                     {
-                        AddTextLine(textBox6,"连接已经打开");
+                        AddTextLine(textBox6, "连接已经打开");
                     }
                 }
                 else
@@ -178,6 +221,12 @@ namespace MainC
         {
             if (formGame != null && formGame.IsDisposed == false)
                 formGame.Close();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            bool c = checkBox1.Checked;
+            Global.IsDebug = c;
         }
     }
 }

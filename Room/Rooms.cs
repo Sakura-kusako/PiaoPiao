@@ -292,6 +292,12 @@ namespace Room
                 case ClientData.CLIENT_DATA_TYPE.TEAM_CHANGE:
                     DealSendData_TeamChange(byt, sit);
                     break;
+                case ClientData.CLIENT_DATA_TYPE.GAME_START:
+                    DealSendData_GameStart(byt, sit);
+                    break;
+                case ClientData.CLIENT_DATA_TYPE.INPUT:
+                    DealSendData_Input(byt, sit);
+                    break;
                 default:
                     break;
             }
@@ -346,6 +352,20 @@ namespace Room
 
             //重新发送房间状态
             var dat = GetSendData_All();
+            clientS.AddData(dat);
+        }
+        private void DealSendData_GameStart(byte[] byt,int sit)
+        {
+            //游戏开始
+            ClientData dat = new ClientData();
+            dat.CreateGameStart();
+            clientS.AddData(dat);
+        }
+        private void DealSendData_Input(byte[] byt, int sit)
+        {
+            //键盘输入
+            ClientData dat = new ClientData();
+            dat.CreateInput(byt, sit);
             clientS.AddData(dat);
         }
 

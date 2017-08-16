@@ -271,7 +271,8 @@ namespace ClientPublic
             var t = sw.ElapsedMilliseconds;
             if(t - delayTime > delay)
             {
-                delay = (int)(t - delayTime);
+                if (t - delayTime > 200)
+                    delay = (int)(t - delayTime);
             }
 
             lock (RecvIDList)

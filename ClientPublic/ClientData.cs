@@ -38,6 +38,8 @@ namespace ClientPublic
             MAP_CHANGE, //更改地图
             TEAM_CHANGE, //更改队伍
             DEL_PLAYER, //玩家退出
+            INPUT, //键盘输入
+            GAME_START, //开始游戏
         };
         
         public IPAddress IP;
@@ -154,6 +156,41 @@ namespace ClientPublic
             GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.DEL_PLAYER), Data, ref index);
             GlobalC.AddSendData_Int(sit, Data, ref index);
         }
+        public void CreateGameStart()
+        {
+            //开始游戏
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[4];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.GAME_START), Data, ref index);
+        }
+        public void CreateInput(int time,bool[] dat)
+        {
+            //键盘输入(客户端)
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[17];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.INPUT), Data, ref index);
+            GlobalC.AddSendData_Int(time, Data, ref index);
+            for (int i = 0; i < 9; i++)
+            {
+                GlobalC.AddSendData_Bool(dat[i], Data, ref index);                        
+            }
+        }
+        public void CreateInput(byte[] byt, int sit)
+        {
+            //键盘输入(服务端)
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[21];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.INPUT), Data, ref index);
+            GlobalC.AddSendData_Int(sit, Data, ref index);
+            System.Buffer.BlockCopy(byt, 4, Data, 8, 13);
+        }
+
         public ClientData NewRecvSend()
         {
             //根据发送信号创建接收信号
@@ -178,6 +215,7 @@ namespace ClientPublic
         public bool IsRecvSend(ClientData dat)
         {
             //判断是否为对应的RECV
+            if (dat == null) return false;
             return (dat.Type == CLIENT_TYPE.RECV_SEND && ID == dat.ID);
         }
         public bool IsCancleSend(ClientData dat)

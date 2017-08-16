@@ -53,6 +53,9 @@
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.textBox14 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -182,6 +185,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.textBox14);
+            this.groupBox1.Controls.Add(this.textBox13);
             this.groupBox1.Controls.Add(this.textBox12);
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.label3);
@@ -190,7 +195,7 @@
             this.groupBox1.Controls.Add(this.textBox3);
             this.groupBox1.Location = new System.Drawing.Point(408, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(302, 95);
+            this.groupBox1.Size = new System.Drawing.Size(302, 149);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             // 
@@ -198,12 +203,13 @@
             // 
             this.textBox12.Location = new System.Drawing.Point(6, 64);
             this.textBox12.Name = "textBox12";
+            this.textBox12.ReadOnly = true;
             this.textBox12.Size = new System.Drawing.Size(115, 21);
             this.textBox12.TabIndex = 9;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(205, 64);
+            this.button4.Location = new System.Drawing.Point(205, 118);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(91, 23);
             this.button4.TabIndex = 8;
@@ -235,6 +241,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(91, 21);
             this.textBox4.TabIndex = 1;
+            this.textBox4.Text = "10800";
             // 
             // textBox3
             // 
@@ -242,10 +249,12 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(193, 21);
             this.textBox3.TabIndex = 0;
+            this.textBox3.Text = "127.0.0.1";
             // 
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage3.Controls.Add(this.checkBox1);
             this.tabPage3.Controls.Add(this.textBox11);
             this.tabPage3.Controls.Add(this.textBox10);
             this.tabPage3.Controls.Add(this.textBox9);
@@ -304,6 +313,33 @@
             this.textBox5.Size = new System.Drawing.Size(598, 378);
             this.textBox5.TabIndex = 2;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(614, 362);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(72, 16);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "调试模式";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // textBox13
+            // 
+            this.textBox13.Location = new System.Drawing.Point(6, 91);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.ReadOnly = true;
+            this.textBox13.Size = new System.Drawing.Size(115, 21);
+            this.textBox13.TabIndex = 10;
+            // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(6, 118);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.ReadOnly = true;
+            this.textBox14.Size = new System.Drawing.Size(115, 21);
+            this.textBox14.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -356,6 +392,9 @@
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.TextBox textBox14;
+        private System.Windows.Forms.TextBox textBox13;
     }
 }
 

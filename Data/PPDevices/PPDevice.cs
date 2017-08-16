@@ -86,26 +86,27 @@ namespace Data.PPDevices
         {
             if (pic == null) return;
             if (pic.bitmap == null) return;
-            float w = (int)pic.bitmap.GetWidth() + 1;
-            float h = (int)pic.bitmap.GetHeight() + 1;
+            const int fix = 1;
+            float w = (int)pic.bitmap.GetWidth() + fix;
+            float h = (int)pic.bitmap.GetHeight() + fix;
 
             _Sprite.Texture = pic.bitmap;
             _Sprite.Left = (int)(pos.X);
-            _Sprite.Top = (int)(pos.Y + 0.1f);
+            _Sprite.Top = (int)(pos.Y);
             _Sprite.Alpha = alpha;
             //_Sprite.SizeY = pos.Width;
             //_Sprite.SizeX = pos.Height;
             //_Sprite.Rotation = 0;
-            _Sprite.TextureLeft = (tex.Left + 1) / w;
-            _Sprite.TextureTop = (tex.Top + 1) / h;
-            _Sprite.TextureRight = (tex.Right + 1) / w;
-            _Sprite.TextureBottom = (tex.Bottom + 1) / h;
+            _Sprite.TextureLeft = (tex.Left + fix) / w;
+            _Sprite.TextureTop = (tex.Top + fix) / h;
+            _Sprite.TextureRight = (tex.Right + fix) / w;
+            _Sprite.TextureBottom = (tex.Bottom + fix) / h;
 
             //_Sprite.ScaleX = pos.Width / (pic.GetWidth() * 1);
             //_Sprite.ScaleY = pos.Height / (pic.GetHeight() * 1);
 
-            _Sprite.ScaleX = pos.Width / (w - 1);
-            _Sprite.ScaleY = pos.Height / (h - 1);
+            _Sprite.ScaleX = pos.Width / (w - fix);
+            _Sprite.ScaleY = pos.Height / (h - fix);
 
             _Sprite.Render();
         }
@@ -122,26 +123,27 @@ namespace Data.PPDevices
             */
             if (pic == null) return;
             if (pic.bitmap == null) return;
-            float w = (int)pic.bitmap.GetWidth() + 1;
-            float h = (int)pic.bitmap.GetHeight() + 1;
+            const int fix = 1;
+            float w = (int)pic.bitmap.GetWidth() + fix;
+            float h = (int)pic.bitmap.GetHeight() + fix;
 
             _Sprite.Texture = pic.bitmap;
             _Sprite.Left = (x);
-            _Sprite.Top = (y + 0.01f);
+            _Sprite.Top = (y );
             _Sprite.Alpha = alpha;
             //_Sprite.SizeY = pos.Width;
             //_Sprite.SizeX = pos.Height;
             //_Sprite.Rotation = 0;
-            _Sprite.TextureLeft = (tex.Left + 1) / w;
-            _Sprite.TextureTop = (tex.Top + 1) / h;
-            _Sprite.TextureRight = (tex.Right + 1) / w;
-            _Sprite.TextureBottom = (tex.Bottom + 1) / h;
+            _Sprite.TextureLeft = (tex.Left + fix) / w;
+            _Sprite.TextureTop = (tex.Top + fix) / h;
+            _Sprite.TextureRight = (tex.Right + fix) / w;
+            _Sprite.TextureBottom = (tex.Bottom + fix) / h;
 
             //_Sprite.ScaleX = pos.Width / (pic.GetWidth() * 1);
             //_Sprite.ScaleY = pos.Height / (pic.GetHeight() * 1);
 
-            _Sprite.ScaleX = tex.Width / (w - 1);
-            _Sprite.ScaleY = tex.Height / (h - 1);
+            _Sprite.ScaleX = tex.Width / (w - fix);
+            _Sprite.ScaleY = tex.Height / (h - fix);
 
             _Sprite.Render();
         }
