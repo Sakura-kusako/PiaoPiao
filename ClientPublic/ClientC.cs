@@ -90,22 +90,13 @@ namespace ClientPublic
 
             if (client.IsConnect())
             {
-                var list = client.GetSendList();
-                lock (list)
+                lock (ClientPublic.Client.lockSendList)
                 {
+                    var list = client.GetSendList();
                     int i = 0;
                     while (i < list.Count)
                     {
                         var dat = list[i];
-                        /*
-                        {
-                            int index = 0;
-                            int type = GlobalC.GetSendData_Int(dat.Data,ref index);
-                            if((int)ClientData.CLIENT_DATA_TYPE.INPUT == type)
-                            {
-
-                            }
-                        }//*/
                         var byt = dat.CreateSendData();
                         Client.BeginSend(byt, byt.Length, ep, CallbackSend, null);
                         switch (dat.Type)

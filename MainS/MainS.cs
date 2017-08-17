@@ -42,11 +42,7 @@ namespace MainS
                 }
                 for (int i = 0; i < 6; i++)
                 {
-                    var list = clientS.GetDataList(i);
-                    if (list != null)
-                    {
-                        room.DealSendData(list,i);
-                    }
+                    room.DealSendData(i);
 
                     if(t>=20)
                     {
@@ -62,7 +58,7 @@ namespace MainS
                     t = 0;
                     clientS.AddDataImpulseAll();
                 }
-                Console.WriteLine("Send : " + clientS.SendNum + "   Recv : " + clientS.RecvNum);
+                //Console.WriteLine("Send : " + clientS.SendNum + "   Recv : " + clientS.RecvNum);
                 clientS.SendNum = 0;
                 clientS.RecvNum = 0;
             }

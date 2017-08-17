@@ -196,14 +196,15 @@ namespace Data.Rooms
             return players[i].team;
         }
 
-        public void DealSendData(List<ClientData> list)
+        public void DealSendData()
         {
             ClientData dat;
-            if (list == null) return;
             while (true)
             {
-                lock (list)
+                lock (Client.lockRecvList)
                 {
+                    var list = Global.GetClientC().GetDataList();
+                    if (list == null) return;
                     if (list.Count > 0)
                     {
                         dat = list[0];
@@ -449,21 +450,18 @@ namespace Data.Rooms
             if (inputFps.Count == 0) return false;
             return inputFps[0].IsComplete();
         }
-        public void SetInput(int ID,int sit,bool[] dat)
+        public void SetInput(int ID, int sit, bool[] dat)
         {
             ID = ID - timeFps + delayFps;
-            if(ID<0&&ID>=LenMax)
+            if (ID < 0 && ID >= LenMax)
             {
                 return;
             }
-            lock(inputFps)
-            {
-                inputFps[ID].SetInput(sit, dat);
-            }
+            inputFps[ID].SetInput(sit, dat);
         }
         public bool[] GetInput(int sit)
         {
-            if(inputFps.Count>0)
+            if (inputFps.Count > 0)
             {
                 return inputFps[0].GetInput(sit);
             }
@@ -494,12 +492,9 @@ namespace Data.Rooms
         public void Update()
         {
             timeFps++;
-            lock(inputFps)
-            {
-                inputFps.RemoveAt(0);
-                inputFps.Add(new InputFps());
-            }
-        }           
+            inputFps.RemoveAt(0);
+            inputFps.Add(new InputFps());
+        } 
         public void SetPlayer(bool[] dat)
         {
             player = dat;

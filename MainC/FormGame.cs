@@ -99,7 +99,7 @@ namespace MainC
                     }
 
                     windowList.Action();
-                    windowList.Draw(ppDevice);
+                    //windowList.Draw(ppDevice);
 
                     {
                         var clientC = Global.GetClientC();
@@ -107,7 +107,7 @@ namespace MainC
                         {
                             clientC.SendAll();
                             clientC.UpdateTime();
-                            Global.GetRoom().DealSendData(clientC.GetDataList());
+                            Global.GetRoom().DealSendData();
                         }
                     }
 

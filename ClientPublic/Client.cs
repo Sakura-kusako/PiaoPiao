@@ -71,6 +71,10 @@ namespace ClientPublic
          * ·获取IPEndPoint
          * ·更新内部时间（每帧）
          */
+        public static readonly object lockRecvList = new object();
+        public static readonly object lockSendList = new object();
+        public static readonly object lockRecvIDList = new object();
+
         private const int timeLost = 10000; //掉线时间
 
         private IPAddress IP;
@@ -131,9 +135,18 @@ namespace ClientPublic
             ID = 0;
             sw.Restart();
             delayTime = sw.ElapsedMilliseconds;
-            SendList.Clear();
-            RecvList.Clear();
-            RecvIDList.Clear();
+            lock (lockSendList)
+            {
+                SendList.Clear();
+            }
+            lock (lockRecvList)
+            {
+                RecvList.Clear();
+            }
+            lock (lockRecvIDList)
+            {
+                RecvIDList.Clear();
+            }
         }
         public void ReConnect(IPEndPoint ep)
         {
@@ -151,9 +164,18 @@ namespace ClientPublic
         {
             //连接断开
             isConnect = false;
-            SendList.Clear();
-            RecvList.Clear();
-            RecvIDList.Clear();
+            lock(lockSendList)
+            {
+                SendList.Clear();
+            }
+            lock(lockRecvList)
+            {
+                RecvList.Clear();
+            }
+            lock(lockRecvIDList)
+            {
+                RecvIDList.Clear();
+            }
             sw.Stop();
             sw.Reset();
         }
@@ -165,7 +187,7 @@ namespace ClientPublic
                 dat.ID = this.ID;
                 this.ID++;
             }
-            lock (SendList)
+            lock (lockSendList)
             {
                 SendList.Add(dat);
             }
@@ -208,12 +230,22 @@ namespace ClientPublic
                         {
                             //不存在
                             //检查是否已经接收
+                            //Console.WriteLine("ID:"+dat.ID);
                             if (CheckRecvID(dat.ID) == true)
                             {
                                 return;
                             }
+                            /*
+                            {
+                                for (int i = 0; i < RecvIDList.Count; i++)
+                                {
+                                    var l = RecvIDList[i];
+                                    Console.Write(l.minID + "-" + l.maxID + "");
+                                }
+                                Console.WriteLine();
+                            }//*/
                             //检查是否在接收列表
-                            if(CheckRecvExist(dat))
+                            if (CheckRecvExist(dat))
                             {
                                 return;
                             }
@@ -234,7 +266,7 @@ namespace ClientPublic
             }
 
             //将数据添加到数据接收列表
-            lock (RecvList)
+            lock (lockRecvList)
             {
                 RecvList.Add(dat);
             }
@@ -271,17 +303,17 @@ namespace ClientPublic
             var t = sw.ElapsedMilliseconds;
             if(t - delayTime > delay)
             {
-                if (t - delayTime > 200)
+                if (t - delayTime > (long)200)
                     delay = (int)(t - delayTime);
             }
 
-            lock (RecvIDList)
+            lock (lockRecvIDList)
             {
                 int i = 0;
                 while(i<RecvIDList.Count)
                 {
                     var datID = RecvIDList[i];
-                    if (t - datID.time > timeLost)
+                    if ((int)(t - datID.time) > timeLost)
                     {
                         RecvIDList.RemoveAt(i);
                     }
@@ -296,7 +328,7 @@ namespace ClientPublic
         private bool AddRecvSend(ClientData dat)
         {
             //已经存在返回false
-            lock(SendList)
+            lock(lockSendList)
             {
                 foreach (var data in SendList)
                 {
@@ -311,7 +343,7 @@ namespace ClientPublic
         }
         private bool CheckRecvExist(ClientData dat)
         {
-            lock(RecvList)
+            lock(lockRecvList)
             {
                 foreach (var data in RecvList)
                 {
@@ -327,7 +359,7 @@ namespace ClientPublic
         {
             //2取消1
             int i = 0;
-            lock (SendList)
+            lock (lockSendList)
             {
                 foreach (var data in SendList)
                 {
@@ -343,7 +375,7 @@ namespace ClientPublic
         private bool CheckRecvID(int id)
         {
             int i = 0;
-            lock(RecvIDList)
+            lock(lockRecvIDList)
             {
                 foreach (var datID in RecvIDList)
                 {

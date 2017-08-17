@@ -91,16 +91,17 @@ namespace ClientPublic
                 if(client.IsConnect())
                 {
                     var ep = client.GetIPEndPoint();
-                    var list = client.GetSendList();
-                    lock(list)
+                    lock(ClientPublic.Client.lockSendList)
                     {
+                        var list = client.GetSendList();
                         int i = 0;
                         while(i < list.Count)
                         {
                             var dat = list[i];
                             var byt = dat.CreateSendData();
                             Client.BeginSend(byt, byt.Length,ep, CallbackSend, null);
-                            switch(dat.Type)
+
+                            switch (dat.Type)
                             {
                                 case ClientData.CLIENT_TYPE.SEND:
                                     {
@@ -115,11 +116,10 @@ namespace ClientPublic
                                 case ClientData.CLIENT_TYPE.ERROR:
                                 default:
                                     {
-                                        list.RemoveAt(0);
+                                        list.RemoveAt(i);
                                         break;
                                     }
                             }
-                            //Console.WriteLine("Send"+ep.ToString()+"  "+dat.Type.ToString());
                         }
                     }
                 }
@@ -144,6 +144,7 @@ namespace ClientPublic
                 if (clients[i].IsConnect())
                 {
                     clients[i].AddSendData(dat);
+
                 }
             }
         }
@@ -203,7 +204,6 @@ namespace ClientPublic
             byte[] bytes = Client.EndReceive(ar, ref ep);
             var dat = new ClientData(ep, bytes);
 
-
             //Console.WriteLine(dat.ToString());
 
             //重新开始接收
@@ -255,6 +255,7 @@ namespace ClientPublic
                     {
                         //添加到消息列表
                         client.AddRecvData(dat);
+
                     }
                 }
             }

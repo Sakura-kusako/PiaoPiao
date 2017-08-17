@@ -255,14 +255,15 @@ namespace Room
             return dat;
         }
 
-        public void DealSendData(List<ClientData> list, int sit)
+        public void DealSendData(int sit)
         {
             ClientData dat;
-            if (list == null) return;
             while (true)
             {
-                lock (list)
+                lock (Client.lockRecvList)
                 {
+                    var list = clientS.GetDataList(sit);
+                    if (list == null) return;
                     if (list.Count > 0)
                     {
                         dat = list[0];
