@@ -1305,7 +1305,7 @@ namespace Data.Windows
         {
             if (Input.IsLeftUp())
             {
-                if(Global.GetRoom().mapTypeID != 6 && Global.GetRoom().mapTypeID != 0)
+                if(Global.GetRoom().mapTypeID != 6 && Global.GetRoom().mapTypeID != 1)
                 {
                     return;
                 }
@@ -2022,6 +2022,8 @@ namespace Data.Windows
                 addBefore.Add(new Sprite_Map_JingSu());
             }
             addBefore.Add(new Sprite_Map_Base());
+            Global.GetRoom().inputManager.Reset();
+            Global.GetReplayManager().End();
         }
 
         public int GetIndex(int typeID)

@@ -16,6 +16,7 @@ using SharpDX.Direct3D9;
 using Data.MapsManager;
 using ClientPublic;
 using Data.Replays;
+using Data.Sounds;
 
 namespace Data.Globals
 {
@@ -41,6 +42,7 @@ namespace Data.Globals
         private static MapManager mapManager = null;
         private static ClientC clientC ;
         private static Replay replayManager = new Replay();
+        private static Sound soundManager = new Sound();
 
         public static ResManager GetResManager()
         {
@@ -120,13 +122,25 @@ namespace Data.Globals
             return null;
         }
 
-        public static void PlayBgm(int id)
+        public static Sound GetSoundManager()
         {
-
+            return soundManager;
+        }
+        public static void PlayBgm(int id,bool isLoop = true)
+        {
+            soundManager.PlayBgm(id,isLoop);
+        }
+        public static void PlayBgm(Sound.BGM_ID id, bool isLoop = true)
+        {
+            soundManager.PlayBgm(id, isLoop);
         }
         public static void PlayEffect(int id)
         {
-
+            soundManager.PlayEffect(id);
+        }
+        public static void PlayEffect(Sound.EFFECT_ID id)
+        {
+            soundManager.PlayEffect(id);
         }
 
         public static void BitBlt_Rect_Green(RectangleF pos)
@@ -224,7 +238,10 @@ namespace Data.Globals
 
         public static void Init_Map(int typeID, int mapID)
         {
-            mapManager = new MapManager(xmlManager.maps[typeID].maps[mapID]);
+            if(mapManager == null)
+            {
+                mapManager = new MapManager(xmlManager.maps[typeID].maps[mapID]);
+            }
         }
 
     }

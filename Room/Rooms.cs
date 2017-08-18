@@ -15,9 +15,9 @@ namespace Room
         public int ID = 027;
         public int soutai = 0;
         public int Boss = 0;
-        public int mode = 0;
-        public int mapTypeID = 1;
-        public int mapID = 1;
+        public int mode = 2;
+        public int mapTypeID = 6;
+        public int mapID = 5;
         public bool IsGame = false;
 
         public bool Islock = false;
@@ -299,6 +299,9 @@ namespace Room
                 case ClientData.CLIENT_DATA_TYPE.INPUT:
                     DealSendData_Input(byt, sit);
                     break;
+                case ClientData.CLIENT_DATA_TYPE.CHANGE_DELAY:
+                    DealSendData_ChangeDelay(dat, sit);
+                    break;
                 default:
                     break;
             }
@@ -316,13 +319,12 @@ namespace Room
             ResetSoutai();
 
             //发送房间状态
-            var dat = GetSendData_All();
-            clientS.AddData(dat);
             for (int i = 0; i < 6; i++)
             {
                 if (players[i].player != null)
                 {
                     clientS.AddData(players[i].player.GetSendData_All_Change());
+                    clientS.AddData(GetSendData_All(), i);
                 }
             }
         }
@@ -367,6 +369,13 @@ namespace Room
             //键盘输入
             ClientData dat = new ClientData();
             dat.CreateInput(byt, sit);
+            clientS.AddData(dat);
+        }
+        private void DealSendData_ChangeDelay(ClientData dat,int sit)
+        {
+            //判断是否为房主
+            if (sit != Boss) return;
+
             clientS.AddData(dat);
         }
 

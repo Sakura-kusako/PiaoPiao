@@ -584,6 +584,9 @@ namespace Data.MapsManager
         public List<SpritePlayerJudgement> judgeList = new List<SpritePlayerJudgement>();
         private Buff buff_base = new Buff(1, -1);
         private Buff buff_wudi = new Buff(10, 0); //无敌buff;
+        public bool IsCamaraFocus = false;
+        public bool IsCtrlAble = true;
+        public bool IsMoveAble = true;
 
         //脸朝向
         public int face = 0;
@@ -601,6 +604,17 @@ namespace Data.MapsManager
 
         public override void Action()
         {
+            if (IsMoveAble == false) return;
+            if(IsCtrlAble == false)
+            {
+                player.input.UpdateKey(new bool[9]
+                {
+                    false,false,false,
+                    false,false,false,
+                    false,false,false,
+                });
+            }
+
             count++;
             Update_Buff_Time();
             Update_Buff_Eff();
@@ -1368,7 +1382,7 @@ namespace Data.MapsManager
         }
         private void Change_To_ShangTian()
         {
-            Global.PlayEffect(24);
+            PlayEffect(24);
             buff_base.type = 4;
             buff_base.time = 600;
             atkEnable = false;
@@ -1392,11 +1406,11 @@ namespace Data.MapsManager
             buff_base.time = 60;
             atkEnable = false;
             pyhEnable = false;
-            Global.PlayEffect(25);
+            PlayEffect(25);
         }
         private void Dec_hp()
         {
-            Global.PlayEffect(43);
+            PlayEffect(43);
             hp--;
             if (hp == 0)
             {
@@ -1426,6 +1440,12 @@ namespace Data.MapsManager
         {
             hp += poi;
             if (hp > hp_max) hp = hp_max;
+        }
+
+        private void PlayEffect(int EffID)
+        {
+            if (IsCamaraFocus)
+                Global.PlayEffect(EffID);
         }
     }
     public class SpritePlayerJudgement

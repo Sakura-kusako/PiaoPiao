@@ -220,13 +220,49 @@ namespace MainC
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (formGame != null && formGame.IsDisposed == false)
+            {
                 formGame.Close();
+            }
+            while(Global.IsFormGameOpen == true)
+            {
+
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             bool c = checkBox1.Checked;
             Global.IsDebug = c;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            
+            var clientC = Global.GetClientC();
+            if(clientC == null || clientC.IsConnect() == false)
+            {
+                AddTextLine(textBox5, "Error : 还没有连接到服务端");
+                return;
+            }
+            if(Global.GetMapManager() != null)
+            {
+                AddTextLine(textBox5, "Error : 游戏已经开始，不能修改延时");
+                return;
+            }
+
+            int delay = 5;
+            bool check = int.TryParse(textBox15.Text,out delay);
+            if (check == false || delay > 9 || delay < 1)
+            {
+                AddTextLine(textBox5, "Error : 延迟的取值范围是1-9");
+                return;
+            }
+
+            var dat = new ClientPublic.ClientData();
+            dat.CreateChangeDelay(delay);
+            clientC.AddData(dat);
+
+            AddTextLine(textBox5, "延迟修改信息已发送");
         }
     }
 }

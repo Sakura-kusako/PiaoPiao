@@ -22,6 +22,7 @@ namespace MainC
 {
     public partial class FormGame : Form
     {
+        private static int IsReadyClose = 0; 
         private Form1 FormParent;
         private Stopwatch sw = new Stopwatch();
         private int fps = 0;
@@ -81,7 +82,7 @@ namespace MainC
         {
             try
             {
-                while (true)
+                while (IsReadyClose == 0)
                 {
                     if (this.IsDisposed) break;
 
@@ -99,7 +100,6 @@ namespace MainC
                     }
 
                     windowList.Action();
-                    //windowList.Draw(ppDevice);
 
                     {
                         var clientC = Global.GetClientC();
@@ -125,8 +125,10 @@ namespace MainC
         private void Draw()
         {
             var map = Global.GetMapManager();
-            if (map != null) map.Draw(ppDevice);
-
+            if (map != null)
+            {
+                map.Draw(ppDevice);
+            }
             windowList.Draw(ppDevice);
         }
 
@@ -224,11 +226,11 @@ namespace MainC
         private void FormGame_FormClosed(object sender, FormClosedEventArgs e)
         {
             Global.GetReplayManager().End();
-            Global.IsFormGameOpen = false;
             XmlPlayer.WritePlayer(GlobalB.GetRootPath()+@"\Setting\", Global.GetPlayer());
             FormParent.AddTextGame("玩家数据保存成功");
             Global.DelRes();
             FormParent.formGame = null;
+            Global.IsFormGameOpen = false;
         }
 
         private void FormGame_KeyDown(object sender, KeyEventArgs e)
@@ -239,6 +241,11 @@ namespace MainC
         private void FormGame_KeyUp(object sender, KeyEventArgs e)
         {
             input.UpdateKeyUP((byte)e.KeyCode);
+        }
+
+        private void FormGame_FormClosing(object sender, FormClosingEventArgs e)
+        {
+                Thread.Sleep(100);
         }
     }
 }

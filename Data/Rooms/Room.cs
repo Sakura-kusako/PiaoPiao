@@ -240,6 +240,9 @@ namespace Data.Rooms
                 case ClientData.CLIENT_DATA_TYPE.GAME_START:
                     DealSendData_GameStart(byt);
                     break;
+                case ClientData.CLIENT_DATA_TYPE.CHANGE_DELAY:
+                    DealSendData_ChangeDelay(byt);
+                    break;
                 default:
                     break;
             }
@@ -307,13 +310,20 @@ namespace Data.Rooms
             Global.GetWindowsList().CloseAll();
             Global.GetWindowsList().ActiveWindow(1003);
         }
+        private void DealSendData_ChangeDelay(byte[] byt)
+        {
+            //改变延迟
+            int index = 4;
+            int delay = GlobalC.GetSendData_Int(byt, ref index);
+            inputManager.delayFps = delay;
+        }
 
         public int UpdateInput()
         {
             if(Global.IsConnect())
             {
                 //游戏是否开始
-                if(Global.GetMapManager()!=null)
+                if(Global.GetMapManager()!=null && Global.GetMapManager().situation <=1)
                 {
                     if(inputManager.IsComplete())
                     {
@@ -335,7 +345,23 @@ namespace Data.Rooms
                                 Directory.CreateDirectory(path);
                             }
                             var time = DateTime.Now;
-                            string timeStr = "" + time.Year + time.Month + time.Day + "_" + time.Hour + time.Minute + time.Second;
+                            int[] times = new int[6] {
+                                time.Year,
+                                time.Month,
+                                time.Day,
+                                time.Hour,
+                                time.Minute,
+                                time.Second
+                            };
+                            string timeStr = "";
+                            for (int i = 0; i < 6; i++)
+                            {
+                                if (i == 3)
+                                    timeStr = timeStr + "_";
+                                if (times[i] < 10)
+                                    timeStr = timeStr + "0";
+                                timeStr = timeStr + times[i];
+                            }
                             path = path + "\\" + timeStr + ".rep";
                             rep.Start(path);
                             sw = rep.GetSw();
@@ -415,7 +441,7 @@ namespace Data.Rooms
     }
     public class RoomInputManager
     {
-        const int delayFps = 5; //延迟帧
+        public int delayFps = 5; //延迟帧
         const int LenMax = 10; //最大储存量
         private int timeFps = 0; //第0帧开始
         public List<InputFps> inputFps;
@@ -453,7 +479,7 @@ namespace Data.Rooms
         public void SetInput(int ID, int sit, bool[] dat)
         {
             ID = ID - timeFps + delayFps;
-            if (ID < 0 && ID >= LenMax)
+            if (ID < 0 || ID >= LenMax)
             {
                 return;
             }

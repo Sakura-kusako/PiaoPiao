@@ -40,6 +40,8 @@
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBox14 = new System.Windows.Forms.TextBox();
+            this.textBox13 = new System.Windows.Forms.TextBox();
             this.textBox12 = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,15 +49,15 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.textBox11 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.textBox15 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -199,6 +201,22 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(6, 118);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.ReadOnly = true;
+            this.textBox14.Size = new System.Drawing.Size(115, 21);
+            this.textBox14.TabIndex = 11;
+            // 
+            // textBox13
+            // 
+            this.textBox13.Location = new System.Drawing.Point(6, 91);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.ReadOnly = true;
+            this.textBox13.Size = new System.Drawing.Size(115, 21);
+            this.textBox13.TabIndex = 10;
+            // 
             // textBox12
             // 
             this.textBox12.Location = new System.Drawing.Point(6, 64);
@@ -254,6 +272,8 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage3.Controls.Add(this.textBox15);
+            this.tabPage3.Controls.Add(this.button5);
             this.tabPage3.Controls.Add(this.checkBox1);
             this.tabPage3.Controls.Add(this.textBox11);
             this.tabPage3.Controls.Add(this.textBox10);
@@ -268,39 +288,55 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "开发选项";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(593, 365);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(72, 16);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "调试模式";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // textBox11
             // 
-            this.textBox11.Location = new System.Drawing.Point(610, 114);
+            this.textBox11.Location = new System.Drawing.Point(593, 114);
             this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(100, 21);
+            this.textBox11.ReadOnly = true;
+            this.textBox11.Size = new System.Drawing.Size(117, 21);
             this.textBox11.TabIndex = 7;
             // 
             // textBox10
             // 
-            this.textBox10.Location = new System.Drawing.Point(610, 87);
+            this.textBox10.Location = new System.Drawing.Point(593, 87);
             this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(100, 21);
+            this.textBox10.ReadOnly = true;
+            this.textBox10.Size = new System.Drawing.Size(117, 21);
             this.textBox10.TabIndex = 6;
             // 
             // textBox9
             // 
-            this.textBox9.Location = new System.Drawing.Point(610, 60);
+            this.textBox9.Location = new System.Drawing.Point(593, 60);
             this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(100, 21);
+            this.textBox9.ReadOnly = true;
+            this.textBox9.Size = new System.Drawing.Size(117, 21);
             this.textBox9.TabIndex = 5;
             // 
             // textBox8
             // 
-            this.textBox8.Location = new System.Drawing.Point(610, 33);
+            this.textBox8.Location = new System.Drawing.Point(593, 33);
             this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(100, 21);
+            this.textBox8.ReadOnly = true;
+            this.textBox8.Size = new System.Drawing.Size(117, 21);
             this.textBox8.TabIndex = 4;
             // 
             // textBox7
             // 
-            this.textBox7.Location = new System.Drawing.Point(610, 6);
+            this.textBox7.Location = new System.Drawing.Point(593, 6);
             this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(100, 21);
+            this.textBox7.ReadOnly = true;
+            this.textBox7.Size = new System.Drawing.Size(117, 21);
             this.textBox7.TabIndex = 3;
             // 
             // textBox5
@@ -310,35 +346,27 @@
             this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(598, 378);
+            this.textBox5.Size = new System.Drawing.Size(573, 378);
             this.textBox5.TabIndex = 2;
             // 
-            // checkBox1
+            // button5
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(614, 362);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(72, 16);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "调试模式";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.button5.Location = new System.Drawing.Point(593, 336);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 9;
+            this.button5.Text = "修改延时";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // textBox13
+            // textBox15
             // 
-            this.textBox13.Location = new System.Drawing.Point(6, 91);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.ReadOnly = true;
-            this.textBox13.Size = new System.Drawing.Size(115, 21);
-            this.textBox13.TabIndex = 10;
-            // 
-            // textBox14
-            // 
-            this.textBox14.Location = new System.Drawing.Point(6, 118);
-            this.textBox14.Name = "textBox14";
-            this.textBox14.ReadOnly = true;
-            this.textBox14.Size = new System.Drawing.Size(115, 21);
-            this.textBox14.TabIndex = 11;
+            this.textBox15.Location = new System.Drawing.Point(674, 338);
+            this.textBox15.Name = "textBox15";
+            this.textBox15.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox15.Size = new System.Drawing.Size(36, 21);
+            this.textBox15.TabIndex = 10;
+            this.textBox15.Text = "5";
             // 
             // Form1
             // 
@@ -347,8 +375,9 @@
             this.ClientSize = new System.Drawing.Size(748, 437);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "飘飘";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -395,6 +424,8 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TextBox textBox14;
         private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.TextBox textBox15;
+        private System.Windows.Forms.Button button5;
     }
 }
 

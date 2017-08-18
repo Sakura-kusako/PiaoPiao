@@ -93,6 +93,7 @@
     <Compile Include="Resources\ResManager.cs" />
     <Compile Include="Resources\ResPic.cs" />
     <Compile Include="Rooms\Room.cs" />
+    <Compile Include="Sounds\Sound.cs" />
     <Compile Include="Windows\Window_Add.cs" />
     <Compile Include="Windows\Window_List.cs" />
     <Compile Include="XML\Element.cs" />

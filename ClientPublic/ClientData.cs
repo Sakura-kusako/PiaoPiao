@@ -40,6 +40,7 @@ namespace ClientPublic
             DEL_PLAYER, //玩家退出
             INPUT, //键盘输入
             GAME_START, //开始游戏
+            CHANGE_DELAY, //修改延迟
         };
         
         public IPAddress IP;
@@ -189,6 +190,16 @@ namespace ClientPublic
             GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.INPUT), Data, ref index);
             GlobalC.AddSendData_Int(sit, Data, ref index);
             System.Buffer.BlockCopy(byt, 4, Data, 8, 13);
+        }
+        public void CreateChangeDelay(int delay)
+        {
+            //修改延迟
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[8];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.CHANGE_DELAY), Data, ref index);
+            GlobalC.AddSendData_Int(delay, Data, ref index);
         }
 
         public ClientData NewRecvSend()

@@ -63,6 +63,8 @@ namespace Data.MapsManager
     {
         public string name = "";
         public int soutai = 1;
+        public int situation = 0; //0正常，1九秒倒计时，2结束准备，3结算，4退出
+        public int situation_time = 0;
         public float x = 0;
         public float y = 0;
         public float width = 800;
@@ -93,63 +95,9 @@ namespace Data.MapsManager
         public MapManager(Maps map)
         {
             Init_Map_Base(map);
-
-            foreach (var e in map.elements)
-            {
-                if (e.name == "Map")
-                {
-                    maps.Init(e.id);
-                    continue;
-                }
-                switch (e.id)
-                {
-                    case 2:
-                        statics.Init(e);
-                        break;
-                    case 5:
-                        property.Init(e);
-                        break;
-                    case 7:
-                        traps.Init(e);
-                        break;
-                    case 8:
-                        players.Init(e);
-                        break;
-                    case 12:
-                        floats.Init(e);
-                        break;
-                    case 14:
-                        stabbers.Init(e);
-                        break;
-                    case 15:
-                        spout.Init(e);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            if (type == 3)
-            {
-                Init_Layer_DuoBao();
-            }
-            else if (type == 1)
-            {
-                Init_Layer_JingSu();
-            }
-            else if (type == 0)
-            {
-                Init_Layer_Shop();
-            }
-            else
-            {
-                //Data.msg = "ERROR：不存在的游戏模式";
-            }
-
-            if (camera_type >= 1 && camera_type <= 6)
-            {
-                Set_Camera(pla.list[camera_type - 1].x - 50, pla.list[camera_type - 1].y - 50);
-            }
+            Init_Map_XML(map);
+            Init_Layer();
+            Init_Camara();
         }
         public void Init_Map_Base(Maps map)
         {
@@ -186,6 +134,95 @@ namespace Data.MapsManager
             layer_poi = new Layer();
             oth = new List_Other();
         }
+        public void Init_Map_XML(Maps map)
+        {
+            foreach (var e in map.elements)
+            {
+                if (e.name == "Map")
+                {
+                    maps.Init(e.id);
+                    continue;
+                }
+                switch (e.id)
+                {
+                    case 2:
+                        statics.Init(e);
+                        break;
+                    case 5:
+                        property.Init(e);
+                        break;
+                    case 7:
+                        traps.Init(e);
+                        break;
+                    case 8:
+                        players.Init(e);
+                        break;
+                    case 12:
+                        floats.Init(e);
+                        break;
+                    case 14:
+                        stabbers.Init(e);
+                        break;
+                    case 15:
+                        spout.Init(e);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+        public void Init_Camara()
+        {
+            var player = Global.GetPlayer();
+            if (pla != null)
+            {
+                if (pla.list != null)
+                {
+                    for (int i = 0; i < pla.list.Count; i++)
+                    {
+                        var pp = pla.list[i];
+                        if (pp.player != null)
+                        {
+                            var p = pp.player;
+                            if (p.GetExID() == player.GetExID() && p.GetQQ() == player.GetQQ())
+                            {
+                                camera_type = i+1;
+                                pp.IsCamaraFocus = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (camera_type >= 1 && camera_type <= 6)
+            {
+                Set_Camera(pla.list[camera_type - 1].x - 50, pla.list[camera_type - 1].y - 50);
+            }
+
+        }
+        public void Init_Layer()
+        {
+            {
+                if (type == 3)
+                {
+                    Init_Layer_DuoBao();
+                }
+                else if (type == 1)
+                {
+                    Init_Layer_JingSu();
+                }
+                else if (type == 0)
+                {
+                    Init_Layer_Shop();
+                }
+                else
+                {
+                    //Data.msg = "ERROR：不存在的游戏模式";
+                }
+            }
+        }
         public void Init_Layer_DuoBao()
         {
             Init_Layer_Static();
@@ -200,7 +237,7 @@ namespace Data.MapsManager
             //Init_Layer_Static();
             //Init_Layer_Floats();
             Init_Layer_Maps();
-            Global.PlayBgm(1);
+            Global.PlayBgm(Sounds.Sound.BGM_ID.JINGSU);
         }
         public void Init_Layer_Shop()
         {
@@ -673,6 +710,56 @@ namespace Data.MapsManager
         public void Update()
         {
             if (soutai == 0) return;
+            if (situation == 1)
+            {
+                //十秒倒计时
+                if (situation_time > 0)
+                {
+                    situation_time--;
+                }
+                else
+                {
+                    ChangeToEndWait();
+                }
+            }
+            else if (situation == 2)
+            {
+                //等待结算
+                if (situation_time > 0)
+                {
+                    situation_time--;
+                }
+                else
+                {
+                    ChangeToJieSuan();
+                }
+                return;
+            }
+            else if(situation == 3)
+            {
+                if (situation_time > 0)
+                {
+                    situation_time--;
+                }
+                else
+                {
+                    ChangeToDel();
+                }
+                return;
+            }
+            else if(situation == 4)
+            {
+                Global.SetMapManager(null);
+                Global.GetXmlManager().OnCreate();
+                Global.GetXmlManager().Load();
+                Global.GetResManager().Clear();
+                Global.GetResManager().OnCreate();
+                Global.GetResManager().LoadItemPic();
+                Global.GetResManager().LoadPic();
+                Global.GetWindowsList().CloseAll();
+                Global.GetWindowsList().ActiveWindow(19);
+                return;
+            }
 
             Update_Static();
             Update_Float();
@@ -702,8 +789,83 @@ namespace Data.MapsManager
             Delete_Sprite();
 
             count++;
-            if (time > 0) time--;
+            if (time > 0)
+            {
+                time--;
+                if (time == 600)
+                    ChangeToEnd();
+            }
+            
+            switch(type)
+            {
+                case 1:
+                    UpdateJingSu();
+                    break;
+                default:
+                    break;
+            }
         }
+        public void UpdateJingSu()
+        {
+            //终点右坐标为410
+            //超过400结束
+            if (pla != null)
+            {
+                if (pla.list != null)
+                {
+                    var list = pla.list;
+                    foreach (var sp in list)
+                    {
+                        if(sp.x <= 350)
+                        {
+                            //有人到达终点开始读秒
+                            sp.IsCtrlAble = false;
+                            if(situation == 0)
+                            {
+                                ChangeToEnd();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public void ChangeToEnd()
+        {
+            situation = 1;
+            situation_time = 600;
+        }
+        public void ChangeToEndWait()
+        {
+            situation = 2;
+            situation_time = 400;
+            if (pla != null)
+            {
+                if (pla.list != null)
+                {
+                    var list = pla.list;
+                    foreach (var sp in list)
+                    {
+                        if (sp.x <= 400)
+                        {
+                            sp.IsMoveAble = false;
+                        }
+                    }
+                }
+            }
+            Global.GetReplayManager().End();
+            Global.GetRoom().inputManager.Reset();
+        }
+        public void ChangeToJieSuan()
+        {
+            situation = 3;
+            situation_time = 0;
+        }
+        public void ChangeToDel()
+        {
+            situation = 4;
+        }
+            
+            
         public void Judgement_Player_MapRect()
         {
             if (type == 0)

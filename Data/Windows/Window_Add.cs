@@ -1,4 +1,5 @@
 ﻿using Data.Globals;
+using Data.MapsManager;
 using Data.PPDevices;
 using Data.Resources;
 using Room;
@@ -1015,7 +1016,6 @@ namespace Data.Windows
     }
     public class Sprite_Map_Base : Sprite_WinAdd
     {
-        /*
         public BalloonItemPic_Base name_bg; //名字背景框
         public BalloonItemPic_Base player_sx; //（生命、速度、攻击)文字
         public BalloonItemPic_Base nu_kong; //空怒槽
@@ -1029,6 +1029,8 @@ namespace Data.Windows
         public BalloonItemPic_Base player_daqi; //呼吸条
         public BalloonItemPic_Base player_daqi_time; //呼吸血条
         public BalloonItemPic_Base time_fuhuo; //复活时间
+        public BalloonItemPic_Base time_end_320x28x10; //倒计时
+        public BalloonItemPic_Base time_clock_448x90x4; //倒计时钟
 
         public int playerID = 0;
         public Sprite_Map_Base()
@@ -1052,6 +1054,9 @@ namespace Data.Windows
             player_daqi = Load_Bitmap_FromFile(path + @"balloon\Pic\Static\呼吸条.tga", 335, 34);
             player_daqi_time = Load_Bitmap_FromFile(path + @"balloon\Pic\Static\呼吸血条.tga", 299, 11);
             time_fuhuo = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\复活倒计时数字.tga", 1700, 159, 10);
+            time_end_320x28x10 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\竞速倒数数字.tga", 320, 28, 10);
+            time_clock_448x90x4 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\竞速倒数闹钟-动画.tga", 448, 90, 4);
+            //竞速倒数闹钟-动画.png
         }
         public override void Action()
         {
@@ -1092,7 +1097,9 @@ namespace Data.Windows
         {
             //当局倒计时
             //320,20
-            var time = Poi.GetManager().time / 60;
+            var mapManager = Global.GetMapManager();
+            var time = mapManager.time / 60;
+
             int min = time / 60 + 1;
             int sec_l = time % 60 / 10 + 1;
             int sec_r = time % 10 + 1;
@@ -1100,6 +1107,16 @@ namespace Data.Windows
             ppDevice.BitBlt(time1, new RectangleF(335, 20, 15, 14), new RectangleF(0, 0, 15, 14));
             ppDevice.BitBlt(time1, new RectangleF(350, 20, 15, 14), new RectangleF(sec_l * 15, 0, 15, 14));
             ppDevice.BitBlt(time1, new RectangleF(365, 20, 15, 14), new RectangleF(sec_r * 15, 0, 15, 14));
+
+            if(mapManager.situation == 1)
+            {
+                time = mapManager.situation_time;
+                if(time <600)
+                {
+                    ppDevice.BitBlt(time_clock_448x90x4, new RectangleF((800 - 112) / 2, 70, 112, 90), new RectangleF(112 * ((time / 15) % 4), 0, 112, 90));
+                    ppDevice.BitBlt(time_end_320x28x10, new RectangleF((800 - 32) / 2, 101, 32, 28), new RectangleF(32 * (time / 60), 0, 32, 28));
+                }
+            }
         }
         private void Draw_dead(PPDevice ppDevice)
         {
@@ -1127,21 +1144,39 @@ namespace Data.Windows
         }
         private SpritePlayer GetPlayer()
         {
-            var man = Poi.GetManager();
+            var man = Global.GetMapManager();
             int index = man.camera_type - 1;
             return man.pla.list[index];
         }
-        */
+        public override void Clear()
+        {
+            base.Clear();
+            name_bg.Clear();
+            nu_kong.Clear();
+            nu_man.Clear();
+            nu_dong.Clear();
+            my_atk.Clear();
+            my_hp.Clear();
+            my_v.Clear();
+            player_hp.Clear();
+            time1.Clear();
+            player_daqi.Clear();
+            player_daqi_time.Clear();
+            time_fuhuo.Clear();
+            time_end_320x28x10.Clear();
+            time_clock_448x90x4.Clear();
+        }
     }
     public class Sprite_Map_JingSu : Sprite_WinAdd
     {
-        /*
-        public MapManager map;
-        public int playerID = 0;
+        private MapManager map;
+        private int playerID = 0;
 
-        public BalloonItemPic_Base jdt; //进度条
-        public BalloonItemPic_Base dbs; //进度大标识
-        public BalloonItemPic_Base name_big; //名字_大
+        private BalloonItemPic_Base jdt; //进度条
+        private BalloonItemPic_Base dbs; //进度大标识
+        private BalloonItemPic_Base xbs_186x39x6; //进度小标识
+        private BalloonItemPic_Base name_big; //名字_大
+        private BalloonItemPic_Base name_small_84x7x6; //名字_小 
 
         public Sprite_Map_JingSu()
         {
@@ -1149,15 +1184,18 @@ namespace Data.Windows
         }
         public void OnCreate()
         {
-            map = Poi.GetManager();
+            map = Global.GetMapManager();
             playerID = 1;
             Load_pic();
         }
         public void Load_pic()
         {
-            dbs = Load_Bitmap_FromFile(GlobalB.GetRootPath() + @"balloon\Pic\Moving\玩家进度大标识.tga", 228, 46);
-            jdt = Load_Bitmap_FromFile(GlobalB.GetRootPath() + @"balloon\Pic\Static\进度条.tga", 472, 34);
-            name_big = Load_Bitmap_FromFile(GlobalB.GetRootPath() + @"balloon\Pic\Moving\玩家大标识数字.tga", 108, 9);
+            var path = GlobalB.GetRootPath() + "\\";
+            dbs = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\玩家进度大标识.tga", 228, 46);
+            xbs_186x39x6 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\玩家进度小标识.tga", 186, 39);
+            jdt = Load_Bitmap_FromFile(path + @"balloon\Pic\Static\进度条.tga", 472, 34);
+            name_big = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\玩家大标识数字.tga", 108, 9);
+            name_small_84x7x6 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\玩家小标识数字.tga", 84, 7);
         }
         public override void Action()
         {
@@ -1169,20 +1207,69 @@ namespace Data.Windows
         }
         private void Draw_jd(PPDevice ppDevice)
         {
-            var player = GetPlayer();
-            float dx = (player.x / map.width) * 448 - 19;
+            var man = Global.GetMapManager();
+            var list = man.pla.list;
+            playerID = map.camera_type - 1; //本机编号
+
+            float[] dx = new float[6];
+            int[] rank = new int[6] {0, 1, 2, 3, 4, 5, };
+            
+            //应该显示的位置
+            for (int i = 0; i < list.Count; i++)
+            {
+                var player = list[i];
+                if (player != null)
+                {
+                    dx[i] = (player.x / map.width) * 448 - 19;
+                }
+            }
+            //冒泡排序 从小到大
+            for (int i = 0; i < list.Count - 1; i++)
+            {
+                for (int j = 0; j < list.Count; j++)
+                {
+                    if (dx[i] > dx[j])
+                    {
+                        float t = dx[i];
+                        dx[i] = dx[j];
+                        dx[j] = t;
+
+                        int r = rank[i];
+                        rank[i] = rank[j];
+                        rank[j] = r;
+                    }
+                }
+            }
+            
             ppDevice.BitBlt(jdt, new RectangleF(164, 560, 472, 34), new RectangleF(0, 0, 472, 34));
-            ppDevice.BitBlt(dbs, new RectangleF(184 + dx, 560 - 25, 38, 46), new RectangleF(114, 0, 38, 46));
-            ppDevice.BitBlt(name_big, new RectangleF(194 + dx, 560 - 10, 18, 9), new RectangleF(0, 0, 18, 9));
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (playerID == rank[i])
+                {
+                    //本机显示大标识
+                    //228x46
+                    ppDevice.BitBlt(dbs, new RectangleF(203-19 + dx[rank[i]], 560 - 25, 38, 46), new RectangleF(114, 0, 38, 46));
+                    //108x9
+                    ppDevice.BitBlt(name_big, new RectangleF(194 + dx[rank[i]], 560 - 10, 18, 9), new RectangleF(18*rank[i], 0, 18, 9));
+                }
+                else
+                {
+                    ppDevice.BitBlt(xbs_186x39x6, new RectangleF(203-15 + dx[rank[i]], 560 - 18, 31, 39), new RectangleF(93, 0, 31, 39));
+                    ppDevice.BitBlt(name_small_84x7x6, new RectangleF(203-15+8 + dx[rank[i]], 560 - 6, 14, 7), new RectangleF(14*rank[i], 0, 14, 7));
+                }
+            }
         }
 
-        private SpritePlayer GetPlayer()
+        public override void Clear()
         {
-            var man = Poi.GetManager();
-            int index = map.camera_type - 1;
-            return man.pla.list[index];
+            base.Clear();
+            dbs.Clear();
+            jdt.Clear();
+            name_big.Clear();
+            xbs_186x39x6.Clear();
+            name_small_84x7x6.Clear();
         }
-        */
+        //*/
     }
     public class Sprite_Room_MapSelect_Root : UI_CheckBox2
     {

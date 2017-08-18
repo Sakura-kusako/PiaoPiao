@@ -25,7 +25,7 @@ namespace Data.Globals
             string path = System.Environment.CurrentDirectory;
 
             //判断balloon资源文件夹是否存在
-            if (Directory.Exists(path + @"\ballo0n"))
+            if (Directory.Exists(path + @"\balloon"))
             {
                 return path;
             }
