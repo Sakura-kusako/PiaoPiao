@@ -376,8 +376,7 @@ namespace Data.MapsManager
                     var sp = new SpritePlayer();
                     sp.x = 0;
                     sp.y = 0;
-                    //sp.x = 0;
-                    //sp.y = 0;
+                    sp.type = 8;
                     sp.width = 100;
                     sp.height = 100;
                     sp.pic_dx = 0;
@@ -402,6 +401,7 @@ namespace Data.MapsManager
                 var sp = new SpritePlayer();
                 sp.x = ele.x;
                 sp.y = ele.y;
+                sp.type = 8;
                 //sp.x = 0;
                 //sp.y = 0;
                 sp.width = 100;
@@ -773,36 +773,48 @@ namespace Data.MapsManager
             Update_Primer();
             Update_Other();
 
-            Judgement_Player_Map();
-            Do_Judgement_Player();
-            Judgement_Player_MapRect();
-            Do_Judgement_Player();
-            Judgement_Player_MapRect();
-            Do_Judgement_Player();
-            Judgement_Player_Map();
-            Do_Judgement_Player();
-            Judgement_Player_MapRect();
-            Do_Judgement_Player();
-            Judgement_Player_MapRect();
-            Do_Judgement_Player();
-
-            Delete_Sprite();
-
-            count++;
-            if (time > 0)
-            {
-                time--;
-                if (time == 600)
-                    ChangeToEnd();
-            }
-            
-            switch(type)
+            switch (type)
             {
                 case 1:
+                    UpdateJudgementJingSu();
                     UpdateJingSu();
                     break;
                 default:
                     break;
+            }
+
+            Delete_Sprite();
+            
+            count++;
+            if (time > 0)
+            {
+                time--;
+                if (time == 600 && situation==0)
+                {
+                    ChangeToEnd();
+                }
+            }
+        }
+        public void UpdateJudgementJingSu()
+        {
+            bool check = true;
+            while (check)
+            {
+                while (check)
+                {
+                    Do_Judgement_Player();
+                    check = Judgement_Player_Player();
+                }
+                Judgement_Player_Map();
+                Do_Judgement_Player();
+                Judgement_Player_Map();
+                Do_Judgement_Player();
+
+                Judgement_Player_MapRect();
+                Do_Judgement_Player();
+                Judgement_Player_MapRect();
+                Do_Judgement_Player();
+                check = Judgement_Player_Player();
             }
         }
         public void UpdateJingSu()
@@ -864,8 +876,7 @@ namespace Data.MapsManager
         {
             situation = 4;
         }
-            
-            
+                       
         public void Judgement_Player_MapRect()
         {
             if (type == 0)
@@ -1195,6 +1206,99 @@ namespace Data.MapsManager
                     }
                 }
             }
+        }
+        private bool Judgement_Player_Player()
+        {
+            if(pla != null)
+            {
+                if(pla.list != null)
+                {
+                    for (int i = 0; i < pla.list.Count-1; i++)
+                    {
+                        var playerA = pla.list[i];
+                        for (int j = i; j < pla.list.Count; j++)
+                        {
+                            var playerB = pla.list[j];
+                            if (playerA.Is_DaQi() && playerB.IsNormal())
+                            {
+                                //B撞飞A打气
+                                if (Physics.Rect_Rect(playerA.GetRectBody(), playerB.GetRectBody()))
+                                {
+                                    playerA.Change_To_ShangTian();
+                                    break;
+                                }
+                            }
+                            else if (playerA.IsNormal() && playerB.Is_DaQi())
+                            {
+                                //A撞飞B打气
+                                if(Physics.Rect_Rect(playerA.GetRectBody(), playerB.GetRectBody()))
+                                {
+                                    playerB.Change_To_ShangTian();                                    
+                                }
+                            }
+                            else if(playerA.IsNormal() && playerB.IsNormal())
+                            {
+                                //A攻击对B受击
+                                var ARectAtk = playerA.GetAttackList();
+                                var BRectBalloon = playerB.GetBalloonList();
+                                foreach (var rectA in ARectAtk)
+                                {
+                                    foreach (var rectB in BRectBalloon)
+                                    {
+                                        //获取碰撞信息
+                                        var results = Physics.Rect_Rect_V_V(rectB, rectA, playerA.vx, playerA.vy, playerB.vx, playerB.vy);
+                                        if (results != null)
+                                        {
+                                            //添加到碰撞信息到列表
+                                            results.type |= 128;
+                                            playerA.judgeList.Add(new SpritePlayerJudgement(results, playerB));
+                                            return true;
+                                        }
+                                    }
+                                }
+
+                                //A受击对B攻击
+                                var BRectAtk = playerB.GetAttackList();
+                                var ARectBalloon = playerA.GetBalloonList();
+                                foreach (var rectB in BRectAtk)
+                                {
+                                    foreach (var rectA in ARectBalloon)
+                                    {
+                                        //获取碰撞信息
+                                        var results = Physics.Rect_Rect_V_V(rectA, rectB, playerB.vx, playerB.vy, playerA.vx, playerA.vy);
+                                        if (results != null)
+                                        {
+                                            //添加到碰撞信息到列表
+                                            results.type |= 128;
+                                            playerB.judgeList.Add(new SpritePlayerJudgement(results, playerA));
+                                            return true;
+                                        }
+                                    }
+                                }
+
+                                //A物理对B物理
+                                var APhyList = playerA.GetPhyList();
+                                var BPhyList = playerB.GetPhyList();
+                                foreach (var rectA in APhyList)
+                                {
+                                    foreach (var rectB in BPhyList)
+                                    {
+                                        //获取碰撞信息
+                                        var results = Physics.Rect_Rect_V_V(rectB, rectA, playerA.vx, playerA.vy, playerB.vx, playerB.vy);
+                                        if (results != null)
+                                        {
+                                            //添加到碰撞信息到列表
+                                            playerA.judgeList.Add(new SpritePlayerJudgement(results, playerB));
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         private void Delete_Sprite()

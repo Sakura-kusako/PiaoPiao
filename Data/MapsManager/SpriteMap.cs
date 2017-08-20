@@ -575,21 +575,8 @@ namespace Data.MapsManager
     }
     public class SpritePlayer : SpriteMap
     {
-        public bool pyhEnable = true;
-        public bool atkEnable = true;
-        public PlayerData player = null;
-        private RectangleF balloonList;
-        private List<RectangleF> fireList = null;
-
-        public List<SpritePlayerJudgement> judgeList = new List<SpritePlayerJudgement>();
-        private Buff buff_base = new Buff(1, -1);
-        private Buff buff_wudi = new Buff(10, 0); //无敌buff;
-        public bool IsCamaraFocus = false;
-        public bool IsCtrlAble = true;
-        public bool IsMoveAble = true;
-
         //脸朝向
-        public int face = 0;
+        public int face = -1; //-1为左边1为右边
 
         //生命、攻击、速度
         public int hp = 3;
@@ -601,6 +588,96 @@ namespace Data.MapsManager
 
         //重力
         private float g = 0.04f;
+
+        //buff叠加
+        private float dg = 0;
+        private float dvx = 0;
+        private float dvy = 0;
+
+        //piaobi
+        private int piaobi = 0;
+
+        public bool pyhEnable = true;
+        public bool atkEnable = true;
+        public PlayerData player = null;
+
+        private RectangleF RectPhy;
+        private RectangleF RectBalloon;
+        private RectangleF RectBody;
+        private RectangleF RectBottom;
+        private RectangleF[] RectFireList;
+
+        private List<RectangleF> balloonList = null;
+        private List<RectangleF> bottomList = null;
+        private List<RectangleF> fireList = null;
+
+        public List<SpritePlayerJudgement> judgeList = new List<SpritePlayerJudgement>();
+        private Buff buff_base = new Buff(0, -1); //表示所处的状态
+        private Buff buff_wudi = new Buff(0, -1); //复活无敌buff
+        private Buff buff_xiachen = new Buff(1, -1); //地图下沉
+        private Buff buff_gongjiwuxiao = new Buff(2, -1); //攻击无效
+        private Buff buff_bingshuang = new Buff(3, -1); //冰霜陷阱重力↑
+        private Buff buff_qingying = new Buff(4, -1); //轻盈之羽重力↓
+        private Buff buff_huoyan = new Buff(5, -1); //火焰陷阱持续扣血
+        private Buff buff_zhizhu = new Buff(6, -1); //蜘蛛陷阱禁止移动
+        private Buff buff_jiguang = new Buff(7, -1); //激光陷阱持续扣血
+        private Buff buff_zhaohuo = new Buff(8, -1); //大炮着火
+        private Buff buff_dachui = new Buff(9, -1); //反响减速
+        private Buff buff_bisha = new Buff(10, -1); //必杀发动
+        private Buff buff_xiahua = new Buff(11, -1); //下滑蓄力
+        private Buff buff_bishafadong = new Buff(12, -1); //必杀发动
+        private Buff buff_xialuo = new Buff(13, -1); //无气球下落
+        public bool IsCamaraFocus = false; //是否为本机玩家
+        public bool IsCtrlAble = true; //是否允许键盘控制
+        public bool IsMoveAble = true; //是否允许移动
+        public bool IsMapLoop = false; //地图是否循环
+        public bool IsMapWS = false; //是否为误伤地图
+        public int team = 4; //玩家队伍所属
+
+        public SpritePlayer()
+        {
+            const int ox = 24;
+            const int oy = 4;
+            const int w = 44;
+            const int h = 80;
+            const int bottom_h = 10;
+            const int balloon_h = 22; //气球判定高度
+
+            phyList = new List<RectangleF>();
+            balloonList = new List<RectangleF>();
+            bottomList = new List<RectangleF>();
+            fireList = new List<RectangleF>();
+            RectPhy = new RectangleF(ox, oy, w, h);
+            RectBalloon = new RectangleF(ox, oy, w, balloon_h);
+            RectBottom = new RectangleF(ox, oy + h - bottom_h, w, bottom_h);
+            RectBody = new RectangleF(ox, oy + balloon_h, w, h - balloon_h);
+            RectFireList = new RectangleF[6]{
+                new RectangleF(), //中间小火焰
+                new RectangleF(), //中间大火焰
+                new RectangleF(), //左边小火焰
+                new RectangleF(), //左边大火焰
+                new RectangleF(), //右边小火焰
+                new RectangleF(), //右边大火焰
+            };
+        }
+        public void BuffReset()
+        {
+            //清空所有buff
+            buff_wudi.time = -1;
+            buff_gongjiwuxiao.time = -1;
+            buff_xiachen.time = -1;
+            buff_bingshuang.time = -1;
+            buff_qingying.time = -1;
+            buff_huoyan.time = -1;
+            buff_zhizhu.time = -1;
+            buff_jiguang.time = -1;
+            buff_zhaohuo.time = -1;
+            buff_dachui.time = -1;
+            buff_bisha.time = -1;
+            buff_xiahua.time = -1;
+            buff_bishafadong.time = -1;
+            buff_xialuo.time = -1;
+        }
 
         public override void Action()
         {
@@ -621,48 +698,116 @@ namespace Data.MapsManager
             switch (buff_base.type)
             {
                 case 0:
-                    //移出游戏
-                    Action_Del();
-                    break;
-                case 1:
                     //正常模式
                     Action_Normal();
                     break;
+                case 1:
+                    //死亡移出游戏
+                    Action_Del();
+                    break;
                 case 2:
-                    //无气球死亡
-                    Action_Dead();
+                    //冒烟/复活/上天
+                    Action_ShangTian();
                     break;
                 case 3:
                     //气球打气
                     Action_DaQi();
                     break;
                 case 4:
-                    //上天
-                    Action_ShangTian();
-                    break;
-                case 5:
-                    //下地
-                    Action_XiaDi();
-                    break;
-                case 6:
                     //被电
                     Action_BeiDian();
                     break;
                 default:
                     break;
             }
+            Update_List();
         }
         private void Update_Buff_Time()
         {
             Update_Buff_Time_Single(buff_base);
             Update_Buff_Time_Single(buff_wudi);
+            //Update_Buff_Time_Single(buff_xiachen);
+            Update_Buff_Time_Single(buff_gongjiwuxiao);
+            Update_Buff_Time_Single(buff_bingshuang);
+            Update_Buff_Time_Single(buff_qingying);
+            Update_Buff_Time_Single(buff_huoyan);
+            Update_Buff_Time_Single(buff_zhizhu);
+            Update_Buff_Time_Single(buff_jiguang);
+            Update_Buff_Time_Single(buff_zhaohuo);
+            Update_Buff_Time_Single(buff_dachui);
+            Update_Buff_Time_Single(buff_bisha);
+            Update_Buff_Time_Single(buff_xiahua);
+            Update_Buff_Time_Single(buff_bishafadong);
+            //Update_Buff_Time_Single(buff_xialuo);
         }
         private void Update_Buff_Eff()
         {
+            dg = 0;
+            dvx = 0;
+            dvy = 0;
+            Update_Buff_Eff_Base();
+            Update_Buff_Xialuo(); //Set
         }
+        private void Update_Buff_Eff_Base()
+        {
+            switch (buff_base.type)
+            {
+                case 0: //正常
+                    atkEnable = true;
+                    pyhEnable = true;
+                    break;
+                case 1: //死亡
+                    atkEnable = false;
+                    pyhEnable = false;
+                    break;
+                case 2: //冒烟
+                    atkEnable = false;
+                    pyhEnable = false;
+                    break;
+                case 3:
+                    atkEnable = false;
+                    pyhEnable = true;
+                    break;
+                case 4:
+                    atkEnable = false;
+                    pyhEnable = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void Update_Buff_Xialuo()
+        {
+            if(Is_Dead())
+            {
+                vx = 0; //水平无速度
+                dg += g; //两倍重力
+                atkEnable = false;
+            }
+        }            
         private void Update_Buff_Time_Single(Buff buff)
         {
             if (buff.time > 0) buff.time--;
+        }
+        private void Update_List()
+        {
+            //更新用于碰撞的判定框列表
+
+            //物理判定
+            phyList.Clear();
+            phyList.Add(new RectangleF(x + pic_dx + RectPhy.X, y + pic_dy + RectPhy.Y, RectPhy.Width, RectPhy.Height));
+
+            //受击判定
+            balloonList.Clear();
+            balloonList.Add(new RectangleF(x + pic_dx + RectBalloon.X, y + pic_dy + RectBalloon.Y, RectBalloon.Width, RectBalloon.Height));
+
+            //底部攻击判定
+            bottomList.Clear();
+            bottomList.Add(new RectangleF(x + pic_dx + RectBottom.X, y + pic_dy + RectBottom.Y, RectBottom.Width, RectBottom.Height));
+
+            //火焰攻击判定
+            fireList.Clear();
+            //火焰判定代码...........
         }
         private void Action_Del()
         {
@@ -670,10 +815,29 @@ namespace Data.MapsManager
         }
         private void Action_Normal()
         {
-            Action_Normal_Input();
-            Action_Normal_Gravity();
-            Action_Normal_Air_f();
-            Action_Normal_Move();
+            if(Is_Dead())
+            {
+                Action_Normal_Gravity();
+                Action_Normal_Air_f();
+                Action_Normal_Move();
+            }
+            else if(Is_XiaDi())
+            {
+                Action_Normal_Gravity();
+                Action_Normal_Air_f();
+                Action_Normal_Move();
+                if (this.y - 10 > Global.GetMapManager().PhyRect.Bottom)
+                {
+                    Change_To_ShangTian();
+                }
+            }
+            else
+            {
+                Action_Normal_Input();
+                Action_Normal_Gravity();
+                Action_Normal_Air_f();
+                Action_Normal_Move();
+            }
         }
         private void Action_Normal_Input()
         {
@@ -709,7 +873,7 @@ namespace Data.MapsManager
         private void Action_Normal_Gravity()
         {
             //重力
-            vy += g;
+            vy += g + dg;
         }
         private void Action_Normal_Air_f()
         {
@@ -768,13 +932,6 @@ namespace Data.MapsManager
                 }
             }
         }
-        private void Action_Dead()
-        {
-            vx = 0;
-            vy += 2 * g;
-            Action_Normal_Air_f();
-            Action_Normal_Move();
-        }
         private void Action_DaQi()
         {
             vy += 2 * g;
@@ -794,6 +951,7 @@ namespace Data.MapsManager
                 //复活冷却结束
                 if (Global.GetMapManager().type == 1)
                 {
+                    //竞速模式复活
                     y = Global.GetMapManager().PhyRect.Bottom - 150;
                     Change_To_Normal();
                 }
@@ -801,16 +959,6 @@ namespace Data.MapsManager
                 {
                     Change_To_Lost();
                 }
-            }
-        }
-        private void Action_XiaDi()
-        {
-            vy += 2 * g;
-            Action_Normal_Air_f();
-            Action_Normal_Move();
-            if (this.y - 10 > Global.GetMapManager().PhyRect.Bottom)
-            {
-                Change_To_ShangTian();
             }
         }
         private void Action_BeiDian()
@@ -960,14 +1108,42 @@ namespace Data.MapsManager
         }
         public override List<RectangleF> GetPhyList()
         {
-            List<RectangleF> rects = new List<RectangleF>();
-            rects.Add(new RectangleF(x + pic_dx + 23, y + pic_dy + 5, 46, 79));
-            return rects;
+            return phyList;
+        }
+        public List<RectangleF> GetBalloonList()
+        {
+            return balloonList;
+        }
+        public List<RectangleF> GetFireList()
+        {
+            return fireList;
+        }
+        public List<RectangleF> GetBottomList()
+        {
+            return bottomList;
+        }
+        public List<RectangleF> GetAttackList()
+        {
+            List<RectangleF> list = new List<RectangleF>();
+            foreach (var item in fireList)
+            {
+                list.Add(item);
+            }
+            foreach (var item in bottomList)
+            {
+                list.Add(item);
+            }
+            return list; 
         }
         public RectangleF GetPhyAABB()
         {
             return new RectangleF(x + pic_dx + 23, y + pic_dy + 5, 46, 79);
         }
+        public RectangleF GetRectBody()
+        {
+            return new RectangleF(x + pic_dx + RectBody.X, y + pic_dy + RectBody.Y, RectBody.Width, RectBody.Height);
+        }
+
         private BalloonItemPic_Base GetPlayerPic_Big(int poi)
         {
             return Global.GetResManager().GetItemPic_Big(poi, player.GetItemIndex(poi));
@@ -1022,12 +1198,16 @@ namespace Data.MapsManager
                     case 11:
                         judge_check = Judgement_Action_Primer(data);
                         break;
+                    case 8:
+                        judge_check = Judgement_Action_Player(data);
+                        break;
                     default:
                         break;
                 }
 
                 if (judge_check == true)
                 {
+                    //坐标改变重置碰撞
                     break;
                 }
                 judgeList.RemoveAt(index);
@@ -1099,7 +1279,7 @@ namespace Data.MapsManager
             if (Is_Dead())
             {
                 this.vy = 0;
-                this.y -= data.judgeData.depth + 0.0001f;//浮点误差
+                this.y -= data.judgeData.depth + 3.0001f;
                 this.Change_To_DaQi();
                 return true;
             }
@@ -1163,7 +1343,7 @@ namespace Data.MapsManager
                 {
                     check = false;
                 }
-                else if (buff_wudi.time == 0)
+                else if (buff_wudi.time <= 0)
                 {
                     x -= (1 - data.judgeData.time) * vx;
                     y -= (1 - data.judgeData.time) * vy;
@@ -1198,7 +1378,7 @@ namespace Data.MapsManager
                 }
             }
 
-            if ((pro & 0x1000) > 0 && atkEnable && (buff_wudi.time == 0))
+            if ((pro & 0x1000) > 0 && atkEnable && (buff_wudi.time <= 0))
             {
                 //刺，扣一血
                 Dec_hp();
@@ -1212,7 +1392,10 @@ namespace Data.MapsManager
             {
                 this.vy = data.sprite.vy;
                 this.y -= data.judgeData.depth + 0.0001f;//浮点误差
-                this.Change_To_DaQi();
+                if((data.sprite.property & 0x800) == 0)
+                {
+                    this.Change_To_DaQi();
+                }
                 return true;
             }
             else
@@ -1330,18 +1513,87 @@ namespace Data.MapsManager
             data.sprite.Del();
             return false;
         }
+        private bool Judgement_Action_Player(SpritePlayerJudgement data)
+        {
+            if ((data.judgeData.type & 128) > 0)
+            {
+                var player = (SpritePlayer)data.sprite;
+                player.Dec_hp();
+            }
 
+            var typ = data.judgeData.type & 7;
+            switch (typ)
+            {
+                case 1:
+                case 3:
+                    return Judgement_Action_Player_Y(data);
+                case 2:
+                case 4:
+                    return Judgement_Action_Player_X(data);
+                default:
+                    return false;
+            }
+        }
+        private bool Judgement_Action_Player_Y(SpritePlayerJudgement data)
+        {
+            var player = (SpritePlayer)data.sprite; 
+            
+            //改变坐标
+            this.y -= data.judgeData.depth;
+            if(player.IsNormal())
+            {
+                data.sprite.y += data.judgeData.depth;
+
+                //速度交换
+                float t = this.vy + 0.8f;
+                this.vy = data.sprite.vy - 0.8f;
+                data.sprite.vy = t;
+
+                return true;
+            }
+            else
+            {
+                //已经死亡，特殊处理
+                data.sprite.y -= 1.0f;
+
+                float t = this.vy + 0.8f;
+                this.vy = data.sprite.vy - 0.8f;
+                data.sprite.vy = t;
+                return true;
+            }
+
+
+        }
+        private bool Judgement_Action_Player_X(SpritePlayerJudgement data)
+        {
+            //改变坐标
+            var t = (1 - data.judgeData.time);
+            this.x += (data.sprite.vx - this.vx) * t;
+            data.sprite.x += (this.vx - data.sprite.vx) * t;
+
+            //速度交换
+            t = this.vx;
+            this.vx = data.sprite.vx;
+            data.sprite.vx = t;
+
+            return true;
+        }
+
+        public bool IsNormal()
+        {
+            return buff_base.type == 0;
+        }
         public bool Is_Lost()
         {
-            return (buff_base.type == 0);
+            return (buff_base.type == 1);
         }
         public bool Is_Dead()
         {
-            return (buff_base.type == 2);
+            return (buff_xialuo.time > 0);
         }
         public bool Is_BeiDian()
         {
-            return (buff_base.type == 6);
+            return (buff_base.type == 4);
         }
         public bool Is_DaQi()
         {
@@ -1349,7 +1601,11 @@ namespace Data.MapsManager
         }
         public bool Is_ShangTian()
         {
-            return (buff_base.type == 4);
+            return (buff_base.type == 2);
+        }
+        public bool Is_XiaDi()
+        {
+            return buff_xiachen.time > 0;
         }
         public int GetBuffTime()
         {
@@ -1357,7 +1613,9 @@ namespace Data.MapsManager
         }
         private void Change_To_Dead()
         {
-            buff_base.type = 2;
+            buff_base.type = 0;
+            buff_xialuo.time = 1;
+            buff_xiachen.time = -1;
             hp = 0;
             atkEnable = false;
             pyhEnable = true;
@@ -1366,65 +1624,67 @@ namespace Data.MapsManager
         {
             buff_base.type = 3;
             buff_base.time = 600;
+            buff_xialuo.time = -1;
+            buff_xiachen.time = -1;
             hp = 0;
             atkEnable = false;
             pyhEnable = true;
         }
         private void Change_To_Normal()
         {
-            Buff_Clear();
-            buff_base.type = 1;
+            BuffReset();
+            buff_base.type = 0;
             buff_base.time = -1;
             hp = 2;
             buff_wudi.time = 180;
             pyhEnable = true;
             atkEnable = true;
         }
-        private void Change_To_ShangTian()
+        public void Change_To_ShangTian()
         {
-            PlayEffect(24);
-            buff_base.type = 4;
+            //PlayEffect(24);
+            BuffReset();
+            buff_base.type = 2;
             buff_base.time = 600;
             atkEnable = false;
             pyhEnable = false;
         }
         private void Change_To_XiaDi()
         {
-            buff_base.type = 5;
-            buff_base.time = -1;
+            buff_base.type = 0;
+            buff_xialuo.time = -1;
+            buff_xiachen.time = 1;
             pyhEnable = false;
             atkEnable = false;
         }
         private void Change_To_Lost()
         {
-            buff_base.type = 0;
+            BuffReset();
+            buff_base.type = 1;
             buff_base.time = -1;
         }
         private void Change_To_BeiDian()
         {
-            buff_base.type = 6;
+            BuffReset();
+            buff_base.type = 4;
             buff_base.time = 60;
             atkEnable = false;
             pyhEnable = false;
-            PlayEffect(25);
+            //PlayEffect(25);
         }
         private void Dec_hp()
         {
-            PlayEffect(43);
+            //PlayEffect(43);
             hp--;
             if (hp == 0)
             {
                 Change_To_Dead();
             }
         }
-        private void Buff_Clear()
-        {
-            buff_wudi.time = 0;
-        }
 
         private void Add_PiaoBi(int poi)
         {
-            this.player.piaobi += poi;
+            piaobi += poi;
         }
         private void Add_V(int poi)
         {
@@ -1447,6 +1707,55 @@ namespace Data.MapsManager
             if (IsCamaraFocus)
                 Global.PlayEffect(EffID);
         }
+        public override void Draw_RectList()
+        {
+            var rects = GetLayer().GetLayerAABB();
+
+            List<RectangleF> list;
+            if (Is_DaQi())
+            {
+                var rect = GetRectBody();
+                Global.BitBlt_Rect_Green(new RectangleF(rect.X - rects.X, rect.Y - rects.Y, rect.Width, rect.Height));
+            }
+            else
+            {
+                list = GetPhyList();
+                if (list != null)
+                {
+                    foreach (var rect in list)
+                    {
+                        Global.BitBlt_Rect_Green(new RectangleF(rect.X - rects.X, rect.Y - rects.Y, rect.Width, rect.Height));
+                    }
+                }
+            }
+            list = GetBalloonList();
+            if (list != null)
+            {
+                foreach (var rect in list)
+                {
+                    Global.BitBlt_Rect_Blue1(new RectangleF(rect.X - rects.X, rect.Y - rects.Y, rect.Width, rect.Height));
+                }
+            }
+
+            list = GetBottomList();
+            if (list != null)
+            {
+                foreach (var rect in list)
+                {
+                    Global.BitBlt_Rect_Pink(new RectangleF(rect.X - rects.X, rect.Y - rects.Y, rect.Width, rect.Height));
+                }
+            }
+
+            list = GetFireList();
+            if (list != null)
+            {
+                foreach (var rect in list)
+                {
+                    Global.BitBlt_Rect_Pink(new RectangleF(rect.X - rects.X, rect.Y - rects.Y, rect.Width, rect.Height));
+                }
+            }
+        }
+
     }
     public class SpritePlayerJudgement
     {
@@ -1463,6 +1772,10 @@ namespace Data.MapsManager
         public int type = 1;
         public int time = -1;
         public Buff(int type, int time)
+        {
+            Set(type, time);
+        }
+        public void Set(int type, int time)
         {
             this.type = type;
             this.time = time;

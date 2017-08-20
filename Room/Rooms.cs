@@ -318,15 +318,8 @@ namespace Room
             playerR.IsReady = false;
             ResetSoutai();
 
-            //发送房间状态
-            for (int i = 0; i < 6; i++)
-            {
-                if (players[i].player != null)
-                {
-                    clientS.AddData(players[i].player.GetSendData_All_Change());
-                    clientS.AddData(GetSendData_All(), i);
-                }
-            }
+            SendData_All();
+            SendData_PlayerAll();
         }
         private void DealSendData_MapChange(byte[] byt, int sit)
         {

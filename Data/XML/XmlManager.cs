@@ -397,7 +397,7 @@ namespace Data.XML
         }
         public void Load()
         {
-            string path = @"D:\vs2015.data\PiaoPiao\PiaoPiao\balloon\BalloonElemnet.xml";
+            string path = GlobalB.GetRootPath() + @"\balloon\BalloonElemnet.xml";
             if (!File.Exists(path))
             {
                 MessageBox.Show("无法打开: " + path, "ERROR");

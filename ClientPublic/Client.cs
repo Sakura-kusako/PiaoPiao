@@ -129,7 +129,6 @@ namespace ClientPublic
             //添加连接
             IP = ep.Address;
             Port = ep.Port;
-            isConnect = true;
             delay = 0;
             delayTime = 0;
             ID = 0;
@@ -147,6 +146,7 @@ namespace ClientPublic
             {
                 RecvIDList.Clear();
             }
+            isConnect = true;
         }
         public void ReConnect(IPEndPoint ep)
         {
