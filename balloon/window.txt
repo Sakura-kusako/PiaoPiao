@@ -523,6 +523,13 @@ object Window = 19
 		src = 聊天框.bmp
 		alpha = 100
 	}
+	
+	//自定义角色选择区域
+	object ButtonLine = 1921
+	{
+		type = ButtonLine
+		rect = 215,453,376,102
+	}
 }
 
 //地图选择

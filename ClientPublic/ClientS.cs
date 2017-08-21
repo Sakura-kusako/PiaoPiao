@@ -25,7 +25,7 @@ namespace ClientPublic
         private int Port = 10800;
         private UdpClient Client; 
         private IPEndPoint EndPoint; //临时变量
-        private Client[] clients;
+        public Client[] clients;
         public int SendNum = 0;
         public int RecvNum = 0;
 
@@ -85,9 +85,9 @@ namespace ClientPublic
         {
             //发送所有数据
             if (isConnect == false) return;
-
             foreach (var client in clients)
             {
+
                 if(client.IsConnect())
                 {
                     var ep = client.GetIPEndPoint();
@@ -132,7 +132,7 @@ namespace ClientPublic
             {
                 if (clients[poi].IsConnect())
                 {
-                    clients[poi].AddSendData(dat);
+                    clients[poi].AddSendData(dat.Copy());
                 }
             }
         }
@@ -143,8 +143,7 @@ namespace ClientPublic
             {
                 if (clients[i].IsConnect())
                 {
-                    clients[i].AddSendData(dat);
-
+                    clients[i].AddSendData(dat.Copy());
                 }
             }
         }
@@ -185,7 +184,7 @@ namespace ClientPublic
                     if(client.GetDelay()>10000)
                     {
                         client.LostConnect();
-                        ret += 1<<0;
+                        ret += 1<<i;
                     }
                 }
             }
@@ -195,7 +194,6 @@ namespace ClientPublic
         private void Callback(IAsyncResult ar)
         {
             //接收回调函数
-
             if (isConnect == false) return;
 
             var ep = new IPEndPoint(IPAddress.Any, 0);
@@ -251,11 +249,10 @@ namespace ClientPublic
                 foreach (var client in clients)
                 {
                     //判断ip
-                    if (client.EqualIP(ep))
+                    if (client.EqualIP(ep) && client.IsConnect())
                     {
                         //添加到消息列表
                         client.AddRecvData(dat);
-
                     }
                 }
             }

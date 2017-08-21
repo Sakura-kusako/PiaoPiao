@@ -41,6 +41,8 @@ namespace ClientPublic
             INPUT, //键盘输入
             GAME_START, //开始游戏
             CHANGE_DELAY, //修改延迟
+            CHANGE_ROOM_PREP, //修改房间属性
+            CHANGE_PLAYER_TYPE, //修改角色
         };
         
         public IPAddress IP;
@@ -53,7 +55,13 @@ namespace ClientPublic
         public ClientData()
         {
         }
-
+        public ClientData Copy()
+        {
+            var dat = new ClientData();
+            dat.Type = Type;
+            dat.Data = Data;
+            return dat;
+        }
         public ClientData(IPEndPoint ep,byte[] byt)
         {
             //构造函数
@@ -200,6 +208,27 @@ namespace ClientPublic
             int index = 0;
             GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.CHANGE_DELAY), Data, ref index);
             GlobalC.AddSendData_Int(delay, Data, ref index);
+        }
+        public void CreateChangeRoomPrep(bool IsWS,bool Isfree)
+        {
+            //改变房间属性
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[6];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.CHANGE_ROOM_PREP), Data, ref index);
+            GlobalC.AddSendData_Bool(IsWS, Data, ref index);
+            GlobalC.AddSendData_Bool(Isfree, Data, ref index);
+        }
+        public void CreateChangePlayerType(int type)
+        {
+            //修改角色
+            Type = CLIENT_TYPE.SEND;
+            Data = new byte[8];
+
+            int index = 0;
+            GlobalC.AddSendData_Int((int)(CLIENT_DATA_TYPE.CHANGE_PLAYER_TYPE), Data, ref index);
+            GlobalC.AddSendData_Int(type, Data, ref index);
         }
 
         public ClientData NewRecvSend()

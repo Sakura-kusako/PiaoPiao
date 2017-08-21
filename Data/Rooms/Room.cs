@@ -38,6 +38,20 @@ namespace Data.Rooms
                 players[i] = new Room_Players();
             }
         }
+        public void Reset()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                players[i] = new Room_Players();
+            }
+            name = "大家一起踩~~";
+            ID = 1;
+            soutai = 0;
+            Boss = 0;
+
+            copySit = 0;
+            AddPlayer(Global.GetPlayer());
+        }
         public void CheckError()
         {
             for (int i = 0; i < 6; i++)

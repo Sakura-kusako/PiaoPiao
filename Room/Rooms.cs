@@ -302,6 +302,12 @@ namespace Room
                 case ClientData.CLIENT_DATA_TYPE.CHANGE_DELAY:
                     DealSendData_ChangeDelay(dat, sit);
                     break;
+                case ClientData.CLIENT_DATA_TYPE.CHANGE_ROOM_PREP:
+                    DealSendData_ChangeRoomPrep(byt,sit);
+                    break;
+                case ClientData.CLIENT_DATA_TYPE.CHANGE_PLAYER_TYPE:
+                    DealSendData_ChangePlayerType(byt, sit);
+                    break;
                 default:
                     break;
             }
@@ -370,6 +376,36 @@ namespace Room
             if (sit != Boss) return;
 
             clientS.AddData(dat);
+        }
+        private void DealSendData_ChangeRoomPrep(byte[] byt,int sit)
+        {
+            //判断是否为房主
+            if (sit != Boss) return;
+
+            //读取房间属性
+            int index = 4;
+            IsWS = GlobalC.GetSendData_Bool(byt, ref index);
+            modeFree = GlobalC.GetSendData_Bool(byt, ref index);
+
+            //重新发送房间状态
+            var dat = GetSendData_All();
+            clientS.AddData(dat);
+        }
+        private void DealSendData_ChangePlayerType(byte[] byt, int sit)
+        {
+            //读取玩家类型
+            int index = 4;
+            int typ = GlobalC.GetSendData_Int(byt, ref index);
+            if (typ > 0 && typ <= 6)
+            {
+                if(players[sit].player != null)
+                {
+                    players[sit].player.type = typ;
+                }
+            }
+
+            //重新发送房间玩家状态
+            SendData_PlayerAll();
         }
 
         public void SendData_All()

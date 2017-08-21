@@ -393,14 +393,68 @@ namespace Data.Windows
             */
         }
     }
+    public class Sprite_Room_In3 : Sprite_Room
+    {
+        //角色选择
+        //显示飘币
+        private int[] point = new int[7] { 1, 2, 3, 0, 5, 4, 6 };
+        private int[] point_typ = new int[7] { 3, 0, 1, 2, 5, 4, 6 };
+        private int selectID = 0; //当前选中玩家
+
+        public Sprite_Room_In3()
+        {
+            room = Global.GetRoom();
+            x = 214;
+            y = 452;
+            width = 364+12;
+            height = 102;
+            selectID = Global.GetPlayer().type;
+        }
+        public override void Action()
+        {
+            count++;
+            if (room == null) return;
+        }
+        public override void Draw(PPDevice ppDevice)
+        {
+            if (room == null) return;
+            
+            //飘币显示
+            DrawNum(ppDevice, Num_PiaoBi_10x14, Global.GetPlayer().piaobi, 767, 533, 10, 14, 5, 4);
+
+            //人物立绘
+            for (int i = 0; i < 7; i++)
+            {
+                if (i == point_typ[selectID])
+                {
+                    BitBlt(ppDevice, room_player_photo[point[i]][1], x + i * 54, y);
+                }
+                else
+                {
+                    BitBlt(ppDevice, room_player_photo[point[i]][0], x + i * 54, y + 5);
+                }
+            }
+        }
+        public override void Update()
+        {
+            var input = Global.GetInput();
+            if (input.y - y > 5 && input.y - y < 97)
+            {
+                int t = point[(int)((input.x - x) / 54) % 7];
+                if (t > 0)
+                {
+                    selectID = t;
+                    Global.GetPlayer().type = selectID;
+                }
+            }
+        }
+    }
     public class Sprite_Room_In2 : Sprite_Room
     {
         //负责绘制房间内部的基本信息
         //房主，游戏地图，房间名字等
         public Sprite_Room_In2()
         {
-            //var ser = Ser_Data.servers[Config.server];//读取当前服务器;
-            //room = ser.rooms[Config.player.roomID - 1];
             room = Global.GetRoom();
         }
         public override void Action()
@@ -443,17 +497,14 @@ namespace Data.Windows
         }
         private void DrawTxt(PPDevice ppDevice)
         {
-            /*
-            g.DrawString(str, new Font(TextType, 10), new SolidBrush(color_yellow), new PointF(80, 9));
-            */
             Global.BitBlt_Str("飘飘" + ": " + room.name, new Rectangle(80, 10, 300, 30), color_yellow, 6, 12);
             Global.BitBlt_Str(room.GetRoomType(), new Rectangle(337, 10, 600, 100), color_yellow, 6, 12);
             Global.BitBlt_Str(room.GetMapName(), new Rectangle(98, 578, 800, 600), color_blue, 6, 12);
         }
         private void DrawOther(PPDevice ppDevice)
         {
-            //g.DrawString(room.GetRoomType(), new Font(TextType, 10), new SolidBrush(color_yellow), new PointF(334, 10));
             if (room.IsWS) BitBlt(ppDevice, room_WS, 305, 7);
+
         }
         private void DrawBoss(PPDevice ppDevice)
         {

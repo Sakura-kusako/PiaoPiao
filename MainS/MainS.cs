@@ -32,11 +32,9 @@ namespace MainS
                     {
                         if ((ret & (1 << i)) > 0)
                         {
-                            room.players[i].Reset();
                             room.DelPlayer(i);
                         }
                     }
-                    room.ResetSoutai();
                     room.SendData_All();
                     room.SendData_PlayerAll();
                 }

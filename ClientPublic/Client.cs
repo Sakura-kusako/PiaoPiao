@@ -182,13 +182,13 @@ namespace ClientPublic
         public void AddSendData(ClientData dat)
         {
             //将数据添加到数据发送列表
-            if(dat.Type == ClientData.CLIENT_TYPE.SEND)
-            {
-                dat.ID = this.ID;
-                this.ID++;
-            }
             lock (lockSendList)
             {
+                if(dat.Type == ClientData.CLIENT_TYPE.SEND)
+                {
+                    dat.ID = this.ID;
+                    this.ID++;
+                }
                 SendList.Add(dat);
             }
         }

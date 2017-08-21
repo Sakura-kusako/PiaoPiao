@@ -46,8 +46,8 @@ namespace Data.Windows
         }
         public void Load()
         {
-            if(showNum==null) showNum = new List<int>();
-            if(windows==null) windows = new List<Window>();
+            if (showNum == null) showNum = new List<int>();
+            if (windows == null) windows = new List<Window>();
 
             Input = Global.GetInput();
             SpriteBase.Input = Input;
@@ -957,7 +957,7 @@ namespace Data.Windows
                 }
             }
         }
-        public void ActiveWindow_IF_enabled(int typeID)
+        public bool ActiveWindow_IF_enabled(int typeID)
         {
             int len = windows.Count();
             for (int i = 0; i < len; i++)
@@ -966,9 +966,10 @@ namespace Data.Windows
                 if (win.typeID == typeID && win.enabled == 0)
                 {
                     win.Active();
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
         //响应按钮
@@ -1011,6 +1012,7 @@ namespace Data.Windows
             }
             else if (eve == 224)
             {
+                Room_Set_WS_Eve();
             }
             else if (eve == 225)
             {
@@ -1035,6 +1037,14 @@ namespace Data.Windows
             else if (eve == 1912)
             {
                 Open_Setting_Windows_Eve();
+            }
+            else if(eve == 1914)
+            {
+                Room_Select_RoomProp_Eve();
+            }
+            else if(eve == 1921)
+            {
+                Room_Select_Character_Eve();
             }
             else if (eve == 100012)
             {
@@ -1183,6 +1193,9 @@ namespace Data.Windows
                 ActiveWindow(22);
             }
         }
+        private void Room_Set_WS_Eve()
+        {
+        }
         private void Room_SetFree_Eve()
         {
             if (Input.IsLeftDown())
@@ -1214,14 +1227,28 @@ namespace Data.Windows
             if (Input.IsLeftUp())
             {
                 var win = windows[GetIndex(22)];
+                var room = Global.GetRoom();
 
-                UI ui = win.ui[win.GetIndex(223)];
-                bool Islock = (ui.soutai == 0) ? false : true;
-                ui = win.ui[win.GetIndex(224)];
-                bool IsWS = (ui.soutai == 1) ? true : false;
-                ui = win.ui[win.GetIndex(225)];
-                bool IsFree = (ui.soutai == 1) ? true : false;
+                if(Global.IsConnect())
+                {
+                    UI ui = win.ui[win.GetIndex(224)];
+                    bool IsWS = (ui.soutai == 1) ? true : false;
+                    ui = win.ui[win.GetIndex(225)];
+                    bool ISFree = (ui.soutai == 1) ? true : false;
 
+                    var dat = new ClientData();
+                    dat.CreateChangeRoomPrep(IsWS, ISFree);
+                    Global.GetClientC().AddData(dat);
+                }
+                else
+                {
+                    UI ui = win.ui[win.GetIndex(223)];
+                    room.Islock = (ui.soutai == 0) ? false : true;
+                    ui = win.ui[win.GetIndex(224)];
+                    room.IsWS = (ui.soutai == 1) ? true : false;
+                    ui = win.ui[win.GetIndex(225)];
+                    room.modeFree = (ui.soutai == 1) ? true : false;
+                }
                 win.ToBottom();
             }
         }
@@ -1289,6 +1316,34 @@ namespace Data.Windows
                 win.addBefore[0].Update(); //unsafe
             }
         }
+        private void Room_Select_RoomProp_Eve()
+        {
+            if (Input.IsLeftUp())
+            {
+                if(ActiveWindow_IF_enabled(22) == true)
+                {
+                    var room = Global.GetRoom();
+                    if(room.modeFree)
+                    {
+                        var win = windows[GetIndex(22)];
+                        var ui = win.ui[win.GetIndex(225)];
+                        ui.soutai = 1;
+                    }
+                    else
+                    {
+                        var win = windows[GetIndex(22)];
+                        var ui = win.ui[win.GetIndex(226)];
+                        ui.soutai = 1;
+                    }
+                    if(room.IsWS)
+                    {
+                        var win = windows[GetIndex(22)];
+                        var ui = win.ui[win.GetIndex(224)];
+                        ui.soutai = 1;
+                    }
+                }
+            }
+        }
         private void Room_SelectTeam_Eve()
         {
             if (Input.IsLeftUp())
@@ -1302,6 +1357,32 @@ namespace Data.Windows
                 else
                 {
                     Global.GetRoom().SetRoomTeam(Global.GetPlayer().roomSit, eve - 194);
+                }
+            }
+        }
+        private void Room_Select_Character_Eve()
+        {
+            if (Input.IsLeftDown())
+            {
+                var win = windows[GetIndex(19)];
+                win.addBeforeUI[0].Update(); //unsafe
+
+                if (Global.IsConnect())
+                {
+                    int[] point = new int[7] { 1, 2, 3, 0, 4, 5, 6 };
+
+                    var input = Global.GetInput();
+                    if (input.y - 452 > 5 && input.y - 452 < 97)
+                    {
+                        int t = point[(int)((input.x - 214) / 54) % 7];
+                        if (t > 0)
+                        {
+                            Global.GetPlayer().type = t;
+                            var dat = new ClientData();
+                            dat.CreateChangePlayerType(t);
+                            Global.GetClientC().AddData(dat);
+                        }
+                    }
                 }
             }
         }
@@ -1668,22 +1749,60 @@ namespace Data.Windows
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\心-自由.tga",58,51),
             },
             new BalloonItemPic_Base[]{
-                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-A.tga",58,51),
-                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-B.tga",58,51),
-                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-C.tga",58,51),
-                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-自由.tga",58,51),
-            },
-            new BalloonItemPic_Base[]{
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\糖果-A.tga",58,51),
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\糖果-B.tga",58,51),
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\糖果-C.tga",58,51),
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\糖果-自由.tga",58,51),
             },
             new BalloonItemPic_Base[]{
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-A.tga",58,51),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-B.tga",58,51),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-C.tga",58,51),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\翅膀-自由.tga",58,51),
+            },
+            new BalloonItemPic_Base[]{
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\鲸鱼-A.tga",58,51),
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\鲸鱼-B.tga",58,51),
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\鲸鱼-C.tga",58,51),
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\鲸鱼-自由.tga",58,51),
+            },
+        };
+        public static BalloonItemPic_Base[][] room_player_photo = new BalloonItemPic_Base[7][]
+        {
+            new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\问号-小.tga",52,92),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\问号-大.tga",52,102,12,160),
+            },
+            new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\下午茶-小.tga",52,92),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\下午茶-大.tga",52,102,5,500),
+            },
+            new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\氧气-小.tga",52,92),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\氧气-大.tga",52,102,5,500),
+            },
+            new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\蝴蝶结-小.tga",52,92),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\蝴蝶结-大.tga",52,102,5,500),
+            },
+            new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\饼干-小.tga",52,92),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\饼干-大.tga",52,102,5,500),
+            },
+            new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\小p-小.tga",52,92),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\小p-大.tga",52,102,5,500),
+            },
+            new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\海盗-小.tga",52,92),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\海盗-大.tga",52,102,5,500),
             },
         };
         public static BalloonItemPic_Base PlayerMaoYan_240x240x2x2 = Load_Bitmap_FromFile(path + @"balloon\Pic\角色\冒烟黑人.tga", 120,120,2,80,2);
@@ -1715,6 +1834,7 @@ namespace Data.Windows
 
             //playertype
             Clear(room_player_type);
+            Clear(room_player_photo);
 
             //
             Clear(PlayerMaoYan_240x240x2x2);
@@ -1836,7 +1956,7 @@ namespace Data.Windows
         public int index = 0;
         public void Active()
         {
-            WinAddDel();
+            Del_WinAdd();
             visible = 1;
             enabled = 1;
             move_dx = 0;
@@ -1931,9 +2051,12 @@ namespace Data.Windows
         }
         public void SetRoom()
         {
-            movable = 1;
-            x = 308;
-            y = 163;
+            movable = 0;
+            topmost = 1;
+            x = 287;
+            y = 179;
+            this.move_dx = 0;
+            this.move_dy = 0;
             pic_dx = 0;
             pic_dy = 0;
         }
@@ -1989,7 +2112,6 @@ namespace Data.Windows
         }
         public void InitRoomIn()
         {
-            //var ser = Ser_Data.servers[Config.server];//读取当前服务器;
             Global.PlayBgm(Sounds.Sound.BGM_ID.ROOM);
             int index = GetIndex(1918);
             ui[index].enable = 0;
@@ -1997,6 +2119,7 @@ namespace Data.Windows
             addAfter.Add(new Sprite_Room_In_bg());
             addAfter.Add(new Sprite_Room_In());
             addBefore.Add(new Sprite_Room_In2());
+            addBeforeUI.Add(new Sprite_Room_In3());
         }
         public void Ready_Go()
         {
@@ -2088,13 +2211,9 @@ namespace Data.Windows
             }
             Del_WinAdd();
         }
-        public void WinAddDel()
-        {
-            addAfter.Clear();
-            addBefore.Clear();
-        }
 
         public List<UI> ui = new List<UI>();
+        public List<Sprite_WinAdd> addBeforeUI = new List<Sprite_WinAdd>();
         public List<Sprite_WinAdd> addBefore = new List<Sprite_WinAdd>();
         public List<Sprite_WinAdd> addAfter = new List<Sprite_WinAdd>();
         public void Del_WinAdd()
@@ -2109,9 +2228,15 @@ namespace Data.Windows
                 if (t != null)
                     t.Clear();
             }
+            foreach (var t in addBeforeUI)
+            {
+                if (t != null)
+                    t.Clear();
+            }
 
             addAfter.Clear();
             addBefore.Clear();
+            addBeforeUI.Clear();
         }
         public override void Draw(PPDevice ppDevice)
         {
@@ -2129,7 +2254,10 @@ namespace Data.Windows
                 if (ui.enable == 0) continue;
                 ui.Draw(ppDevice);
             }
-
+            foreach (var addb in addBeforeUI)
+            {
+                addb.Draw(ppDevice);
+            }
         }
         public virtual void Move()
         {
@@ -2163,6 +2291,12 @@ namespace Data.Windows
                 u.Action();
             }
             foreach (var u in addBefore)
+            {
+                u.pic_dx = this.x + this.pic_dx;//重置UI位置
+                u.pic_dy = this.y + this.pic_dy;
+                u.Action();
+            }
+            foreach (var u in addBeforeUI)
             {
                 u.pic_dx = this.x + this.pic_dx;//重置UI位置
                 u.pic_dy = this.y + this.pic_dy;

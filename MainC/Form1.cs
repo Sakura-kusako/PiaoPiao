@@ -178,9 +178,12 @@ namespace MainC
         {
             //保存玩家数据
             string path = GlobalB.GetRootPath() + @"\Setting\";
-            foreach (var player in players)
+            if (Global.GetPlayer() != null)
             {
-                Data.XML.XmlPlayer.WritePlayer(path, player);
+                var player = Global.GetPlayer();
+                if (player.ExID != "0")
+                    Data.XML.XmlPlayer.WritePlayer(path, Global.GetPlayer());
+
             }
         }            
 

@@ -131,7 +131,14 @@ namespace MainC
                         {
                             clientC.SendAll();
                             clientC.UpdateTime();
-                            Global.GetRoom().DealSendData();
+                            if (clientC.IsConnect() == false)
+                            {
+                                Global.GetRoom().Reset();
+                            }
+                            else
+                            {
+                                Global.GetRoom().DealSendData();
+                            }
                         }
                     }
 
@@ -168,7 +175,7 @@ namespace MainC
             }
 
             FormParent.ShowText8("X: " + input.x);
-            FormParent.ShowText9("X: " + input.y);
+            FormParent.ShowText9("Y: " + input.y);
 
             FormParent.ShowText11("Eve: " + Window_List.eve);
             if (Window_List.mouseIndex >= 0)
