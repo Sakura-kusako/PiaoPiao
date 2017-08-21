@@ -1032,6 +1032,10 @@ namespace Data.Windows
             {
                 Into_Shop_Eve();
             }
+            else if (eve == 1912)
+            {
+                Open_Setting_Windows_Eve();
+            }
             else if (eve == 100012)
             {
                 Login_CreateServer_Eve();
@@ -1442,25 +1446,13 @@ namespace Data.Windows
                 */
             }
         }
-
-        //响应服务器
-        public void DealMsg(string m)
+        private void Open_Setting_Windows_Eve()
         {
-            /*
-            int id = 0;
-            id = int.Parse(m.Substring(0, 6));
-            if (id == 100012)
+            if (Input.IsLeftUp())
             {
-                GetServerData(m);
+                //ActiveWindow(23);
             }
-            wait_server = 0;
-            */
         }
-        public void GetServerData(string m)
-        {
-            int type = int.Parse(m.Substring(6, 4));
-        }
-
         public int GetIndex(int typeID)
         {
             int len = windows.Count;
@@ -1694,6 +1686,7 @@ namespace Data.Windows
                 Load_Bitmap_FromFile(path + @"balloon\Pic\角色\预备\鲸鱼-自由.tga",58,51),
             },
         };
+        public static BalloonItemPic_Base PlayerMaoYan_240x240x2x2 = Load_Bitmap_FromFile(path + @"balloon\Pic\角色\冒烟黑人.tga", 120,120,2,80,2);
 
         public static void ClearAll()
         {
@@ -1722,6 +1715,9 @@ namespace Data.Windows
 
             //playertype
             Clear(room_player_type);
+
+            //
+            Clear(PlayerMaoYan_240x240x2x2);
         }
         public static void Clear(BalloonItemPic_Base[][] t)
         {
@@ -1994,7 +1990,7 @@ namespace Data.Windows
         public void InitRoomIn()
         {
             //var ser = Ser_Data.servers[Config.server];//读取当前服务器;
-            Global.PlayBgm(11);
+            Global.PlayBgm(Sounds.Sound.BGM_ID.ROOM);
             int index = GetIndex(1918);
             ui[index].enable = 0;
             Del_WinAdd();

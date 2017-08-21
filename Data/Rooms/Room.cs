@@ -330,7 +330,14 @@ namespace Data.Rooms
                         //发送到服务端
                         {
                             var dat = new ClientData();
-                            dat.CreateInput(inputManager.GetTime(),Global.GetInput().GetKeyBool());
+                            if(Global.IsCameraFree)
+                            {
+                                dat.CreateInput(inputManager.GetTime(), Global.GetInput().GetKeyBoolNull());
+                            }
+                            else
+                            {
+                                dat.CreateInput(inputManager.GetTime(),Global.GetInput().GetKeyBool());
+                            }
                             Global.GetClientC().AddData(dat);
                         }
                         
@@ -407,7 +414,6 @@ namespace Data.Rooms
                             }
                         }
                         sw.WriteLine();
-                        //sw.Flush();
                         inputManager.Update();
                     }
                     else
@@ -419,7 +425,14 @@ namespace Data.Rooms
             else
             {
                 //本地更新
-                Global.GetPlayer().input.UpdateKey(Global.GetInput().GetKeyBool());
+                if(Global.IsCameraFree)
+                {
+                    Global.GetPlayer().input.UpdateKey(Global.GetInput().GetKeyBoolNull());
+                }
+                else
+                {
+                    Global.GetPlayer().input.UpdateKey(Global.GetInput().GetKeyBool());
+                }
             }
             return 0;
         }
@@ -442,7 +455,7 @@ namespace Data.Rooms
     public class RoomInputManager
     {
         public int delayFps = 5; //延迟帧
-        const int LenMax = 10; //最大储存量
+        const int LenMax = 31; //最大储存量500ms
         private int timeFps = 0; //第0帧开始
         public List<InputFps> inputFps;
         public static bool[] player;

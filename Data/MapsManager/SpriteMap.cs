@@ -1,6 +1,7 @@
 ﻿using Data.Globals;
 using Data.PPDevices;
 using Data.Resources;
+using Data.Windows;
 using Room;
 using System;
 using System.Collections.Generic;
@@ -747,6 +748,7 @@ namespace Data.MapsManager
             dvy = 0;
             Update_Buff_Eff_Base();
             Update_Buff_Xialuo(); //Set
+            Update_Buff_XiaDi(); //Set
         }
         private void Update_Buff_Eff_Base()
         {
@@ -784,10 +786,19 @@ namespace Data.MapsManager
                 dg += g; //两倍重力
                 atkEnable = false;
             }
-        }            
+        }
+        private void Update_Buff_XiaDi()
+        {
+            if (Is_XiaDi())
+            {
+                dg += g; //两倍重力
+                atkEnable = false;
+            }
+        }
+
         private void Update_Buff_Time_Single(Buff buff)
         {
-            if (buff.time > 0) buff.time--;
+            if (buff.time >= 0) buff.time--;
         }
         private void Update_List()
         {
@@ -879,7 +890,7 @@ namespace Data.MapsManager
         {
             //空气阻力
             const float fx = 4.0f; //速度上限
-            const float fy = 4.0f;
+            const float fy = 5.0f;
             const float df = 0.1f; //每帧-0.1
             float dx, dy;
 
@@ -981,8 +992,11 @@ namespace Data.MapsManager
             }
             else
             {
-                DrawSmall(ppDevice);
-                Draw_RectList();
+                if(Is_ShangTian() == false)
+                {
+                    DrawSmall(ppDevice);
+                    Draw_RectList();
+                }
             }
         }
         private void DrawSmall(PPDevice ppDevice)
@@ -1220,8 +1234,12 @@ namespace Data.MapsManager
             //返回最先碰撞的下标;
             int index = 0;
             float time = 1;
-            for (int i = 1; i < judgeList.Count; i++)
+            for (int i = 0; i < judgeList.Count; i++)
             {
+                if(judgeList[i].judgeData.type == 5)
+                {
+                    return i;
+                }
                 if (judgeList[i].judgeData.time < time)
                 {
                     time = judgeList[i].judgeData.time;
@@ -1339,11 +1357,11 @@ namespace Data.MapsManager
             if ((pro & 0x100) > 0)
             {
                 //电属性;
-                if (atkEnable == false)
+                if (atkEnable == false || Is_Dead())
                 {
                     check = false;
                 }
-                else if (buff_wudi.time <= 0)
+                else if (buff_wudi.time <= 0 && IsNormal())
                 {
                     x -= (1 - data.judgeData.time) * vx;
                     y -= (1 - data.judgeData.time) * vy;
@@ -1642,12 +1660,13 @@ namespace Data.MapsManager
         }
         public void Change_To_ShangTian()
         {
-            //PlayEffect(24);
+            PlayEffect(Sounds.Sound.EFFECT_ID.SHANGTIAN);
             BuffReset();
             buff_base.type = 2;
             buff_base.time = 600;
             atkEnable = false;
             pyhEnable = false;
+            Global.GetMapManager().AddSprite(new SpriteMaoyan(this.x,this.y));
         }
         private void Change_To_XiaDi()
         {
@@ -1670,11 +1689,11 @@ namespace Data.MapsManager
             buff_base.time = 60;
             atkEnable = false;
             pyhEnable = false;
-            //PlayEffect(25);
+            PlayEffect(Sounds.Sound.EFFECT_ID.BEIDIAN);
         }
         private void Dec_hp()
         {
-            //PlayEffect(43);
+            PlayEffect(Sounds.Sound.EFFECT_ID.QIQIUBAOZHA);
             hp--;
             if (hp == 0)
             {
@@ -1702,6 +1721,11 @@ namespace Data.MapsManager
             if (hp > hp_max) hp = hp_max;
         }
 
+        private void PlayEffect(Sounds.Sound.EFFECT_ID EffID)
+        {
+            if (IsCamaraFocus)
+                Global.PlayEffect(EffID);
+        }
         private void PlayEffect(int EffID)
         {
             if (IsCamaraFocus)
@@ -1921,4 +1945,5 @@ namespace Data.MapsManager
             base.Del();
         }
     }
+
 }

@@ -122,5 +122,20 @@ namespace Data.Resources
             base.Clear();
             isLoad = false;
         }
+        public BalloonPic2()
+        {
+
+        }
+        public BalloonPic2(BalloonItemPic_Base b)
+        {
+            this.bitmap = b.bitmap;
+            this.frameNum = b.frameNum;
+            this.frameSpan = b.frameSpan;
+            this.height = b.height;
+            this.line = b.line;
+            this.width = b.width;
+            this.x = b.x;
+            this.y = b.y;
+        }
     }
 }

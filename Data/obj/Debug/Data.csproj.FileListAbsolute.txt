@@ -21,3 +21,7 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.DXGI.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\SharpDX.Mathematics.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\ClientPublic.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\ClientPublic.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.DirectSound.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.DirectSound.xml

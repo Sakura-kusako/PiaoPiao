@@ -23,6 +23,7 @@ namespace Data.Globals
     public static class Global
     {
         public static bool IsFormGameOpen = false;
+        public static bool IsCameraFree = false;
         public static bool IsDebug = false;
         public static bool IsConnect()
         {
@@ -42,7 +43,7 @@ namespace Data.Globals
         private static MapManager mapManager = null;
         private static ClientC clientC ;
         private static Replay replayManager = new Replay();
-        private static Sound soundManager = new Sound();
+        private static Sound soundManager;
 
         public static ResManager GetResManager()
         {
@@ -99,6 +100,10 @@ namespace Data.Globals
         public static Replay GetReplayManager()
         {
             return replayManager;
+        }
+        public static void SetSoundManager(Sound s)
+        {
+            soundManager = s;
         }
 
         public static Texture Load_Bitmap_FromFile(string path, string file)

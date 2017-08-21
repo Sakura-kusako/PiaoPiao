@@ -1,4 +1,5 @@
 ﻿using Data.Globals;
+using Data.XML;
 using Room;
 using System;
 using System.Collections;
@@ -9,7 +10,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace MainC
 {
@@ -28,6 +32,7 @@ namespace MainC
             var xmlManager = Global.GetXmlManager();
             xmlManager.Load();
             Form1_Load_Player();
+            Form1_Load_Config();
             if(Global.GetClientC() == null)
             {
                 Global.SetClientC(new ClientPublic.ClientC());
@@ -53,10 +58,121 @@ namespace MainC
             if (comboBox1.Items.Count > 0)
                 comboBox1.SelectedIndex = 0;
         }
+        private void Form1_Load_Config()
+        {
+            //加载窗口设置
+            string path = GlobalB.GetRootPath() + @"\Setting\config.xml";
+            if (File.Exists(path) == false) return;
+
+            //将XML文件加载进来
+            XDocument document = XDocument.Load(path);
+            //获取到XML的根元素进行操作
+            XElement root = document.Root;
+
+            foreach (XElement item1 in root.Elements())
+            {
+                var name = item1.Name.LocalName;
+                if (name == "选择玩家")
+                {
+                    int t = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                    if (t >= 0 && t < players.Count)
+                        comboBox1.SelectedIndex = t;
+                }
+                else if (name == "音乐音量")
+                {
+                    int t = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                    if (t >= 0 && t <= 100)
+                        trackBar1.Value = t;
+                }
+                else if (name == "音效音量")
+                {
+                    int t = XmlManager.Try_Get_Attribute_Value(item1.Attribute("Value"));
+                    if (t >= 0 && t <= 100)
+                        trackBar2.Value = t;
+                }
+                else if (name == "窗口解锁")
+                {
+                    string t = XmlManager.Try_Get_Attribute_Value_Str(item1.Attribute("Value"));
+                    checkBox2.Checked = (t == "是");
+                    Global.IsCameraFree = checkBox2.Checked;
+                }
+                else if (name == "调试模式")
+                {
+                    string t = XmlManager.Try_Get_Attribute_Value_Str(item1.Attribute("Value"));
+                    checkBox1.Checked = (t == "是");
+                    Global.IsDebug = checkBox1.Checked;
+                }
+                else if (name == "IP地址")
+                {
+                    string t = XmlManager.Try_Get_Attribute_Value_Str(item1.Attribute("Value"));
+                    textBox3.Text = t;
+                }
+                else if (name == "端口")
+                {
+                    string t = XmlManager.Try_Get_Attribute_Value_Str(item1.Attribute("Value"));
+                    textBox4.Text = t;
+                }
+            }
+        }
+        private void Form1_Save_Config()
+        {
+            //保存窗口设置
+            string path = GlobalB.GetRootPath() + @"\Setting";
+            if(Directory.Exists(path) == false)
+            {
+                Directory.CreateDirectory(path);
+            }
+            path = path + @"\config.xml";
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            string[,] str = new string[,]
+            {
+                { "选择玩家",""+comboBox1.SelectedIndex },
+                { "音乐音量",""+trackBar1.Value },
+                { "音效音量",""+trackBar2.Value },
+                { "窗口解锁",checkBox2.Checked?"是":"否" },
+                { "调试模式",checkBox1.Checked?"是":"否" },
+                { "IP地址",textBox3.Text },
+                { "端口",textBox4.Text },
+            };
+            XmlDocument xmlDoc = new XmlDocument();
+            //创建Xml声明部分，即<?xml version="1.0" encoding="utf-8" ?>
+            XmlDeclaration Declaration = xmlDoc.CreateXmlDeclaration("1.0", "gb2312", null);
+
+            //创建根节点
+            XmlNode rootNode = xmlDoc.CreateElement("Root");
+            for (int i = 0; i < str.Length / 2; i++)
+            {
+                //创建student子节点
+                XmlNode childNode = xmlDoc.CreateElement(str[i, 0]);
+
+                //创建一个属性
+                XmlAttribute value = xmlDoc.CreateAttribute("Value");
+                value.Value = str[i, 1];
+
+                //xml节点附件属性
+                childNode.Attributes.Append(value);
+
+                //附加子节点到根节点
+                rootNode.AppendChild(childNode);
+            }
+
+            //附加根节点
+            xmlDoc.AppendChild(rootNode);
+            xmlDoc.InsertBefore(Declaration, xmlDoc.DocumentElement);
+
+            //保存Xml文档
+            xmlDoc.Save(path);
+
+        }
+
         private void Save()
         {
             //保存所有数据
             SavePlayer();
+            Form1_Save_Config();
         }
         private void SavePlayer()
         {
@@ -102,6 +218,11 @@ namespace MainC
                 AddTextLine(textBox6, "飘飘正在启动，可能需要几十秒的时间");
                 formGame = new FormGame(this);
                 formGame.Show();
+                if (Global.GetSoundManager() != null)
+                {
+                    Global.GetSoundManager().SetVolume(trackBar1.Value);
+                    Global.GetSoundManager().SetEffVol(trackBar2.Value);
+                }
                 AddTextLine(textBox6, "飘飘启动成功");
             }
             else
@@ -219,13 +340,10 @@ namespace MainC
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (formGame != null && formGame.IsDisposed == false)
+            if (Global.IsFormGameOpen)
             {
                 formGame.Close();
-            }
-            while(Global.IsFormGameOpen == true)
-            {
-
+                e.Cancel = true;
             }
         }
 
@@ -252,9 +370,9 @@ namespace MainC
 
             int delay = 5;
             bool check = int.TryParse(textBox15.Text,out delay);
-            if (check == false || delay > 9 || delay < 1)
+            if (check == false || delay > 30 || delay < 1)
             {
-                AddTextLine(textBox5, "Error : 延迟的取值范围是1-9");
+                AddTextLine(textBox5, "Error : 延迟的取值范围是1-30帧");
                 return;
             }
 
@@ -263,6 +381,27 @@ namespace MainC
             clientC.AddData(dat);
 
             AddTextLine(textBox5, "延迟修改信息已发送");
+        }
+
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            if (Global.GetSoundManager() != null)
+            {
+                Global.GetSoundManager().SetVolume(trackBar1.Value);
+            }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            Global.IsCameraFree = checkBox2.Checked;
+        }
+
+        private void trackBar2_ValueChanged(object sender, EventArgs e)
+        {
+            if (Global.GetSoundManager() != null)
+            {
+                Global.GetSoundManager().SetEffVol(trackBar2.Value);
+            }
         }
     }
 }

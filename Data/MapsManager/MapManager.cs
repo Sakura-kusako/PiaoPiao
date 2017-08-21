@@ -1044,6 +1044,12 @@ namespace Data.MapsManager
                             //添加到碰撞信息到临时列表
                             list_j.Add(new SpritePlayerJudgement(results, fly));
                         }
+                        else if (Physics.Rect_Rect(fly_AABB, pla_AABB))
+                        {
+                            //添加到碰撞信息到列表
+                            results = new JudgeData(5, 0, 0, 0, 0);
+                            player.judgeList.Add(new SpritePlayerJudgement(results, fly));
+                        }
                     }
                 }
             }

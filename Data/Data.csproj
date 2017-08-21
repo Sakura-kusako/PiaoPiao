@@ -33,6 +33,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpDX\Microsoft.DirectX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectSound, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharpDX\Microsoft.DirectX.DirectSound.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharpDX\SharpDX.dll</HintPath>
@@ -114,6 +122,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SharpDX\Microsoft.DirectX.DirectSound.dll" />
+    <Content Include="SharpDX\Microsoft.DirectX.DirectSound.xml" />
+    <Content Include="SharpDX\Microsoft.DirectX.dll" />
+    <Content Include="SharpDX\Microsoft.DirectX.xml" />
     <Content Include="SharpDX\SharpDX.Animation.dll" />
     <Content Include="SharpDX\SharpDX.Animation.xml" />
     <Content Include="SharpDX\SharpDX.D3DCompiler.dll" />

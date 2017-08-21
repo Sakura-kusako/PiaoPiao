@@ -51,6 +51,20 @@ namespace MainC
         private void FormGame_Load(object sender, EventArgs e)
         {
             {
+                try
+                {
+                    if(Global.GetSoundManager() != null)
+                    {
+                        Global.GetSoundManager().DelRes();
+                    }
+                    var s = new Data.Sounds.Sound(this);
+                    Global.SetSoundManager(s);
+                }
+                catch(Exception)
+                {
+
+                }
+
                 ppDevice = new PPDevice(this, this.Draw);
                 Global.SetPPDevice(ppDevice);
 
@@ -64,7 +78,7 @@ namespace MainC
                 windowList = Global.GetWindowsList();
                 //Global.Getconfig = new Config();
                 //Global.Getshop = new ShopManager();
-                //Global.Getsound = new Sound(this);
+
 
                 windowList.Load();
                 windowList.CloseAll();
@@ -90,7 +104,17 @@ namespace MainC
 
                     input.UpdateMousePoint(this.PointToClient(MousePosition));
                     input.UpdateMouseBottons(MouseButtons);
-                    input.UpdateKey();
+
+                    if (input.GetFlyUp() > 0 && input.GetBiSha() > 0 && input.GetNum4() == 1)
+                    {
+                        //↑ + space + 4  锁定/解锁窗口
+                        Global.IsCameraFree = !Global.IsCameraFree;
+                    }
+                    if (input.GetFlyUp() > 0 && input.GetBiSha() > 0 && input.GetNum3() == 1)
+                    {
+                        //↑ + space + 3  开启/关闭调试模式
+                        Global.IsDebug = !Global.IsDebug;
+                    }
 
                     if (Global.GetRoom().UpdateInput()==0)
                     {
@@ -100,7 +124,7 @@ namespace MainC
                     }
 
                     windowList.Action();
-
+                    input.UpdateKey();
                     {
                         var clientC = Global.GetClientC();
                         if(clientC != null && clientC.IsConnect())
@@ -228,6 +252,8 @@ namespace MainC
             Global.GetReplayManager().End();
             XmlPlayer.WritePlayer(GlobalB.GetRootPath()+@"\Setting\", Global.GetPlayer());
             FormParent.AddTextGame("玩家数据保存成功");
+            Global.GetSoundManager().DelRes();
+            Global.SetSoundManager(null);
             Global.DelRes();
             FormParent.formGame = null;
             Global.IsFormGameOpen = false;

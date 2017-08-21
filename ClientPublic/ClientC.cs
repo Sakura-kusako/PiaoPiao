@@ -177,13 +177,6 @@ namespace ClientPublic
                 //添加到消息列表
                 client.AddRecvData(dat);
                 RecvNum++;
-                {
-                    int index = 0;
-                    if (GlobalC.GetSendData_Int(dat.Data, ref index) == (int)ClientData.CLIENT_DATA_TYPE.DATA_ROOM)
-                    {
-                        
-                    }
-                }
             }
         }
         private void CallbackSend(IAsyncResult ar)

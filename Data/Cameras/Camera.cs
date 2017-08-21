@@ -58,7 +58,14 @@ namespace Data.Cameras
         }
         public void Update()
         {
-            Update_By_Target();
+            if(Globals.Global.IsCameraFree)
+            {
+                Debug();
+            }
+            else
+            {
+                Update_By_Target();
+            }
             Update_lrtb();
         }
         public void Update_By_Target()
