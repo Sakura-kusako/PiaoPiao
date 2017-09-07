@@ -43,6 +43,8 @@ namespace Data.Cameras
             top = csy - dtop;
             bottom = csy + dbottom;
             */
+            x = (int)x;
+            y = (int)y;
             left = x - width / 2;
             right = x + width;
             top = y - height / 2;

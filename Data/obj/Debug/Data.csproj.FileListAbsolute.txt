@@ -25,3 +25,4 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.Dire
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\bin\Debug\Microsoft.DirectX.DirectSound.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Data\obj\Debug\Data.csproj.CoreCompileInputs.cache

@@ -13,3 +13,4 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\PPTestC\obj\Debug\PPTestC.csprojResol
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\PPTestC\obj\Debug\PPTestC.exe
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\PPTestC\obj\Debug\PPTestC.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\PPTestC\bin\Debug\PPTestC.exe.config
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\PPTestC\obj\Debug\PPTestC.csproj.CoreCompileInputs.cache

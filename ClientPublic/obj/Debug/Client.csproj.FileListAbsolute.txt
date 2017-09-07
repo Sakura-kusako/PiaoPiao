@@ -6,4 +6,4 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ClientPublic\bin\Debug\ClientPublic.d
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ClientPublic\bin\Debug\ClientPublic.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ClientPublic\obj\Debug\ClientPublic.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ClientPublic\obj\Debug\ClientPublic.pdb
-F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ClientPublic\obj\Debug\Client.csprojResolveAssemblyReference.cache
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\ClientPublic\obj\Debug\Client.csproj.CoreCompileInputs.cache

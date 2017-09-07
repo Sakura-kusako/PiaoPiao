@@ -5,3 +5,4 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Room\obj\Debug\Room.pdb
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Room\obj\Debug\Room.csprojResolveAssemblyReference.cache
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Room\bin\Debug\ClientPublic.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Room\bin\Debug\ClientPublic.pdb
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\Room\obj\Debug\Room.csproj.CoreCompileInputs.cache

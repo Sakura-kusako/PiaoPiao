@@ -932,9 +932,9 @@ namespace Data.Windows
             room = Global.GetRoom();
             roots = new List<Sprite_Room_MapSelect_Root>();
             //rect = 7,41,150,271
-            x = 7;
+            x = 6;
             y = 41;
-            width = 150;
+            width = 151;
             height = 271;
             pic_dx = 0;
             pic_dy = 0;
@@ -1082,6 +1082,8 @@ namespace Data.Windows
         public BalloonItemPic_Base time_fuhuo; //复活时间
         public BalloonItemPic_Base time_end_320x28x10; //倒计时
         public BalloonItemPic_Base time_clock_448x90x4; //倒计时钟
+        public BalloonItemPic_Base DaoJu_48x48; //道具框
+        public BalloonItemPic_Base[] DaoJu_40x40; //道具显示
 
         public int playerID = 0;
         public Sprite_Map_Base()
@@ -1107,7 +1109,17 @@ namespace Data.Windows
             time_fuhuo = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\复活倒计时数字.tga", 1700, 159, 10);
             time_end_320x28x10 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\竞速倒数数字.tga", 320, 28, 10);
             time_clock_448x90x4 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\竞速倒数闹钟-动画.tga", 448, 90, 4);
-            //竞速倒数闹钟-动画.png
+
+            DaoJu_48x48 = Load_Bitmap_FromFile(path + @"balloon\Pic\Static\道具框.tga", 48, 48);
+            DaoJu_40x40 = new BalloonItemPic_Base[]
+            {
+                Load_Bitmap_FromFile(path + @"balloon\Pic\Prop\冰霜控制器.tga",40,40),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\Prop\大锤控制器.tga",40,40),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\Prop\火焰控制器.tga",40,40),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\Prop\激光控制器.tga",40,40),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\Prop\炮弹控制器.tga",40,40),
+                Load_Bitmap_FromFile(path + @"balloon\Pic\Prop\蜘蛛控制器.tga",40,40),
+            };
         }
         public override void Action()
         {
@@ -1115,10 +1127,14 @@ namespace Data.Windows
         }
         public override void Draw(PPDevice ppDevice)
         {
+            var man = Global.GetMapManager();
+            if (man.camera_type == 0) return;
+
             ppDevice.BitBlt(name_bg, new RectangleF(5, 5, 108, 23), new RectangleF(3 * 108, 0, 108, 23));
             Draw_sx(ppDevice);
             Draw_time(ppDevice);
             Draw_dead(ppDevice);
+            Draw_Prop(ppDevice);
         }
         private void Draw_sx(PPDevice ppDevice)
         {
@@ -1183,6 +1199,18 @@ namespace Data.Windows
                 ppDevice.BitBlt(player_daqi_time,
                                 new RectangleF(player.x - camera.left + 5, player.y - camera.top + 6, 90 * time, 3),
                                 new RectangleF(0, 0, 299, 11));
+                if(Global.GetMapManager().IsMapLoop && player.x>700)
+                {
+                    //循环
+                    player.x -= 800;
+                    ppDevice.BitBlt(player_daqi,
+                                    new RectangleF(player.x - camera.left - 4, player.y - camera.top, 102, 11),
+                                    new RectangleF(0, 0, 335, 34));
+                    ppDevice.BitBlt(player_daqi_time,
+                                    new RectangleF(player.x - camera.left + 5, player.y - camera.top + 6, 90 * time, 3),
+                                    new RectangleF(0, 0, 299, 11));
+                    player.x += 800;
+                }
             }
             if (player.Is_ShangTian())
             {
@@ -1190,6 +1218,22 @@ namespace Data.Windows
                 if (time <= 9)
                 {
                     DrawNum(ppDevice, time_fuhuo, time, 485, 226, 170, 159, 1);
+                }
+            }
+        }
+        private void Draw_Prop(PPDevice ppDevice)
+        {
+            if (Global.GetMapManager().type == 1) return;
+            var player = GetPlayer();
+            float dy = 600 - 48;
+            float dx = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                BitBlt(ppDevice, DaoJu_48x48, dx + i * 48, dy);
+                int index = GetPropIndex(player.prop[i]);
+                if (index >= 0)
+                {
+                    BitBlt(ppDevice, DaoJu_40x40[index], dx + i * 48 + 4, dy + 4);
                 }
             }
         }
@@ -1216,6 +1260,26 @@ namespace Data.Windows
             time_fuhuo.Clear();
             time_end_320x28x10.Clear();
             time_clock_448x90x4.Clear();
+        }
+        private int GetPropIndex(int typ)
+        {
+            switch(typ)
+            {
+                case 14:
+                    return 0;
+                case 15:
+                    return 5;
+                case 16:
+                    return 2;
+                case 21:
+                    return 3;
+                case 22:
+                    return 4;
+                case 23:
+                    return 1;
+                default:
+                    return -1;
+            }
         }
     }
     public class Sprite_Map_JingSu : Sprite_WinAdd

@@ -3,8 +3,7 @@
 	<BackGrounds ID="1">
 		<background ID="1" File="pic\\±³¾°1.sfp" Width="800" Height="1000" FrameNum="1" FrameSpan="0"/>
 		<background ID="2" File="pic\\±³¾°2.sfp" Width="800" Height="1000" FrameNum="1" FrameSpan="0"/>
-		<!--background ID="3" File="pic\\±³¾°3.sfp" Width="800" Height="1000" FrameNum="1" FrameSpan="0"/-->
-		<background ID="3" File="pic\\¶á±¦\\duobao-bg.tga" Width="800" Height="1000" FrameNum="1" FrameSpan="0"/>
+		<background ID="3" File="pic\\±³¾°3.sfp" Width="800" Height="1000" FrameNum="1" FrameSpan="0"/>
 		<background ID="4" File="pic\\±³¾°4.sfp" Width="800" Height="1000" FrameNum="1" FrameSpan="0"/>
 	</BackGrounds>
 	<Static_Element ID="2">
@@ -306,8 +305,8 @@
 		<Vane ID="1" File="pic\\Moving\\·çÏò±ê.tga" Width="60" Height="60" FrameNum="4" FrameSpan="250"/>
 	</Vanes>
 	<Traps ID="7">
-		<!--<Trap ID="1" File="pic\\Moving\\FROST\\±ùËª.tga" Width="40" Height="40" FrameNum="12" FrameSpan="80"/>-->
-		<Trap ID="1" File="pic\\Moving\\FROST\\±ù¶³ÏÝÚåÕý³£×´Ì¬.tga" Width="40" Height="40" FrameNum="4" FrameSpan="80"/>
+		<Trap ID="1" File="pic\\Moving\\FROST\\±ùËª.tga" Width="40" Height="40" FrameNum="12" FrameSpan="80"/>
+		<!--<Trap ID="1" File="pic\\Moving\\FROST\\±ù¶³ÏÝÚåÕý³£×´Ì¬.tga" Width="40" Height="40" FrameNum="4" FrameSpan="80"/-->
 		<Trap ID="2" File="pic\\Moving\\FROST\\01.sfp" Width="390" Height="390" FrameNum="1" FrameSpan="0"/>
 		<Trap ID="3" File="pic\\Moving\\FROST\\02.sfp" Width="390" Height="390" FrameNum="1" FrameSpan="0"/>
 		<Trap ID="4" File="pic\\Moving\\FROST\\03.sfp" Width="390" Height="390" FrameNum="1" FrameSpan="0"/>

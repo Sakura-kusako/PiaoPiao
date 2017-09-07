@@ -21,7 +21,7 @@ F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.Mathematics.xml
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\ClientPublic.dll
 F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\ClientPublic.pdb
-F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Microsoft.DirectX.DirectSound.dll
-F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Microsoft.DirectX.dll
-F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Microsoft.DirectX.DirectSound.xml
-F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\Microsoft.DirectX.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\app.config
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.DirectSound.dll
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\bin\Debug\SharpDX.DirectSound.xml
+F:\VS2017.data\ppNetTest\PiaoPiao\PiaoPiao\MainC\obj\Debug\MainC.csproj.CoreCompileInputs.cache

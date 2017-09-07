@@ -120,6 +120,21 @@ namespace Data.Globals
             if (r1.Bottom < r2.Top) return false;
             return true;
         }
+        public static bool Rect_Rect(List<RectangleF> listA, List<RectangleF> listB)
+        {
+            if (listA == null || listB == null) return false;
+            foreach (var r1 in listA)
+            {
+                foreach (var r2 in listB)
+                {
+                    if (Rect_Rect(r1, r2))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public static bool XY_Rect(float x, float y, RectangleF r)
         {
             if (x < r.Left) return false;

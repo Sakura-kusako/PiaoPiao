@@ -335,6 +335,22 @@ namespace Room
         {
             return key[3];
         }
+        public int GetNum1()
+        {
+            return key[5];
+        }
+        public int GetNum2()
+        {
+            return key[6];
+        }
+        public int GetNum3()
+        {
+            return key[7];
+        }
+        public int GetNum4()
+        {
+            return key[8];
+        }
     }
 
 }

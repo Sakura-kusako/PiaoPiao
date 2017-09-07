@@ -51,19 +51,12 @@ namespace MainC
         private void FormGame_Load(object sender, EventArgs e)
         {
             {
-                try
+                if (Global.GetSoundManager() != null)
                 {
-                    if(Global.GetSoundManager() != null)
-                    {
-                        Global.GetSoundManager().DelRes();
-                    }
-                    var s = new Data.Sounds.Sound(this);
-                    Global.SetSoundManager(s);
+                    Global.GetSoundManager().DelRes();
                 }
-                catch(Exception)
-                {
-
-                }
+                var s = new Data.Sounds.Sound(this);
+                Global.SetSoundManager(s);
 
                 ppDevice = new PPDevice(this, this.Draw);
                 Global.SetPPDevice(ppDevice);

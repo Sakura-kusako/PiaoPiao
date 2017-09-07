@@ -15,7 +15,11 @@ namespace Data.Sounds
         {
             SHANGTIAN = 23,
             BEIDIAN = 24,
+            TRAPS_BINGSHUANG = 25,
+            TRAPS_HUOYAN = 34,
+            TRAPS_JIGUANG = 36,
             QIQIUBAOZHA = 42,
+            TRAPS_ZHIZHU = 43,
         }
         public enum BGM_ID : int
         {
@@ -32,21 +36,18 @@ namespace Data.Sounds
             ROOM,
             WIN,
         }
-        const int effLen = 5;
 
         private string bgm_path;
         private string effect_path;
         private string[] bgm_str;
         private string[] effect_str;
 
-        private Control form;
-        private BufferDescription buffDes = null; 
-        private Microsoft.DirectX.DirectSound.Device ds = null; //设备对象
         private int BGMPlayID = 0;
         private int volume = 0;
         private int effVol = 0;
-        private SecondaryBuffer secBufferBGM;
-        public EffectSound[] secBufferEffs;
+        private SoundEngine engine;
+        private EngineSound Sound_BGM;
+        private List<EngineSound> Sound_Effs;
 
         public static int IntToDb(int vol)
         {
@@ -58,8 +59,7 @@ namespace Data.Sounds
         {
             OnCreate();
             CheckError();
-            form = ptr;
-            Init();
+            Init(ptr);
         }
         private void CheckError()
         {
@@ -75,9 +75,9 @@ namespace Data.Sounds
         }
         public void ChangeVolume()
         {
-            if(secBufferBGM!=null)
+            if(Sound_BGM!=null)
             {
-                secBufferBGM.Volume = IntToDb(volume);
+                Sound_BGM.SetVol(IntToDb(volume));
             }
         }
         public int GetVolume()
@@ -117,6 +117,7 @@ namespace Data.Sounds
                  "dm_hint.wav",
                  "Entropy_Full.wav",
                  "flag_mic_get.wav",
+                 //10-19
                  "flag_mic_levelup.wav",
                  "flag_toy_get.wav",
                  "flag_toy_levelup.wav",
@@ -127,6 +128,7 @@ namespace Data.Sounds
                  "lm_ts4.wav",
                  "lm_ufo.wav",
                  "lm_ufo_throw.wav",
+                 //20-29
                  "VS.wav",
                  "按钮1.wav",
                  "按钮2.wav",
@@ -137,6 +139,7 @@ namespace Data.Sounds
                  "大炮陷阱_爆炸.wav",
                  "大炮陷阱_发射.wav",
                  "道具1.wav",
+                 //30-39
                  "道具2.wav",
                  "地图.wav",
                  "滑动1.wav",
@@ -147,46 +150,46 @@ namespace Data.Sounds
                  "角色滑动.wav",
                  "禁止.wav",
                  "巨锤陷阱.wav",
+                 //40-43
                  "碰撞2.wav",
                  "启动.wav",
                  "气球破裂.wav",
                  "蜘蛛陷阱.wav",
             };
         }
-        public void Init()
+        public void Init(Control ptr)
         {
             DelRes();
-            ds = new Microsoft.DirectX.DirectSound.Device();           
-            ds.SetCooperativeLevel(form,CooperativeLevel.Normal);
-            secBufferEffs = new EffectSound[effLen];
-            for (int i = 0; i < effLen; i++)
+            //引擎初始化
+            engine = new SoundEngine(ptr.Handle);
+
+            //加载音效
+            Sound_Effs = new List<EngineSound>();
+            for (int i = 0; i < effect_str.Length; i++)
             {
-                secBufferEffs[i] = new EffectSound();
+                var s = WavFileReader.Read(engine, effect_path + effect_str[i]);
+                s.SetVol(effVol);
+                Sound_Effs.Add(s);
             }
-            //*/
         }
         public void DelRes()
         {
-            if(secBufferBGM!=null)
+            if(Sound_BGM!=null)
             {
-                secBufferBGM.Stop();
-                secBufferBGM.Dispose();
-                secBufferBGM = null;
+                Sound_BGM.Dispose();
+                Sound_BGM = null;
             }
-            if(ds != null)
+            if(Sound_Effs!=null)
             {
-                ds.Dispose();
-                ds = null;
-            }
-            if(secBufferEffs!=null)
-            {
-                for (int i = 0; i < secBufferEffs.Length; i++)
+                foreach (var s in Sound_Effs)
                 {
-                    if (secBufferEffs[i] != null)
-                    {
-                        secBufferEffs[i].DelRes();
-                    }
+                    s.Dispose();
                 }
+                Sound_Effs = null;
+            }
+            if(engine!=null)
+            {
+                engine = null;
             }
         }
         public void PlayBgm(int ID, bool IsLoop = true)
@@ -201,19 +204,15 @@ namespace Data.Sounds
                 BGMPlayID = -1;
             }
 
-            buffDes = new BufferDescription();
-            buffDes.GlobalFocus = true;
-            buffDes.ControlVolume = true;
-
-            if(secBufferBGM!=null)
+            if (Sound_BGM != null)
             {
-                secBufferBGM.Stop();
-                secBufferBGM.Dispose();
-                secBufferBGM = null;
+                Sound_BGM.Stop();
+                Sound_BGM.Dispose();
             }
-            secBufferBGM = new SecondaryBuffer(bgm_path + bgm_str[ID], buffDes,ds);
-            ChangeVolume();
-            secBufferBGM.Play(0, IsLoop ? BufferPlayFlags.Looping : BufferPlayFlags.Default);
+            Sound_BGM = WavFileReader.Read(engine, bgm_path + bgm_str[ID]);
+            Sound_BGM.SetBgmLoop(IsLoop);
+            Sound_BGM.SetVol(IntToDb(volume));
+            Sound_BGM.Play();
         }
         public void PlayBgm(BGM_ID ID, bool IsLoop = true)
         {
@@ -221,25 +220,11 @@ namespace Data.Sounds
         }
         public void StopBgm()
         {
-            if (secBufferBGM != null)
-                secBufferBGM.Stop();
             BGMPlayID = -1;
         }
         public void PlayEffect(int ID)
         {
-            if (secBufferEffs != null)
-            {
-                for (int i = 0; i < secBufferEffs.Length; i++)
-                {
-                    if (secBufferEffs[i] != null)
-                    {
-                        if(secBufferEffs[i].IsPlaying() == false)
-                        {
-                            secBufferEffs[i].Play(effect_path + effect_str[ID], ds, effVol);
-                        }
-                    }
-                }
-            }
+            Sound_Effs[ID].Play();
         }
         public void PlayEffect(EFFECT_ID ID)
         {
@@ -252,71 +237,10 @@ namespace Data.Sounds
         }
         private void ChangeEffVol()
         {
-            if (secBufferEffs != null)
+            if (Sound_Effs == null) return;
+            foreach (var s in Sound_Effs)
             {
-                for (int i = 0; i < secBufferEffs.Length; i++)
-                {
-                    if(secBufferEffs[i]!=null)
-                    {
-                        secBufferEffs[i].SetVol(effVol);
-                    }
-                }
-            }
-        }
-
-        public class EffectSound
-        {
-            private SecondaryBuffer secBuffer = null;
-            private BufferDescription buffDes = null;
-            private int len = 0;
-
-            public bool IsPlaying()
-            {
-                if(secBuffer!=null)
-                {
-                    if(secBuffer.PlayPosition >= len - 1)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            public void Play(string path,Device ds,int vol)
-            {
-                buffDes = new BufferDescription();
-                buffDes.GlobalFocus = true;
-                buffDes.ControlVolume = true;
-
-                if (secBuffer != null)
-                {
-                    secBuffer.Stop();
-                    secBuffer.Dispose();
-                    secBuffer = null;
-                }
-                secBuffer = new SecondaryBuffer(path, buffDes, ds);
-                len = buffDes.BufferBytes;
-                secBuffer.Volume = IntToDb(vol);
-                secBuffer.Play(0, BufferPlayFlags.Default);
-            }
-            public void DelRes()
-            {
-                try
-                {
-                    if(secBuffer!=null)
-                    {
-                        secBuffer.Dispose();
-                        secBuffer = null;
-                    }
-                }
-                catch(Exception)
-                {
-
-                }
-            }
-            public void SetVol(int vol)
-            {
-                if (secBuffer != null)
-                    secBuffer.Volume = IntToDb(vol);
+                s.SetVol(IntToDb(effVol));
             }
         }
     }

@@ -73,12 +73,14 @@ namespace Data.MapsManager
         public int camera_type = 1;
         public int time = 0;
         public int count = 0;
+        public bool IsMapLoop = false;
         public RectangleF PhyRect = new RectangleF(0, 0, 800, 600);
         public BalloonItemPic_Base pic = null;
 
         public Element_Propertys property = new Element_Propertys();
         public Element_Spouts spout = new Element_Spouts();
         public Element_Static_Elements statics = new Element_Static_Elements();
+        public Element_Fly_Elements flys = new Element_Fly_Elements();
         public Element_Floats floats = new Element_Floats();
         public Element_Traps traps = new Element_Traps();
         public Element_Stabbers stabbers = new Element_Stabbers();
@@ -89,15 +91,19 @@ namespace Data.MapsManager
         public Layer layer_poi;
         public List_Other oth;
         public List_Static sta;
+        public List_Fly fly;
         public List_Float flo;
         public List_Player pla;
         public List_Map map;
+        public List_Trap tra;
+        public PropertysManager propManager;
         public MapManager(Maps map)
         {
             Init_Map_Base(map);
             Init_Map_XML(map);
             Init_Layer();
             Init_Camara();
+            Global.rand = new Random(0);
         }
         public void Init_Map_Base(Maps map)
         {
@@ -120,7 +126,8 @@ namespace Data.MapsManager
                 PhyRect = new RectangleF(0, 0, width, height);
             }
 
-            pic = Global.GetResManager().GetMapPic2(1, map.backGround);
+            int mapID = Global.GetXmlManager().elements.backGrounds[map.backGround].pic.ID;
+            pic = Global.GetResManager().GetMapPic2(1, mapID);
             layers = new Layer[7]
             {
                 new Layer(),
@@ -147,6 +154,9 @@ namespace Data.MapsManager
                 {
                     case 2:
                         statics.Init(e);
+                        break;
+                    case 3:
+                        flys.Init(e);
                         break;
                     case 5:
                         property.Init(e);
@@ -198,7 +208,14 @@ namespace Data.MapsManager
 
             if (camera_type >= 1 && camera_type <= 6)
             {
-                Set_Camera(pla.list[camera_type - 1].x - 50, pla.list[camera_type - 1].y - 50);
+                if(pla!=null&&pla.list!=null&&pla.list.Count>0)
+                {
+                    Set_Camera(pla.list[camera_type - 1].x - 50, pla.list[camera_type - 1].y - 50);
+                }
+                else
+                {
+                    camera_type = 0;
+                }
             }
 
         }
@@ -208,6 +225,10 @@ namespace Data.MapsManager
                 if (type == 3)
                 {
                     Init_Layer_DuoBao();
+                }
+                else if (type == 2)
+                {
+                    Init_Layer_JingJi();
                 }
                 else if (type == 1)
                 {
@@ -231,6 +252,24 @@ namespace Data.MapsManager
             //Init_Layer_Traps();
             //Init_Layer_Stabbers();
         }
+        public void Init_Layer_JingJi()
+        {
+            IsMapLoop = true;
+            Init_Layer_Floats();
+            Init_Layer_Static();
+            Init_Layer_Traps();
+            Init_Layer_Stabbers();
+            Init_Layer_Fly();
+            Init_Layer_Propertys();
+            Init_Layer_Players();
+            if(pla!=null&&pla.list!=null)
+            {
+                for (int i = 0; i < pla.list.Count; i++)
+                {
+                    pla.list[i].IsMapLoop = true;
+                }
+            }
+        }
         public void Init_Layer_JingSu()
         {
             Init_Layer_Players();
@@ -252,6 +291,8 @@ namespace Data.MapsManager
             {
                 var sprites = layers[ele.layer].sprites;
                 var sta = Global.GetXmlManager().elements.static_Elements[ele.id - 1];
+                bool poi = true;
+
                 foreach (var pic in sta.pics)
                 {
                     var pic2 = Global.GetResManager().GetMapPic2(pic.typeID, pic.ID);
@@ -262,37 +303,114 @@ namespace Data.MapsManager
                     sp.y = ele.y + pic.y;
                     sp.pic = pic2;
                     sp.layer = ele.layer;
-                    sp.OnCreate();
-                    sprites.Add(sp);
-                    list.Add(sp);
-                }
-                /*
-                if (sta.points.Count == 0)
-                {
-                    var sp = new SpriteStatic();
-                    sp.x = ele.x;
-                    sp.y = ele.y;
-                    sp.pic = pic2;
-                    sp.layer = ele.layer;
-                    sp.OnCreate();
-                    sprites.Add(sp);
-                    list.Add(sp);
-                }
-                else
-                {
-                    foreach (var point in sta.points)
+                    if (poi)
                     {
-                        var sp = new SpriteStatic();
-                        sp.x = ele.x + point.X;
-                        sp.y = ele.y + point.Y;
-                        sp.pic = pic2;
+                        poi = false;
+                        sp.phyList = Global.GetRectList_StaticElement(sta.type, sta.points);
+                    }
+                    sp.OnCreate();
+                    sprites.Add(sp);
+                    list.Add(sp);
+                }
+            }
+        }
+        public void Init_Layer_Fly()
+        {
+            this.fly = new List_Fly();
+            var list = fly.list;
+            if (flys.elements == null) return;
+            foreach (var ele in flys.elements.elements_base)
+            {
+                var sprites = layers[ele.layer].sprites;
+                var fly = Global.GetXmlManager().elements.fly_Elements[ele.id - 1];
+                var pic = fly.pic;
+                List<RectangleF> rects1 = new List<RectangleF>();
+                List<RectangleF> rects2 = new List<RectangleF>();
+                int rect_pro1 = 0;
+                int rect_pro2 = 0;
+                int rect_len = 0;
+
+                foreach (var rect in fly.rects)
+                {
+                    if (rect_len == 0)
+                    {
+                        rect_pro1 = rect.property;
+                        rects1.Add(rect.rect);
+                        rect_len++;
+                    }
+                    else if (rect_len == 1)
+                    {
+                        if (rect_pro1 == rect.property)
+                        {
+                            rects1.Add(rect.rect);
+                        }
+                        else
+                        {
+                            rect_pro2 = rect.property;
+                            rects2.Add(rect.rect);
+                            rect_len++;
+                        }
+                    }
+                    else if (rect_len == 2)
+                    {
+                        if (rect_pro1 == rect.property)
+                        {
+                            rects1.Add(rect.rect);
+                        }
+                        else if (rect_pro2 == rect.property)
+                        {
+                            rects2.Add(rect.rect);
+                        }
+                    }
+                }
+
+                if (pic != null)
+                {
+                    var pic2 = Global.GetResManager().GetMapPic2(pic.typeID, pic.ID);
+
+                    for (int i = 0; i < rect_len || i == 0; i++)
+                    {
+                        var sp = new SpriteFly();
+                        if (rect_len == 0)
+                        {
+                            sp.phyList = null;
+                        }
+                        else if (i == 0)
+                        {
+                            sp.phyList = rects1;
+                            sp.property = rect_pro1;
+                        }
+                        else if (i == 1)
+                        {
+                            sp.phyList = rects2;
+                            sp.property = rect_pro2;
+                            sp.Poi_A = 1;
+                        }
+                        sp.flyType = ele.flyType;
+                        sp.type = 3;
+                        sp.x = ele.left + pic2.x;
+                        sp.y = ele.top + pic2.y;
+                        sp.vrad = ele.speed / 60.0f;
+                        sp.centerX = ele.centerX + pic2.x;
+                        sp.centerY = ele.centerY + pic2.y;
+                        sp.radian = ele.radian;
+                        sp.radius = ele.radius;
+                        sp.left = ele.left;
+                        sp.right = ele.right;
+                        sp.top = ele.top;
+                        sp.bottom = ele.bottom;
+                        sp.time = ele.time * 60;
+                        sp.pastTime = ele.pastTime * 60;
+                        sp.interVal1 = ele.interVal1 * 60;
+                        sp.interVal2 = ele.interVal2 * 60;
                         sp.layer = ele.layer;
-                        sp.OnCreateCenter();
+                        sp.pic = pic2;
+                        sp.OnCreate();
+                        sp.CheckError();
                         sprites.Add(sp);
                         list.Add(sp);
                     }
                 }
-                */
             }
         }
         public void Init_Layer_Floats()
@@ -343,22 +461,77 @@ namespace Data.MapsManager
         }
         public void Init_Layer_Traps()
         {
+            this.tra = new List_Trap();
             if (traps.elements == null) return;
             foreach (var ele in traps.elements.elements_base)
             {
                 var sprites = layers[ele.layer].sprites;
-                var sta = Global.GetXmlManager().elements.traps[ele.id - 1];
-                foreach (var pic in sta.pics)
+                if (ele.id == 1)
                 {
-                    var pic2 =Global.GetResManager().GetMapPic2(pic.typeID, pic.ID);
-                    var sp = new SpriteMap();
-                    sp.x = ele.x + pic2.x;
-                    sp.y = ele.y + pic2.y;
-                    sp.pic = pic2;
+                    //冰霜陷阱
+                    var sta = Global.GetXmlManager().elements.traps[ele.id - 1];
+                    var sp = new SpriteTrap_BingShuang();
+                    sp.IsMapLoop = this.IsMapLoop;
+                    sp.type = 7;
+                    sp.typeID = 1;
+                    sp.x = ele.x -20; //-20?
+                    sp.y = ele.y -20; //居中
+                    sp.width = 40;
+                    sp.height = 40;
                     sp.layer = ele.layer;
-                    sp.OnCreate();
+                    sp.pics = new BalloonPic2[18];
+                    sp.pics[0] = Global.GetResManager().GetMapPic2(sta.pics[0].typeID, sta.pics[0].ID);
+                    for (int i = 2; i <= 18; i++)
+                    {
+                        sp.pics[i - 1] = Global.GetResManager().GetMapPic2(sta.pics[i].typeID, sta.pics[i].ID);
+                    }
+                    sp.BaseCreate();
                     sprites.Add(sp);
-                    //break;
+                    tra.list.Add(sp);
+                }
+                if (ele.id == 2)
+                {
+                    //蜘蛛陷阱
+                    var sta = Global.GetXmlManager().elements.traps[ele.id - 1];
+                    var sp = new SpriteTrap_ZhiZhu();
+                    sp.IsMapLoop = this.IsMapLoop;
+                    sp.type = 7;
+                    sp.typeID = 2;
+                    sp.x = ele.x;
+                    sp.y = ele.y; //居中
+                    sp.width = 40;
+                    sp.height = 40;
+                    sp.layer = ele.layer;
+                    sp.pics = new BalloonPic2[8];
+                    for (int i = 0; i < 8; i++)
+                    {
+                        sp.pics[i] = Global.GetResManager().GetMapPic2(sta.pics[i].typeID, sta.pics[i].ID);
+                    }
+                    sp.BaseCreate();
+                    sprites.Add(sp);
+                    tra.list.Add(sp);
+                }
+                if (ele.id == 3)
+                {
+                    //火焰陷阱
+                    var sta = Global.GetXmlManager().elements.traps[ele.id - 1];
+                    var sp = new SpriteTrap_HuoYan();
+                    sp.IsMapLoop = this.IsMapLoop;
+                    sp.type = 7;
+                    sp.typeID = 3;
+                    sp.x = ele.x; 
+                    sp.y = ele.y; //居中
+                    sp.width = 40;
+                    sp.height = 40;
+                    sp.layer = ele.layer;
+                    sp.pics = new BalloonPic2[18];
+                    for (int i = 0; i < 7; i++)
+                    {
+                        sp.pics[i] = Global.GetResManager().GetMapPic2(sta.pics[i].typeID, sta.pics[i].ID);
+                    }
+                    sp.BaseCreate();
+                    sprites.Add(sp);
+                    tra.list.Add(sp);
                 }
             }
         }
@@ -399,6 +572,7 @@ namespace Data.MapsManager
                 var ele = eles[i];
                 var sprites = layers[ele.layer].sprites;
                 var sp = new SpritePlayer();
+                sp.IsMapWS = room.IsWS;
                 sp.x = ele.x;
                 sp.y = ele.y;
                 sp.type = 8;
@@ -415,24 +589,51 @@ namespace Data.MapsManager
                 sprites.Add(sp);
             }
         }
+        public void Init_Layer_Propertys()
+        {
+            propManager = new PropertysManager();
+            propManager.Init_Ele(this.property);
+            propManager.AddSpriteBegin();
+        }
         public void Init_Layer_Stabbers()
         {
+            if(this.tra == null) this.tra = new List_Trap();
             if (stabbers.elements == null) return;
             foreach (var ele in stabbers.elements.elements_base)
             {
                 var sprites = layers[ele.layer].sprites;
-                var sta = Global.GetXmlManager().elements.stabbers[ele.id - 1];
-                foreach (var pic in sta.pics)
+                if (ele.id == 1)
                 {
-                    var pic2 =Global.GetResManager().GetMapPic2(pic.typeID, pic.ID);
-                    var sp = new SpriteMap();
-                    sp.x = ele.x + pic2.x;
-                    sp.y = ele.y + pic2.y;
-                    sp.pic = pic2;
+                    //激光陷阱
+                    var bar = Global.GetXmlManager().elements.stabbers[ele.id - 1];
+                    var sp = new SpriteTrap_JiGuang();
+                    sp.type = 7;
+                    sp.typeID = 4;
+                    sp.x = ele.x;
+                    sp.y = ele.y;
                     sp.layer = ele.layer;
-                    sp.OnCreate();
+                    sp.left = ele.left;
+                    sp.right = ele.right;
+                    sp.top = ele.top;
+                    sp.bottom = ele.bottom;
+                    sp.dirLeft = ele.dirLeft;
+                    sp.dirRight = ele.dirRight;
+                    sp.dirTop = ele.dirTop;
+                    sp.dirBottom = ele.dirBottom;
+                    sp.time = ele.time * 60;
+                    sp.pastTime = ele.pastTime * 60;
+                    sp.bstTime = bar.bstTime * 60;
+                    sp.sprTime = bar.sprTime * 60;
+                    sp.offsetTime = ele.offsetTime * 60;
+
+                    foreach (var pic in bar.pics)
+                    {
+                        sp.picList.Add(Global.GetResManager().GetMapPic2(pic));
+                    }
+                    sp.BaseCreate();
+                    sp.CheckError();
+                    tra.list.Add(sp);
                     sprites.Add(sp);
-                    break;
                 }
             }
         }
@@ -543,6 +744,17 @@ namespace Data.MapsManager
         }
         public void Update_Fly()
         {
+            if (fly!= null)
+            {
+                if (sta.list != null)
+                {
+                    var list = sta.list;
+                    foreach (var sp in list)
+                    {
+                        sp.Action();
+                    }
+                }
+            }
             if (map != null)
             {
                 if (map.list != null)
@@ -589,8 +801,23 @@ namespace Data.MapsManager
                 }
             }
         }
+        public void Update_Trap()
+        {
+            if (tra != null)
+            {
+                if (tra.list != null)
+                {
+                    var list = tra.list;
+                    foreach (var sp in list)
+                    {
+                        sp.Action();
+                    }
+                }
+            }
+        }
         public void Update_Property()
         {
+            //竞速
             if (map != null)
             {
                 if (map.list != null)
@@ -603,6 +830,16 @@ namespace Data.MapsManager
                             sp.Action();
                         }
                     }
+                }
+            }
+
+            //普通
+            if(propManager!=null)
+            {
+                propManager.Update();
+                if(this.count % 360 == 0)
+                {
+                    propManager.AddSprite();
                 }
             }
         }
@@ -769,6 +1006,7 @@ namespace Data.MapsManager
             Update_Barrier();
             Update_Property();
             Update_Vane();
+            Update_Trap();
             Update_Gate();
             Update_Primer();
             Update_Other();
@@ -778,6 +1016,9 @@ namespace Data.MapsManager
                 case 1:
                     UpdateJudgementJingSu();
                     UpdateJingSu();
+                    break;
+                case 2:
+                    UpdateJudgementJingJi();
                     break;
                 default:
                     break;
@@ -817,6 +1058,26 @@ namespace Data.MapsManager
                 check = Judgement_Player_Player();
             }
         }
+        public void UpdateJudgementJingJi()
+        {
+            bool check = true;
+            while (check)
+            {
+                while (check)
+                {
+                    Do_Judgement_Player();
+                    check = Judgement_Player_Player();
+                }
+                Judgement_Player_Map_Jingji();
+                Do_Judgement_Player();
+                Judgement_Player_Map_Jingji();
+                Do_Judgement_Player();
+
+                Judgement_Player_MapRect_JingJi();
+                Do_Judgement_Player();
+                check = Judgement_Player_Player();
+            }
+        }
         public void UpdateJingSu()
         {
             //终点右坐标为410
@@ -828,7 +1089,7 @@ namespace Data.MapsManager
                     var list = pla.list;
                     foreach (var sp in list)
                     {
-                        if(sp.x <= 350)
+                        if(sp.x <= 330 && sp.y<450)
                         {
                             //有人到达终点开始读秒
                             sp.IsCtrlAble = false;
@@ -970,6 +1231,30 @@ namespace Data.MapsManager
                 }
             }
         }
+        private void Judgement_Player_MapRect_JingJi()
+        {
+            var MapRect = new RectangleF[2]
+            {
+                new RectangleF(PhyRect.Left,PhyRect.Top,PhyRect.Width,0),
+                new RectangleF(PhyRect.Left,PhyRect.Bottom,PhyRect.Width,0),
+            };
+            foreach (var player in pla.list)
+            {
+                var list = player.GetPhyList();
+                foreach (var playerRect in list)
+                {
+                    foreach (var phyRect in MapRect)
+                    {
+                        var results = Physics.Rect_Rect_V(phyRect, playerRect, player.vx, player.vy);
+                        if (results != null)
+                        {
+                            //添加到碰撞信息到列表
+                            player.judgeList.Add(new SpritePlayerJudgement(results, new SpriteMap()));
+                        }
+                    }
+                }
+            }
+        }
         private void Judgement_Player_Map()
         {
             if (map == null) return;
@@ -998,8 +1283,27 @@ namespace Data.MapsManager
                 }
             }
         }
+        private void Judgement_Player_Map_Jingji()
+        {
+            if(pla!=null&&pla.list!=null)
+            {
+                for (int i = 0; i < pla.list.Count; i++)
+                {
+                    var player = pla.list[i];
+                    if (sta != null)
+                        Judgement_Player_Staitc(player, sta.list);
+                    if (fly != null)
+                        Judgement_Player_Fly(player, fly.list);
+                    if (propManager != null)
+                        Judgement_Player_Property(player, propManager.pros);
+                    if (tra != null)
+                        Judgement_Player_Trap(player, tra.list);
+                }
+            }
+        }
         private void Judgement_Player_Staitc(SpritePlayer player, List<SpriteStatic> ele_sta)
         {
+            if (ele_sta == null) return;
             var pla_AABB_list = player.GetPhyList();
             List<SpritePlayerJudgement> list_j = new List<SpritePlayerJudgement>();
 
@@ -1026,11 +1330,13 @@ namespace Data.MapsManager
         }
         private void Judgement_Player_Fly(SpritePlayer player, List<SpriteFly> ele_fly)
         {
+            if (ele_fly == null) return;
             var pla_AABB_list = player.GetPhyList();
             List<SpritePlayerJudgement> list_j = new List<SpritePlayerJudgement>();
 
             foreach (var fly in ele_fly)
             {
+                if (fly.IsDel()) continue;
                 var fly_AABB_list = fly.GetPhyList();
                 foreach (var pla_AABB in pla_AABB_list)
                 {
@@ -1095,6 +1401,7 @@ namespace Data.MapsManager
 
             foreach (var fly in ele_fly)
             {
+                if (fly.IsDel()) continue;
                 var fly_AABB_list = fly.GetPhyList();
                 foreach (var pla_AABB in pla_AABB_list)
                 {
@@ -1111,7 +1418,7 @@ namespace Data.MapsManager
                         else if (Physics.Rect_Rect(fly_AABB, pla_AABB))
                         {
                             //添加到碰撞信息到列表
-                            results = new JudgeData(5, 0, 0, 0, 0);
+                            results = new JudgeData(5, 0, 0, 1, 0);
                             player.judgeList.Add(new SpritePlayerJudgement(results, fly));
                         }
                     }
@@ -1213,6 +1520,24 @@ namespace Data.MapsManager
                 }
             }
         }
+        private void Judgement_Player_Trap(SpritePlayer player, List<SpriteTraps> ele_fly)
+        {
+            if (player.atkEnable == false) return;
+            var pla_AABB_list = player.GetPhyList();
+
+            foreach (var fly in ele_fly)
+            {
+                var fly_AABB_list = fly.GetPhyList();
+
+                if (Physics.Rect_Rect(pla_AABB_list, fly_AABB_list))
+                {
+                    //添加到碰撞信息到列表
+                    var results = new JudgeData(5, 0, 0, 1.1f, 0);
+                    player.judgeList.Add(new SpritePlayerJudgement(results, fly));
+                }
+            }
+        }
+
         private bool Judgement_Player_Player()
         {
             if(pla != null)
@@ -1310,7 +1635,7 @@ namespace Data.MapsManager
         private void Delete_Sprite()
         {
             Delete_Sprite_Map();
-
+            Delete_Sprite_Normal();
         }
         private void Delete_Sprite_Map()
         {
@@ -1401,6 +1726,40 @@ namespace Data.MapsManager
                         i--;
                     }
                 }
+            }
+        }
+        private void Delete_Sprite_Normal()
+        {
+            //del fly
+            if(this.fly!=null && this.fly.list!=null)
+            {
+                var list = this.fly.list;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].IsDel())
+                    {
+                        //删除图层中的sprite
+                        var sp = list[i];
+                        var list_ = this.layers[sp.layer].sprites;
+                        for (int j = 0; j < list_.Count; j++)
+                        {
+                            if (list_[j].ID == sp.ID)
+                            {
+                                list_.RemoveAt(j);
+                                break;
+                            }
+                        }
+
+                        //删除行动链表中的sprite
+                        list.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+
+            if (propManager != null)
+            {
+                propManager.Del();
             }
         }
         private void Delete_Sprite_Other()
@@ -1505,6 +1864,19 @@ namespace Data.MapsManager
         {
             oth.list.Add(sp);
             layers[sp.layer].sprites.Add(sp);
+        }
+        public void ActiveTrap(int id)
+        {
+            if(tra!=null)
+            {
+                foreach(var sp in tra.list)
+                {
+                    if(sp.typeID == id)
+                    {
+                        sp.Attack();
+                    }
+                }
+            }
         }
     }
     public class Element_Propertys
@@ -1622,6 +1994,14 @@ namespace Data.MapsManager
             list = new List<SpriteStatic>();
         }
     }
+    public class List_Fly
+    {
+        public List<SpriteFly> list;
+        public List_Fly()
+        {
+            list = new List<SpriteFly>();
+        }
+    }
     public class List_Float
     {
         public List<SpriteFloat> list;
@@ -1636,6 +2016,14 @@ namespace Data.MapsManager
         public List_Player()
         {
             list = new List<SpritePlayer>();
+        }
+    }
+    public class List_Trap
+    {
+        public List<SpriteTraps> list;
+        public List_Trap()
+        {
+            list = new List<SpriteTraps>();
         }
     }
     public class List_Other
@@ -1936,10 +2324,12 @@ namespace Data.MapsManager
                 var pic2 =Global.GetResManager().GetMapPic2(pro.pic);
                 var sp = new SpriteProperty();
                 sp.type = 5;
-                sp.vy = ele.speed / 60.0f;
+                sp.typeID = pro.ID;
+                sp.vy = 0;
                 sp.vx = 0;
                 sp.flyAreaX = ele.flyAreaX;
                 sp.x = ele.x + pic2.x + m.dst_x;
+                sp.Poi_A = (int)sp.x;
                 sp.y = ele.y + pic2.y;
                 sp.pic = pic2;
                 sp.layer = ele.layer;
@@ -2118,6 +2508,136 @@ namespace Data.MapsManager
             van = new List<SpriteVane>();
             gat = new List<SpriteGate>();
             pri = new List<SpritePrimer>();
+        }
+    }
+
+    public class PropertysManager
+    {
+        private class ElementProps
+        {
+            public int id = 0;
+            public int count = 0;
+            public int countMax = 0;
+            public int x = 0;
+            public int y = 0;
+            public int speed = 0;
+            public int flyAreaX = 80;
+            public int layer = 3;
+        }
+        private List<ElementProps> eleList;
+        public List<SpriteProperty> pros;
+        private int count = 0;
+
+        public PropertysManager()
+        {
+            eleList = new List<ElementProps>();
+            pros = new List<SpriteProperty>();
+        }
+        public void Init_Ele(Element_Propertys ele_xml)
+        {
+            eleList.Clear();
+            count = 0;
+            var ele_list = ele_xml.elements.elements_base;
+            foreach(var ele in ele_list)
+            {
+                ElementProps p = new ElementProps();
+                p.id = ele.id;
+                p.flyAreaX = ele.flyAreaX;
+                p.countMax = ele.count;
+                p.count = p.countMax;
+                p.flyAreaX = ele.flyAreaX;
+                p.x = ele.x;
+                p.y = ele.y;
+                p.layer = ele.layer;
+                p.speed = ele.speed;
+                eleList.Add(p);
+                count += p.countMax;
+            }
+        }
+        public void AddSpriteBegin()
+        {
+
+        }
+        public void AddSprite()
+        {
+            if (count <= 0) return;
+
+            //计算出现的X坐标
+            var rect = Global.GetMapManager().PhyRect;
+            int min = (int)rect.Left + 40;
+            int max = (int)rect.Right - 70;
+            int x0 = Global.rand.Next(min, max);
+            int y0 = (int)rect.Bottom;
+
+            //计算出现的种类
+            ElementProps ele = null;
+            int index = 0;
+            int count_poi = Global.rand.Next(count);
+            foreach (var prop in this.eleList)
+            {
+                if (index <= count_poi && count_poi < index + prop.count)
+                {
+                    ele = prop;
+                    break;
+                }
+                index += prop.count;
+            }
+
+            //sprite初始化
+            var pro_ = Global.GetXmlManager().elements.propertys;
+            var pro = pro_[ele.id - 1];
+            var pic2 = Global.GetResManager().GetMapPic2(pro.pic);
+            var sp = new SpriteProperty();
+            sp.typeID = ele.id;
+            sp.type = 5;
+            sp.vy = ele.speed / 4.0f;
+            sp.vx = 0;
+            sp.flyAreaX = ele.flyAreaX;
+            sp.x = x0;
+            sp.Poi_A = x0;
+            sp.y = y0;
+            sp.pic = pic2;
+            sp.layer = ele.layer;
+            sp.OnCreate();
+            sp.CheckError();
+            pros.Add(sp);
+            Global.GetMapManager().layers[sp.layer].sprites.Add(sp);
+
+            ele.count--;
+            this.count--;
+        }
+        public void Update()
+        {
+            foreach (var sp in pros)
+            {
+                sp.Action();
+            }
+        }
+        public void Del()
+        {
+            var list = this.pros;
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].IsDel())
+                {
+                    //删除图层中的sprite
+                    var sp = list[i];
+                    var list_ = Global.GetMapManager().layers[sp.layer].sprites;
+                    for (int j = 0; j < list_.Count; j++)
+                    {
+                        if (list_[j].ID == sp.ID)
+                        {
+                            list_.RemoveAt(j);
+                            break;
+                        }
+                    }
+
+                    //删除行动链表中的sprite
+                    list.RemoveAt(i);
+                    i--;
+                }
+            }
+
         }
     }
 }

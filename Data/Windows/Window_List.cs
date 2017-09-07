@@ -1392,6 +1392,11 @@ namespace Data.Windows
             {
                 if(Global.GetRoom().mapTypeID != 6 && Global.GetRoom().mapTypeID != 1)
                 {
+                    if(Global.IsDebug)
+                    {
+                        CloseAll();
+                        ActiveWindow(1003);
+                    }
                     return;
                 }
                 if (Global.IsConnect())
@@ -1807,6 +1812,11 @@ namespace Data.Windows
         };
         public static BalloonItemPic_Base PlayerMaoYan_240x240x2x2 = Load_Bitmap_FromFile(path + @"balloon\Pic\角色\冒烟黑人.tga", 120,120,2,80,2);
 
+        //状态
+        public static BalloonItemPic_Base Trap_BingShuang_856x127x8 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\状态-冰冻.tga", 107, 127, 8);
+        public static BalloonItemPic_Base Trap_ZhiZhu_80x80 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\Spider\蜘蛛网.tga", 80, 80);
+        public static BalloonItemPic_Base Trap_JiGuang_1704x248x8 = Load_Bitmap_FromFile(path + @"balloon\Pic\Moving\状态-激光作用.tga", 213, 248, 8);
+        //
         public static void ClearAll()
         {
             //
@@ -1838,6 +1848,9 @@ namespace Data.Windows
 
             //
             Clear(PlayerMaoYan_240x240x2x2);
+
+            //
+            Clear(Trap_BingShuang_856x127x8);
         }
         public static void Clear(BalloonItemPic_Base[][] t)
         {
@@ -2129,7 +2142,6 @@ namespace Data.Windows
             {
                 //随机地图
                 Global.Init_Map(6, 5);
-                room.mapTypeID = 6;
             }
             else
             {

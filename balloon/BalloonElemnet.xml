@@ -1163,12 +1163,12 @@
 			<Pic TypeID="7" ID="28"/>
 		</Trap>
 		<Trap ID="3" Type="3" Radius="250" AngleBegin="20" AngleEnd="160" BstRepeat="1" BstActionNum="10" SprTime="1" BstTime="5">
-			<Pic TypeID="7" ID="34"/><!--32-->
 			<Pic TypeID="7" ID="29"/>
 			<Pic TypeID="7" ID="30"/>
 			<Pic TypeID="7" ID="31"/>
+			<Pic TypeID="7" ID="32"/>
 			<Pic TypeID="7" ID="33"/>
-			<Pic TypeID="7" ID="32"/><!--34-->
+			<Pic TypeID="7" ID="34"/>
 			<Pic TypeID="7" ID="35"/>
 		</Trap>
 	</Traps>

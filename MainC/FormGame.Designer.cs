@@ -38,7 +38,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "FormGame";
-            this.Text = "飘飘";
+            this.Text = "飘飘重置版 v1.1.1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGame_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormGame_FormClosed);
             this.Load += new System.EventHandler(this.FormGame_Load);

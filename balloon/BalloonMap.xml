@@ -910,7 +910,7 @@
 				<Player ID="1" X="400" Y="736" Layer="3"/>
 			</Players>
 			<Traps ID="7">
-				<Trap ID="3" X="407" Y="679" Time="0" Layer="3"/>
+				<Trap ID="3" X="400" Y="679" Time="0" Layer="3"/>
 				<Trap ID="2" X="400" Y="590" Time="0" Layer="3"/>
 			</Traps>
 			<Fly_Element ID="3">
@@ -6994,8 +6994,6 @@
 			<Fly_Element ID="3">
 				<Element ID="54" Layer="3" FlyType="1" Weight="65535" Time="6" PastTime="0" Left="168" Top="0" Right="168" Bottom="0" InterVal1="0" InterVal2="0"/>
 				<Element ID="54" Layer="3" FlyType="1" Weight="65535" Time="6" PastTime="5" Left="168" Top="500" Right="168" Bottom="500" InterVal1="0" InterVal2="0"/>
-				<Element ID="54" Layer="3" FlyType="1" Weight="65535" Time="6" PastTime="4" Left="168" Top="400" Right="168" Bottom="400" InterVal1="0" InterVal2="0"/>
-				<Element ID="54" Layer="3" FlyType="1" Weight="65535" Time="6" PastTime="3" Left="168" Top="300" Right="168" Bottom="300" InterVal1="0" InterVal2="0"/>
 				<Element ID="54" Layer="3" FlyType="1" Weight="65535" Time="6" PastTime="1" Left="168" Top="100" Right="168" Bottom="100" InterVal1="0" InterVal2="0"/>
 				<Element ID="54" Layer="3" FlyType="1" Weight="65535" Time="6" PastTime="2" Left="168" Top="200" Right="168" Bottom="200" InterVal1="0" InterVal2="0"/>
 				<Element ID="1" Layer="3" FlyType="1" Weight="65535" Time="6" PastTime="0" Left="138" Top="570" Right="138" Bottom="0" InterVal1="0" InterVal2="0"/>

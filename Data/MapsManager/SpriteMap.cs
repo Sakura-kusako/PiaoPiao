@@ -509,7 +509,7 @@ namespace Data.MapsManager
                                 alpha);
                 ppDevice.BitBlt(pic0,
                                 new RectangleF(x + pic_dx + 0 - rect.Left, y + pic_dy + 31 - rect.Top, pic0.width, pic0.height),
-                                new RectangleF(frame * pic0.width, 0, pic0.width, pic0.height),
+                                new RectangleF(frame * pic0.width, pic0.height, pic0.width, pic0.height),
                                 alpha);
             }
             //没有左右
@@ -594,6 +594,8 @@ namespace Data.MapsManager
         private float dg = 0;
         private float dvx = 0;
         private float dvy = 0;
+        private int m = 1;
+        private int dm = 0;
 
         //piaobi
         private int piaobi = 0;
@@ -634,7 +636,7 @@ namespace Data.MapsManager
         public bool IsMapLoop = false; //地图是否循环
         public bool IsMapWS = false; //是否为误伤地图
         public int team = 4; //玩家队伍所属
-
+        public int[] prop = new int[4] { 0, 0, 0, 0 };
         public SpritePlayer()
         {
             const int ox = 24;
@@ -722,6 +724,7 @@ namespace Data.MapsManager
                     break;
             }
             Update_List();
+            Update_MapLoop();
         }
         private void Update_Buff_Time()
         {
@@ -746,7 +749,9 @@ namespace Data.MapsManager
             dg = 0;
             dvx = 0;
             dvy = 0;
+            dm = 0;
             Update_Buff_Eff_Base();
+            Update_Buff_Eff_BingShuang();
             Update_Buff_Xialuo(); //Set
             Update_Buff_XiaDi(); //Set
         }
@@ -776,6 +781,26 @@ namespace Data.MapsManager
                     break;
                 default:
                     break;
+            }
+        }
+        private void Update_Buff_Eff_BingShuang()
+        {
+            if(buff_bingshuang.time>0)
+            {
+                dg += g*2;
+                dm = 2;
+            }
+        }
+        private void Update_Buff_Eff_ZhiZhu()
+        {
+            if (buff_zhizhu.time > 0)
+            {
+                dg = 0;
+                dvx = 0;
+                dvy = 0;
+                vx = 0;
+                vy = 0;
+                dm = 100000;
             }
         }
         private void Update_Buff_Xialuo()
@@ -819,6 +844,37 @@ namespace Data.MapsManager
             //火焰攻击判定
             fireList.Clear();
             //火焰判定代码...........
+
+            if (IsMapLoop && x > 500)
+            {
+                x -= 800;
+                phyList.Add(new RectangleF(x + pic_dx + RectPhy.X, y + pic_dy + RectPhy.Y, RectPhy.Width, RectPhy.Height));
+                balloonList.Add(new RectangleF(x + pic_dx + RectBalloon.X, y + pic_dy + RectBalloon.Y, RectBalloon.Width, RectBalloon.Height));
+                bottomList.Add(new RectangleF(x + pic_dx + RectBottom.X, y + pic_dy + RectBottom.Y, RectBottom.Width, RectBottom.Height));
+                x += 800;
+            }
+            else if (IsMapLoop && x < 200)
+            {
+                x += 800;
+                phyList.Add(new RectangleF(x + pic_dx + RectPhy.X, y + pic_dy + RectPhy.Y, RectPhy.Width, RectPhy.Height));
+                balloonList.Add(new RectangleF(x + pic_dx + RectBalloon.X, y + pic_dy + RectBalloon.Y, RectBalloon.Width, RectBalloon.Height));
+                bottomList.Add(new RectangleF(x + pic_dx + RectBottom.X, y + pic_dy + RectBottom.Y, RectBottom.Width, RectBottom.Height));
+                x -= 800;
+            }
+        }
+        private void Update_MapLoop()
+        {
+            if(IsMapLoop)
+            {
+                if(x<0)
+                {
+                    x += 800;
+                }
+                if(x>=800)
+                {
+                    x -= 800;
+                }
+            }
         }
         private void Action_Del()
         {
@@ -847,7 +903,14 @@ namespace Data.MapsManager
                 Action_Normal_Input();
                 Action_Normal_Gravity();
                 Action_Normal_Air_f();
-                Action_Normal_Move();
+                if(buff_zhizhu.time<=0)
+                {
+                    Action_Normal_Move();
+                }
+                else
+                {
+                    vx = vy = 0;
+                }
             }
         }
         private void Action_Normal_Input()
@@ -855,31 +918,51 @@ namespace Data.MapsManager
             float vx_poi = 0.06f;
             float vy_poi = 0.09f;
 
-            if (player.input.GetFlyLeft() > 0)
+            if (buff_bingshuang.time <= 0 && buff_zhizhu.time<=0)
             {
-                face = -1;
-            }
-            if (player.input.GetFlyRight() > 0)
-            {
-                face = 1;
-            }
-            if (player.input.GetFlyUp() > 0)
-            {
-                 vy -= vy_poi;
                 if (player.input.GetFlyLeft() > 0)
                 {
-                    vx -= vx_poi;
+                    face = -1;
                 }
                 if (player.input.GetFlyRight() > 0)
                 {
-                    vx += vx_poi;
+                    face = 1;
                 }
+                if (player.input.GetFlyUp() > 0)
+                {
+                    Global.rand.Next();
+                    vy -= vy_poi;
+                    if (player.input.GetFlyLeft() > 0)
+                    {
+                        vx -= vx_poi;
+                    }
+                    if (player.input.GetFlyRight() > 0)
+                    {
+                        vx += vx_poi;
+                    }
+                }
+            }
+            if (player.input.GetNum1() == 1)
+            {
+                Use_Prop(0);
+            }
+            if (player.input.GetNum2() == 1)
+            {
+                Use_Prop(1);
+            }
+            if (player.input.GetNum3() == 1)
+            {
+                Use_Prop(2);
+            }
+            if (player.input.GetNum4() == 1)
+            {
+                Use_Prop(3);
             }
         }
         private void Action_Normal_Move()
         {
-            x += vx;
-            y += vy;
+            x += vx + dvx;
+            y += vy + dvy;
         }
         private void Action_Normal_Gravity()
         {
@@ -960,15 +1043,39 @@ namespace Data.MapsManager
             if (buff_base.time == 0)
             {
                 //复活冷却结束
-                if (Global.GetMapManager().type == 1)
+                switch(Global.GetMapManager().type)
                 {
-                    //竞速模式复活
-                    y = Global.GetMapManager().PhyRect.Bottom - 150;
-                    Change_To_Normal();
-                }
-                else
-                {
-                    Change_To_Lost();
+                    case 1:
+                        {
+                            if (this.y > Global.GetMapManager().PhyRect.Bottom - 10)
+                            {
+                                y = Global.GetMapManager().PhyRect.Bottom - 150;
+                                Change_To_Normal();
+                            }
+                            else
+                            {
+                                y -= 7;
+                                Change_To_Normal();
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            if (this.y > Global.GetMapManager().PhyRect.Bottom - 10)
+                            {
+                                y = Global.GetMapManager().PhyRect.Bottom - 100;
+                                Change_To_Normal();
+                            }
+                            else
+                            {
+                                y -= 7;
+                                Change_To_Normal();
+                            }
+                            break;
+                        }
+                    default:
+                        Change_To_Lost();
+                        break;
                 }
             }
         }
@@ -989,6 +1096,12 @@ namespace Data.MapsManager
             {
                 //被电
                 Draw_Single(ppDevice, 31, 0);
+                if (IsMapLoop && x > 700)
+                {
+                    x -= 800;
+                    Draw_Single(ppDevice, 31, 0);
+                    x += 800;
+                }
             }
             else
             {
@@ -996,7 +1109,21 @@ namespace Data.MapsManager
                 {
                     DrawSmall(ppDevice);
                     Draw_RectList();
+                    if (IsMapLoop && x > 700)
+                    {
+                        x -= 800;
+                        DrawSmall(ppDevice);
+                        Draw_RectList();
+                        x += 800;
+                    }
                 }
+            }
+            Draw_Buff(ppDevice);
+            if (IsMapLoop && x > 700)
+            {
+                x -= 800;
+                Draw_Buff(ppDevice);
+                x += 800;
             }
         }
         private void DrawSmall(PPDevice ppDevice)
@@ -1101,6 +1228,45 @@ namespace Data.MapsManager
             var pic = GetPlayerPic_Big(poi);
             if (pic == null) return;
             BitBlt(ppDevice, pic, GetFrame(pic), ((draw_type < 0) ? GetLine() : draw_type));
+        }
+        private void Draw_Buff(PPDevice ppDevice)
+        {
+            Draw_Buff_BingShuang(ppDevice);
+            Draw_Buff_ZhiZhu(ppDevice);
+            Draw_Buff_JiGuang(ppDevice);
+        }
+        private void Draw_Buff_BingShuang(PPDevice ppDevice)
+        {
+            if (buff_bingshuang.time > 0)
+            {
+                int frame = (this.count * 10 / 48) % 8;
+                BitBlt(ppDevice, SpriteBase.Trap_BingShuang_856x127x8, frame, 0);
+            }
+        }
+        private void Draw_Buff_ZhiZhu(PPDevice ppDevice)
+        {
+            if (buff_zhizhu.time > 0)
+            {
+                var rect = GetLayer().GetLayerAABB();
+                float w = 80;
+                float h = 80;
+                ppDevice.BitBlt(SpriteBase.Trap_ZhiZhu_80x80,
+                                new RectangleF(x + pic_dx - rect.X + 8, y + pic_dy - rect.Y + 27, w, h),
+                                new RectangleF(0, 0, w, h), alpha);
+            }
+        }
+        private void Draw_Buff_JiGuang(PPDevice ppDevice)
+        {
+            if (buff_jiguang.time > 11)
+            {
+                var rect = GetLayer().GetLayerAABB();
+                float w = 213;
+                float h = 248;
+                frame = (31 - buff_jiguang.time) / 5;
+                ppDevice.BitBlt(SpriteBase.Trap_JiGuang_1704x248x8,
+                                new RectangleF(x + pic_dx - rect.X -64 , y + pic_dy - rect.Y - 50, w, h),
+                                new RectangleF(frame*w, 0, w, h), alpha);
+            }
         }
         private void BitBlt(PPDevice ppDevice, BalloonItemPic_Base pic_poi, int frame, int line)
         {
@@ -1209,6 +1375,9 @@ namespace Data.MapsManager
                     case 6:
                         judge_check = Judgement_Action_Vane(data);
                         break;
+                    case 7:
+                        judge_check = Judgement_Action_Trap(data);
+                        break;
                     case 11:
                         judge_check = Judgement_Action_Primer(data);
                         break;
@@ -1222,12 +1391,14 @@ namespace Data.MapsManager
                 if (judge_check == true)
                 {
                     //坐标改变重置碰撞
+                    Update_List();
                     break;
                 }
                 judgeList.RemoveAt(index);
             }
 
             judgeList.Clear();
+            Update_MapLoop();
         }
         private int Judgement_GetMinIndex()
         {
@@ -1253,6 +1424,7 @@ namespace Data.MapsManager
             switch (Global.GetMapManager().type)
             {
                 case 1:
+                case 2:
                     return Judgement_Action_Map_JingSu(data);
                 default:
                     return false;
@@ -1499,16 +1671,24 @@ namespace Data.MapsManager
                     case 12:
                         //使玩家进入10秒混乱状态，操作左右反向，拾取即时使用。
                         break;
-                    case 20:
+                    case 14:
+                    case 15:
+                    case 16:
+                    case 21:
+                    case 22:
+                    case 23:
+                        Add_Prop(data.sprite.typeID);
+                        break;
+                    case 17:
                         Add_PiaoBi(1);
                         break;
-                    case 21:
+                    case 18:
                         Add_PiaoBi(2);
                         break;
-                    case 22:
+                    case 19:
                         Add_PiaoBi(5);
                         break;
-                    case 23:
+                    case 20:
                         Add_PiaoBi(10);
                         break;
                     default:
@@ -1531,6 +1711,39 @@ namespace Data.MapsManager
             data.sprite.Del();
             return false;
         }
+        private bool Judgement_Action_Trap(SpritePlayerJudgement data)
+        {
+            switch(data.sprite.typeID)
+            {
+                case 1:
+                    buff_bingshuang.time = 360;
+                    return false;
+                case 2:
+                    buff_zhizhu.time = 360;
+                    return false;
+                case 3:
+                    if(buff_huoyan.time <= 0)
+                    {
+                        buff_huoyan.time = 30;
+                        if (hp > 0) Dec_hp();
+                    }
+                    return false;
+                case 4:
+                    if (buff_jiguang.time <= 1)
+                    {
+                        if(buff_jiguang.time == 1)
+                        {
+                            //连续两次被击中获得加速效果
+                        }
+                        buff_jiguang.time = 31;
+                        if (hp > 0) Dec_hp();
+                    }
+                    return false;
+                default:
+                    return false;
+            }
+        }
+            
         private bool Judgement_Action_Player(SpritePlayerJudgement data)
         {
             if ((data.judgeData.type & 128) > 0)
@@ -1554,45 +1767,92 @@ namespace Data.MapsManager
         }
         private bool Judgement_Action_Player_Y(SpritePlayerJudgement data)
         {
-            var player = (SpritePlayer)data.sprite; 
-            
-            //改变坐标
-            this.y -= data.judgeData.depth;
-            if(player.IsNormal())
+            var player = (SpritePlayer)data.sprite;
+            if (player.dm == 0 && this.dm == 0)
             {
-                data.sprite.y += data.judgeData.depth;
+                //改变坐标
+                this.y -= data.judgeData.depth;
+                if (player.IsNormal())
+                {
+                    data.sprite.y += data.judgeData.depth;
 
-                //速度交换
-                float t = this.vy + 0.8f;
-                this.vy = data.sprite.vy - 0.8f;
-                data.sprite.vy = t;
+                    //速度交换
+                    float t = this.vy + 0.8f;
+                    this.vy = data.sprite.vy - 0.8f;
+                    data.sprite.vy = t;
 
-                return true;
+                    return true;
+                }
+                else
+                {
+                    //已经死亡，特殊处理
+                    data.sprite.y -= 1.0f;
+
+                    float t = this.vy + 0.8f;
+                    this.vy = data.sprite.vy - 0.8f;
+                    data.sprite.vy = t;
+                }
             }
             else
             {
-                //已经死亡，特殊处理
-                data.sprite.y -= 1.0f;
+                int m1 = this.m + this.dm;
+                int m2 = player.m + player.dm;
+                float v1 = this.vy;
+                float v2 = player.vy;
+                float time = data.judgeData.time;
 
-                float t = this.vy + 0.8f;
-                this.vy = data.sprite.vy - 0.8f;
-                data.sprite.vy = t;
-                return true;
+                float v11 = (2 * m1 * v1 + (m2 - m1) * v2) / (m1 + m2);
+                float v22 = (2 * m2 * v2 + (m1 - m2) * v1) / (m1 + m2);
+
+                if(player.IsNormal())
+                {
+                    player.y += (v22 - v2) * time;
+                    this.y += (v11 - v1) * time;
+                    player.vy = v22 + 0.8f;
+                    this.vy = v11 - 0.8f;
+                }
+                else
+                {
+                    player.y += (v22 - v2) * time - 1.0f;
+                    this.y += (v11 - v1) * time;
+                    player.vy = v22 + 0.8f;
+                    this.vy = v11 - 0.8f;
+                }
             }
-
-
+            return true;
         }
         private bool Judgement_Action_Player_X(SpritePlayerJudgement data)
         {
-            //改变坐标
-            var t = (1 - data.judgeData.time);
-            this.x += (data.sprite.vx - this.vx) * t;
-            data.sprite.x += (this.vx - data.sprite.vx) * t;
+            var player = (SpritePlayer)data.sprite;
+            if (player.dm == 0 && this.dm == 0)
+            {
+                //改变坐标
+                var t = (1 - data.judgeData.time);
+                this.x += (data.sprite.vx - this.vx) * t;
+                data.sprite.x += (this.vx - data.sprite.vx) * t;
 
-            //速度交换
-            t = this.vx;
-            this.vx = data.sprite.vx;
-            data.sprite.vx = t;
+                //速度交换
+                t = this.vx;
+                this.vx = data.sprite.vx;
+                data.sprite.vx = t;
+
+            }
+            else
+            {
+                int m1 = this.m + this.dm;
+                int m2 = player.m + player.dm;
+                float v1 = this.vx;
+                float v2 = player.vx;
+                float time = data.judgeData.time;
+
+                float v11 = (2 * m1 * v1 + (m2 - m1) * v2) / (m1 + m2);
+                float v22 = (2 * m2 * v2 + (m1 - m2) * v1) / (m1 + m2);
+
+                player.x += (v22 - v2) * time;
+                this.x += (v11 - v1) * time;
+                player.vx = v22;
+                this.vx = v11;
+            }
 
             return true;
         }
@@ -1780,6 +2040,58 @@ namespace Data.MapsManager
             }
         }
 
+        private void Add_Prop(int typ)
+        {
+            //遍历道具栏第一个空位
+            for (int i = 0; i < prop.Length; i++)
+            {
+                if(prop[i]==0)
+                {
+                    prop[i] = typ;
+                    return;
+                }
+            }
+
+            //道具栏已经满,挤掉第一个
+            for (int i = 0; i < prop.Length - 1; i++)
+            {
+                prop[i] = prop[i + 1];
+            }
+            prop[prop.Length - 1] = typ;
+        }
+        private void Use_Prop(int index)
+        {
+            //使用道具
+            if (prop[index] == 0) return;
+            Global.GetMapManager().ActiveTrap(GetPropIndex(prop[index]));
+
+            //删除道具
+            for (int i = index; i < prop.Length-1; i++)
+            {
+                prop[i] = prop[i + 1];
+            }
+            prop[prop.Length - 1] = 0;
+        }
+        private int GetPropIndex(int typ)
+        {
+            switch (typ)
+            {
+                case 14:
+                    return 1;
+                case 15:
+                    return 2;
+                case 16:
+                    return 3;
+                case 21:
+                    return 4;
+                case 22:
+                    return 5;
+                case 23:
+                    return 6;
+                default:
+                    return -1;
+            }
+        }
     }
     public class SpritePlayerJudgement
     {
@@ -1811,9 +2123,10 @@ namespace Data.MapsManager
         public override void Action()
         {
             base.Action();
-            vx = (float)(flyAreaX * Math.Cos((count / 300.0f) * 2 * 3.14159f));
+            float x1 = (float)(flyAreaX/2 * Math.Cos((count / 300.0f) * 2 * 3.14159f)) + this.Poi_A;
             y += vy;
-            x += vx;
+            x = x1;
+            vx = x1 - x;
         }
         public override List<RectangleF> GetPhyList()
         {

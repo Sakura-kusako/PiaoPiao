@@ -22,6 +22,7 @@ namespace Data.Globals
 {
     public static class Global
     {
+        public static Random rand = new Random();
         public static bool IsFormGameOpen = false;
         public static bool IsCameraFree = false;
         public static bool IsDebug = false;
